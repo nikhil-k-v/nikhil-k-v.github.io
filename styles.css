@@ -1,0 +1,112 @@
+
+    body {
+        min-height: 100vh;
+        margin: 0;
+        background-color: #242933;
+    }
+
+    /* make all of the page have text font of monospace, and color of #eceff4 */
+    body, p, h1, h2, h3, h4, h5, h6, a, li, td, th, input, textarea, select, button {
+        font-family: "Monospace", monospace;
+        color: #eceff4;
+    }
+    
+    /* center the h1 with id title horizontally on the page, and change the font to be larger and bold */
+    #title {
+        text-align: left;
+        /* make the title stay in the same place as u scroll */
+        position: fixed;
+        /* add a small left & top margin to the title */
+        margin: 0 0 0 20px;
+        font-size: 4em;
+        font-weight: bold;
+        /* make the text compact */
+        letter-spacing: -1px;
+        color: #eceff4;
+    }
+
+  .container {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    /* using flex, vertically center the container div on the page */
+    
+    justify-content: center;
+    /* justify-content: flex-start; */
+    width: 200%;
+    height: 100%;
+    overflow-x: auto;
+  }
+  
+  .box {
+    display: inline-block;
+    height: 70vh;
+    width: 600px;
+    margin: 5px;
+    text-align: center;
+    color: #eceff4;
+    font-family: "Monospace", monospace;
+    font-size: 20px;
+    font-weight: bolder;
+    /* text-padding: 2px; */
+    vertical-align: middle;
+    background-color: #2e3440;
+    border: 2px solid #2e3440;
+    border-radius: 12px;
+  }
+  
+  .box:hover {
+    background-color: #3E4656;
+    border-color: #3E4656;
+  }
+  
+  .skew { 
+  /*   transform: skew(-2deg, 2deg); */
+    margin-left: 5px !important;
+  /*   border: 2px solid #0c0c0c; */
+  /*   box-shadow: -5px 8px 5px 0px rgb(51,46,46); */
+  /*  box-shadow: 10px 10px 2px #0c2c2c; */
+  }
+  
+  .active {
+    /* margin: 30px; */
+    z-index: 2;
+  }
+  
+  ::-webkit-scrollbar {
+      display: none;
+  }
+  /* using my scrollbar, handle, and mousearea elements, create a custom scrollbar that will be minimalistic at the top of the page */
+  .scrollbar {
+    position: fixed;
+    top: 3%;
+    left: 10%;
+    width: 80%;
+    height: 20px;
+    background-color: #2e3440;
+    border-bottom: 2px solid #2e3440;
+    z-index: -2;
+  }
+
+  .handle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5%;
+    height: 20px;
+    background-color: #3E4656;
+    border: 2px solid #3E4656;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .mousearea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  
