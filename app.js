@@ -10,7 +10,7 @@ function animateMe(el) {
           backgroundColor: "#2e3440",
           borderColor: "#2e3440",
           duration: 1,
-          width: '400',
+          width: '30vw',
           //ease: "elastic",
           //ease: "bounce",
           ease: "power1",
@@ -35,7 +35,7 @@ function animateMe(el) {
           backgroundColor: "red",
           borderColor: "red",
           duration: 1.5,
-          width: '80vw',
+          width: '70vw',
           //ease: "elastic",
           //ease: "bounce",
           ease: "power1",
@@ -46,19 +46,35 @@ function animateMe(el) {
           backgroundColor: "#2e3440",
           borderColor: "#2e3440",
           duration: 1.5,
-          width: 300,
+          width: '30vw',
           ease: "power1",
           //stagger: 0.2,
         });  
     } 
 }
 
-// turn vertical scrolling into horizontal scrolling, everywhere on the page
+// turn vertical scrolling into horizontal scrolling, everywhere on the page, smoothly
+//slow down the scrolling in this function by adding a multiplier
+
+// document.addEventListener('wheel', function(e) {
+//     if (e.deltaY !== 0) {
+//         window.scrollBy((e.deltaY * 0.4), 0);
+//         //animate the custom scrollbar at the top of the page using the scrollbar, handle, and mousearea elements
+//         gsap.to(".handle", {
+//           duration: 0.5,
+//           x: window.scrollX * 0.7575,
+//           ease: "power2",
+//         });
+//     }
+//     e.preventDefault();}
+// );
+
+// turn vertical scrolling into horizontal scrolling, everywhere on the page, smoothly
 //slow down the scrolling in this function by adding a multiplier
 
 document.addEventListener('wheel', function(e) {
     if (e.deltaY !== 0) {
-        window.scrollBy((e.deltaY * 0.3), 0);
+        window.scrollBy((e.deltaY * 0.4), 0);
         //animate the custom scrollbar at the top of the page using the scrollbar, handle, and mousearea elements
         gsap.to(".handle", {
           duration: 0.5,
@@ -74,5 +90,4 @@ document.addEventListener('wheel', function(e) {
 
 
 
-
-
+    
