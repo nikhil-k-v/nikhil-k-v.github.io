@@ -78,7 +78,7 @@ document.addEventListener('wheel', function(e) {
         //animate the custom scrollbar at the top of the page using the scrollbar, handle, and mousearea elements
         gsap.to(".handle", {
           duration: 0.5,
-          x: window.scrollX * 0.7575,
+          x: window.scrollX * 0.115,
           ease: "power2",
         });
     }

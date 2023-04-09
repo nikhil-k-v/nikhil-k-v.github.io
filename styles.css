@@ -16,14 +16,22 @@
         text-align: left;
         /* make the title stay in the same place as u scroll */
         position: fixed;
-        /* add a small left & top margin to the title */
-        margin: 0 0 0 20px;
-        font-size: 4em;
+        margin: 34 0 0 34px;
+        font-size: 2em;
         font-weight: bold;
         /* make the text compact */
-        letter-spacing: -1px;
+        /* letter-spacing: -1px; */
         color: #eceff4;
     }
+
+    /* make the social elements stuck to the top right of the page */
+    .socials {
+        position: fixed;
+        top: 18;
+        right: 34;
+        margin: 10px;
+    }
+
 
   .container {
     display: flex;
@@ -76,15 +84,16 @@
   ::-webkit-scrollbar {
       display: none;
   }
-  /* using my scrollbar, handle, and mousearea elements, create a custom scrollbar that will be minimalistic at the top of the page */
+
   .scrollbar {
     position: fixed;
-    top: 3%;
-    left: 10%;
-    width: 80%;
-    height: 20px;
+    top: 6%;
+    left: 42.5%;
+    width: 15%;
+    height: 12px;
     background-color: #2e3440;
     border-bottom: 2px solid #2e3440;
+    border-radius: 10px;
     z-index: -2;
   }
 
@@ -92,21 +101,13 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 5%;
-    height: 20px;
+    width: 20%;
+    height: 11px;
     background-color: #3E4656;
     border: 2px solid #3E4656;
     border-radius: 12px;
     cursor: pointer;
   }
 
-  .mousearea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 20px;
-    cursor: pointer;
-  }
 
   
