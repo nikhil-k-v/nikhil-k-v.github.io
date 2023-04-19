@@ -2,13 +2,15 @@
     body {
         min-height: 100vh;
         margin: 0;
-        background-color: #242933;
+        background-color: #0F084B;
+        overflow-y: hidden;
     }
 
     /* make all of the page have text font of monospace, and color of #eceff4 */
     body, p, h1, h2, h3, h4, h5, h6, a, li, td, th, input, textarea, select, button {
         font-family: "Monospace", monospace;
         color: #eceff4;
+        
     }
     
     /* center the h1 with id title horizontally on the page, and change the font to be larger and bold */
@@ -24,6 +26,8 @@
         color: #eceff4;
     }
 
+    
+
     /* make the social elements stuck to the top right of the page */
     .socials {
         position: fixed;
@@ -36,13 +40,15 @@
   .container {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
-    /* using flex, vertically center the container div on the page */
-    
+    flex-wrap: nowrap;    
     justify-content: center;
     /* justify-content: flex-start; */
+    
+    /* move the container slightly lower on the page, using flex */
+
     width: 200%;
     height: 100%;
+    margin-top: 2%;
     overflow-x: auto;
   }
   
@@ -58,14 +64,14 @@
     font-weight: bolder;
     /* text-padding: 2px; */
     vertical-align: middle;
-    background-color: #2e3440;
-    border: 2px solid #2e3440;
+    background-color: #26408B;
+    border: 2px solid #26408B;
     border-radius: 12px;
   }
   
   .box:hover {
-    background-color: #3E4656;
-    border-color: #3E4656;
+    background-color: #174B7A;
+    border-color: #174B7A;
   }
   
   .skew { 
@@ -87,7 +93,7 @@
 
   .scrollbar {
     position: fixed;
-    top: 6%;
+    bottom: 6%;
     left: 42.5%;
     width: 15%;
     height: 12px;
