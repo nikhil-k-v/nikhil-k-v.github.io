@@ -1,119 +1,184 @@
-
-    body {
-        min-height: 100vh;
-        margin: 0;
-        background-color: #0F084B;
-        overflow-y: hidden;
-    }
-
-    /* make all of the page have text font of monospace, and color of #eceff4 */
-    body, p, h1, h2, h3, h4, h5, h6, a, li, td, th, input, textarea, select, button {
-        font-family: "Monospace", monospace;
-        color: #eceff4;
-        
-    }
-    
-    /* center the h1 with id title horizontally on the page, and change the font to be larger and bold */
-    #title {
-        text-align: left;
-        /* make the title stay in the same place as u scroll */
-        position: fixed;
-        margin: 34 0 0 34px;
-        font-size: 2em;
-        font-weight: bold;
-        /* make the text compact */
-        /* letter-spacing: -1px; */
-        color: #eceff4;
-    }
-
-    
-
-    /* make the social elements stuck to the top right of the page */
-    .socials {
-        position: fixed;
-        top: 18;
-        right: 34;
-        margin: 10px;
-    }
+/* Theme Colors */
+:root {
+  --dark-primary: #041220;
+  --dark-secondary: #091A2B;
+  --dark-accent: #041220;
+  --dark-hover: #000000;
+  --light-primary: #f0f0f0;
+  --light-secondary: #e0e0e0;
+  --light-accent: #ff6b81;
+}
 
 
-  .container {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;    
-    justify-content: center;
-    /* justify-content: flex-start; */
-    
-    /* move the container slightly lower on the page, using flex */
 
-    width: 200%;
-    height: 100%;
-    margin-top: 2%;
-    overflow-x: auto;
-  }
-  
-  .box {
-    display: inline-block;
-    height: 70vh;
-    width: 30vw;
-    margin: 5px;
-    text-align: center;
-    color: #eceff4;
+body {
+  min-height: 100vh;
+  margin: 0;
+  overflow-y: hidden;
+}
+
+/* make all of the page have text font of monospace, and color of #eceff4 */
+body, p, h1, h2, h3, h4, h5, h6, a, li, td, th, input, textarea, select, button {
     font-family: "Monospace", monospace;
-    font-size: 20px;
-    font-weight: bolder;
-    /* text-padding: 2px; */
-    vertical-align: middle;
-    background-color: #26408B;
-    border: 2px solid #26408B;
-    border-radius: 12px;
-  }
-  
-  .box:hover {
-    background-color: #174B7A;
-    border-color: #174B7A;
-  }
-  
-  .skew { 
-  /*   transform: skew(-2deg, 2deg); */
-    margin-left: 5px !important;
-  /*   border: 2px solid #0c0c0c; */
-  /*   box-shadow: -5px 8px 5px 0px rgb(51,46,46); */
-  /*  box-shadow: 10px 10px 2px #0c2c2c; */
-  }
-  
-  .active {
-    /* margin: 30px; */
-    z-index: 2;
-  }
-  
-  ::-webkit-scrollbar {
-      display: none;
-  }
-
-  .scrollbar {
+}
+    
+/* center the h1 with id title horizontally on the page, and change the font to be larger and bold */
+#title {
+    text-align: left;
     position: fixed;
-    bottom: 6%;
-    left: 42.5%;
-    width: 15%;
-    height: 12px;
-    background-color: #2e3440;
-    border-bottom: 2px solid #2e3440;
-    border-radius: 10px;
-    z-index: -2;
-  }
+    margin: 34 0 0 34px;
+    font-size: 2em;
+    font-weight: bold;
+    color: #eceff4;
+}
 
-  .handle {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20%;
-    height: 11px;
-    background-color: #3E4656;
-    border: 2px solid #3E4656;
-    border-radius: 12px;
-    cursor: pointer;
-  }
+    
+
+/* make the social elements stuck to the top right of the page */
+.socials {
+    position: fixed;
+    top: 18;
+    right: 34;
+    margin: 10px;
+}
 
 
-  
+.container {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;    
+  justify-content: center;
+  width: 200%;
+  height: 100%;
+  margin-top: 2%;
+  overflow-x: auto;
+}
+
+.box {
+  display: inline-block;
+  height: 70vh;
+  width: 40vw;
+  margin: 5px;
+  text-align: center;
+  color: #eceff4;
+  font-family: "Monospace", monospace;
+  font-size: 20px;
+  font-weight: bolder;
+  vertical-align: middle;
+  background-color: var(--dark-accent);
+  border: 2px solid var(--dark-accent);
+  border-radius: 12px;
+}
+
+.box:hover {
+  background-color: var(--dark-hover);
+  border-color: var(--dark-hover);
+}
+
+.boxskew:hover {
+  background-color: var(--dark-hover);
+  border-color: var(--dark-hover);
+}
+
+.skew { 
+  margin-left: 5px !important;
+}
+
+.active {
+  z-index: 2;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar {
+  position: fixed;
+  bottom: 6%;
+  left: 42.5%;
+  width: 15%;
+  height: 12px;
+  background-color: #2e3440;
+  border-bottom: 2px solid #2e3440;
+  border-radius: 10px;
+  z-index: -2;
+}
+
+.handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20%;
+  height: 11px;
+  background-color: #3E4656;
+  border: 2px solid #3E4656;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+
+/* Default Theme (dark) */
+body {
+  background-color: var(--dark-primary);
+  color: var(--dark-primary);
+  /* transition: background-color 0.7s ease; */
+}
+
+/* Dark Theme
+body.dark-theme {
+  background-color: var(--dark-primary);
+  color: var(--light-primary);
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+}
+
+.themeButton {
+  background-color: var(--light-accent);
+  border: none;
+  border-radius: 4px;
+  color: var(--light-primary);
+  cursor: pointer;
+  font-size: 1rem;
+  margin-right: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+body.dark-theme .themeButton {
+  background-color: var(--dark-accent);
+} */
+
+.box {
+  /* ...previous styles... */
+  position: relative;
+  overflow: hidden;
+} 
+
+.anims {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: 200%;
+  transform: translate(-51.5%, -50%);
+  z-index: 1;
+}
+
+
+/* make the s-title class always display at the bottom within the box element, centered horizontally */
+.s-title {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #eceff4;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+  white-space: nowrap;
+}

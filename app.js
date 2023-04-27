@@ -7,15 +7,16 @@ function animateMe(el) {
       const activeBox = document.querySelectorAll('.active');
        activeBox.className = "box";
         gsap.to('.box', { 
-          backgroundColor: "#2e3440",
-          borderColor: "#2e3440",
+          backgroundColor: "var(--dark-accent)",
+          borderColor: "var(--dark-accent)",
           duration: 1,
-          width: '30vw',
+          width: '40vw',
           //ease: "elastic",
           //ease: "bounce",
           ease: "power1",
           //stagger: 0.1,
         });
+        
        const boxes = document.querySelectorAll('.box');
        Array.from(boxes).forEach(function(box) {
           box.classList.add("skew");
@@ -29,27 +30,26 @@ function animateMe(el) {
           box.classList.add("skew");
         });
         el.classList.add("active");
-        //el.classList.remove("skew")
+        el.classList.remove("skew")
 
         gsap.to(el, { 
-          backgroundColor: "red",
-          borderColor: "red",
+          backgroundColor: "var(--dark-secondary)",
+          borderColor: "var(--dark-secondary)",
           duration: 1.5,
           width: '70vw',
-          //ease: "elastic",
-          //ease: "bounce",
+          transition: "background-color 1s ease",
           ease: "power1",
-          //stagger: 0.1,
         });
 
         gsap.to(".box:not(.active)", { 
-          backgroundColor: "#2e3440",
-          borderColor: "#2e3440",
+          backgroundColor: "var(--dark-accent)",
+          borderColor: "var(--dark-accent)",
           duration: 1.5,
-          width: '30vw',
+          width: '40vw',
           ease: "power1",
-          //stagger: 0.2,
         });  
+
+        
     } 
 }
 
@@ -84,6 +84,21 @@ document.addEventListener('wheel', function(e) {
     }
     e.preventDefault();}
 );
+
+// main.js
+
+// document.addEventListener("DOMContentLoaded", () => {
+//   const themeButtons = document.querySelectorAll(".themeButton");
+
+//   themeButtons.forEach((button) => {
+//       button.addEventListener("click", () => {
+//           const theme = button.getAttribute("data-theme");
+//           document.body.className = theme + "-theme";
+//       });
+//   });
+// });
+
+
 
 
 
