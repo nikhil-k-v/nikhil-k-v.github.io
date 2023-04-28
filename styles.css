@@ -1,9 +1,9 @@
 /* Theme Colors */
 :root {
-  --dark-primary: #041220;
-  --dark-secondary: #091A2B;
-  --dark-accent: #041220;
-  --dark-hover: #000000;
+  --dark-primary: #030d18;
+  --dark-secondary: #091a2a;
+  --dark-accent: #071420;
+  --dark-hover: #071420;
   --light-primary: #f0f0f0;
   --light-secondary: #e0e0e0;
   --light-accent: #ff6b81;
@@ -18,7 +18,7 @@ body {
 }
 
 /* make all of the page have text font of monospace, and color of #eceff4 */
-body, p, h1, h2, h3, h4, h5, h6, a, li, td, th, input, textarea, select, button {
+* {
     font-family: "Monospace", monospace;
 }
     
@@ -26,10 +26,10 @@ body, p, h1, h2, h3, h4, h5, h6, a, li, td, th, input, textarea, select, button 
 #title {
     text-align: left;
     position: fixed;
-    margin: 34 0 0 34px;
-    font-size: 2em;
+    margin: 0 0 0 34px;
+    font-size: 2.5em;
     font-weight: bold;
-    color: #eceff4;
+    color: #e0e0e0;
 }
 
     
@@ -57,7 +57,7 @@ body, p, h1, h2, h3, h4, h5, h6, a, li, td, th, input, textarea, select, button 
 .box {
   display: inline-block;
   height: 70vh;
-  width: 40vw;
+  width: 30vw;
   margin: 5px;
   text-align: center;
   color: #eceff4;
@@ -98,10 +98,10 @@ body, p, h1, h2, h3, h4, h5, h6, a, li, td, th, input, textarea, select, button 
   left: 42.5%;
   width: 15%;
   height: 12px;
-  background-color: #2e3440;
-  border-bottom: 2px solid #2e3440;
+  background-color: var(--dark-accent);
+  border-bottom: 2px solid var(--dark-accent);
   border-radius: 10px;
-  z-index: -2;
+  z-index: 1000;
 }
 
 .handle {
@@ -110,9 +110,10 @@ body, p, h1, h2, h3, h4, h5, h6, a, li, td, th, input, textarea, select, button 
   left: 0;
   width: 20%;
   height: 11px;
-  background-color: #3E4656;
-  border: 2px solid #3E4656;
+  background-color: var(--dark-secondary);
+  border: 2px solid var(--dark-secondary);
   border-radius: 12px;
+  z-index: 1001;
   cursor: pointer;
 }
 
@@ -170,15 +171,44 @@ body.dark-theme .themeButton {
 /* make the s-title class always display at the bottom within the box element, centered horizontally */
 .s-title {
   position: absolute;
-  bottom: 5%;
+  bottom: 6%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.2em;
+  font-size: 2vmin;
   font-weight: bold;
-  color: #eceff4;
+  color: var(--light-primary);
   text-align: center;
   margin: 0;
   padding: 0;
   z-index: 2;
   white-space: nowrap;
+}
+
+
+.see-more {
+  position: absolute;
+  bottom: 4%; /* Adjust this according to your needs */
+  left: 50%;
+  transform: translateX(-50%);
+  display: none; /* Hide the button by default */
+  background-color: var(--dark-accent);
+  border: none;
+  border-radius: 5px;
+  padding: 10px 40px;
+  font-size: 1.2em;
+  color: var(--light-primary);
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* style the divider to be a thin, solid line with color light primary, and move it down */
+
+.divider {
+    position: absolute;
+    bottom: 23.5%;
+    border: 1px solid var(--light-secondary);
+    width: 50%;
+    margin: 0 25%;
+    z-index: 2;
+    display: none;
 }

@@ -1,5 +1,6 @@
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.3/draggable.min.js"></script>
     <script src="app.js"></script>
     <link rel="stylesheet" href="styles.css">
     <!-- add a header title to the page, centered horizontally, with id of title -->
@@ -22,6 +23,9 @@
         <span class="s-title">CYCLOIDAL ACTUATOR</span>
         <img class= "anims" src="assets/Sequence 01_1.gif" alt="Your GIF" loop>
         I
+        <button class="see-more" onclick="window.location.href='your-link.html'; event.stopPropagation();">SEE MORE</button>
+        <!-- add a divider solid line -->
+        <div class="divider"></div>
       </div>
 
       <div onclick="animateMe(this)" class="box skew">II</div>
