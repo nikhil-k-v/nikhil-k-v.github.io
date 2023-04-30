@@ -1,6 +1,6 @@
 /* Theme Colors */
 :root {
-  --dark-primary: #040e19;
+  --dark-primary: #051220;
   --dark-secondary: #0b2135;
   --dark-accent: #091b2b;
   --dark-hover: #091b2b;
@@ -32,8 +32,6 @@ body {
     color: #e0e0e0;
 }
 
-    
-
 /* make the social elements stuck to the top right of the page */
 .socials {
     position: fixed;
@@ -49,6 +47,7 @@ body {
   flex-wrap: nowrap;    
   justify-content: center;
   width: 200%;
+  margin-left: 6px;
   height: 100%;
   margin-top: 2%;
   overflow-x: auto;
@@ -68,25 +67,18 @@ body {
   background-color: var(--dark-accent);
   border: 2px solid var(--dark-accent);
   border-radius: 12px;
+  position: relative;
+  overflow: hidden;
 }
 
-.box:hover {
-  background-color: var(--dark-hover);
-  border-color: var(--dark-hover);
-}
-
-.boxskew:hover {
-  background-color: var(--dark-hover);
-  border-color: var(--dark-hover);
-}
-
+/* 
 .skew { 
   margin-left: 5px !important;
 }
 
 .active {
   z-index: 2;
-}
+} */
 
 ::-webkit-scrollbar {
     display: none;
@@ -125,39 +117,6 @@ body {
   /* transition: background-color 0.7s ease; */
 }
 
-/* Dark Theme
-body.dark-theme {
-  background-color: var(--dark-primary);
-  color: var(--light-primary);
-}
-
-.theme-toggle {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-}
-
-.themeButton {
-  background-color: var(--light-accent);
-  border: none;
-  border-radius: 4px;
-  color: var(--light-primary);
-  cursor: pointer;
-  font-size: 1rem;
-  margin-right: 0.5rem;
-  padding: 0.5rem 1rem;
-}
-
-body.dark-theme .themeButton {
-  background-color: var(--dark-accent);
-} */
-
-.box {
-  /* ...previous styles... */
-  position: relative;
-  overflow: hidden;
-} 
-
 .anims {
   position: absolute;
   top: 50%;
@@ -165,6 +124,11 @@ body.dark-theme .themeButton {
   max-width: 200%;
   transform: translate(-51.5%, -51%);
   z-index: 1;
+}
+
+#braille-anim {
+  left: 56%;
+  max-width: 180%;
 }
 
 
@@ -182,6 +146,8 @@ body.dark-theme .themeButton {
   padding: 0;
   z-index: 2;
   white-space: nowrap;
+  /* add some drop shadow to this text */
+  text-shadow: 0 0 4px #000000;
 }
 
 
@@ -192,7 +158,7 @@ body.dark-theme .themeButton {
   transform: translateX(-50%);
   display: none; /* Hide the button by default */
   background-color: var(--dark-accent);
-  border: none;
+  border: 2px solid var(--light-primary);
   border-radius: 5px;
   padding: 10px 40px;
   font-size: 1.2em;
@@ -211,4 +177,6 @@ body.dark-theme .themeButton {
     margin: 0 25%;
     z-index: 2;
     display: none;
+    /* add some drop shadow to this divider */
+    box-shadow: 0 0 3px #000000;
 }

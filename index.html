@@ -1,11 +1,11 @@
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.3/draggable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+
     <script src="app.js"></script>
     <link rel="stylesheet" href="styles.css">
-    <!-- add a header title to the page, centered horizontally, with id of title -->
     <h1 id="title">NIKHIL VIJAY</h1>
-    <!-- create a bunch of elements on the top right of the page that are clickable icons to my insta, github, and youttube -->
     <!-- <div class="socials">
       <a href="https://www.instagram.com/nikhilvijay/">
         <img src="https://img.icons8.com/ios-filled/50/000000/instagram-new.png" alt="instagram" class="social">
@@ -18,22 +18,19 @@
       </a>
     </div> -->
     <div class="container" id="containers">
-
-      <div onclick="animateMe(this)" class="box skew">
+      <div onclick="animateMe(this)" class="box active">
         <span class="s-title">CYCLOIDAL ACTUATOR</span>
-        <img class= "anims" src="assets/Sequence 01_2.gif" alt="Your GIF" loop>
+        <img class= "anims" src="assets/CycloidAnim.gif" draggable="false" alt="Your GIF" loop>
         I
         <button class="see-more" onclick="window.location.href='your-link.html'; event.stopPropagation();">SEE MORE</button>
-        <!-- add a divider solid line -->
         <div class="divider"></div>
       </div>
 
       <div onclick="animateMe(this)" class="box skew">
         <span class="s-title">BRAILLE DISPLAY</span>
-        <img class= "anims" src="assets/Sequence 01_3.gif" alt="Your GIF" loop>
+        <img class= "anims" id="braille-anim" src="assets/BraileAnim.gif" draggable="false" alt="Your GIF" loop>
         II
         <button class="see-more" onclick="window.location.href='your-link.html'; event.stopPropagation();">SEE MORE</button>
-        <!-- add a divider solid line -->
         <div class="divider"></div>
       </div>
 
@@ -44,16 +41,10 @@
       <div onclick="animateMe(this)" class="box skew">VI</div>
       <div onclick="animateMe(this)" class="box skew">VII</div>
     </div>
-    <!-- <div class="theme-toggle">
-      <button class="themeButton" data-theme="light">Light Theme</button>
-      <button class="themeButton" data-theme="dark">Dark Theme</button>
-    </div> -->
-    <!-- add a custom scrollbar to the top of the page -->
+
     <div class="scrollbar">
       <div class="handle">
         <div class="mousearea"></div>
       </div>
-      
-  </div>
-  
+    </div>
   </body>
