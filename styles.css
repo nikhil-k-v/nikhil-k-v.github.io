@@ -33,12 +33,12 @@ body {
 }
 
 /* make the social elements stuck to the top right of the page */
-.socials {
+/* .socials {
     position: fixed;
     top: 18;
     right: 34;
     margin: 10px;
-}
+} */
 
 
 .container {
@@ -137,7 +137,7 @@ body {
   bottom: 6%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: 700;
   color: var(--light-primary);
   text-align: center;

@@ -24,7 +24,7 @@ function animateMe(el) {
   boxes.forEach((box) => {
     const boxIsActive = box.classList.contains("active");
     const boxWidth = boxIsActive ? "60vw" : "30vw";
-    const titleFontSize = boxIsActive ? "2.7em" : "1.5em";
+    const titleFontSize = boxIsActive ? "2.4em" : "1.2em";
     const titleBottom = boxIsActive ? "13%" : "6%";
     const durationToggle = boxIsActive ? 1 : 0.5;
     const opacityToggle = boxIsActive ? 1 : 0;
@@ -136,8 +136,5 @@ window.addEventListener('scroll', function() {
   });
 });
 
-document.getElementById("back-to-home").addEventListener("click", function () {
-  window.location.href = "index.html"; // Replace 'index.html' with the name of your homepage file.
-});
 
 

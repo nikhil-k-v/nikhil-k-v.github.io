@@ -1,0 +1,48 @@
+/* make the links clickable and add a hover effect */
+.navigation {
+    background-color: rgb(44, 44, 36);
+    position: fixed;
+    top: 5px;
+    height: 40px;
+    padding: 10px;
+    left: 40%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    list-style-type: none;
+    gap: 15px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+  }
+  .navigation a {
+    color: #ec8349;
+    text-decoration: none;
+    padding-right: 5px;
+  }
+  
+  .navigation li:after {
+    content: "|";
+    float: right;
+    color: #fff;
+  }
+  
+  .navigation li:last-child::after {
+    display: none;
+  }
+  
+  .navigation a:hover, a.active {
+    color:  #f5bfa3;
+    font-weight: bold;
+  }
+  
+  /* make the social elements stuck to the top right of the page */
+  .socials {
+      position: fixed;
+      top: 18px;
+      right: 34px;
+      margin: 10px;
+      border: none;
+      background-color: transparent;
+  }
+
+  img { border-style: none; }
