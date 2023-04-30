@@ -55,7 +55,7 @@ body {
 
 .box {
   display: inline-block;
-  height: 70vh;
+  height: 75vh;
   width: 30vw;
   margin: 5px;
   text-align: center;
@@ -86,7 +86,7 @@ body {
 
 .scrollbar {
   position: fixed;
-  bottom: 6%;
+  bottom: 4%;
   left: 42.5%;
   width: 15%;
   height: 12px;
@@ -122,7 +122,7 @@ body {
   top: 50%;
   left: 50%;
   max-width: 200%;
-  transform: translate(-51.5%, -51%);
+  transform: translate(-51.5%, -52%);
   z-index: 1;
 }
 
