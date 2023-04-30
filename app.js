@@ -82,7 +82,7 @@ function animateMe(el) {
     // Scale up the text as the box gets larger
     gsap.to(title, {
       duration: 1.5,
-      fontSize: "3em", // Adjust this value to control the scaling
+      fontSize: "2.6em", // Adjust this value to control the scaling
       ease: "power4",
       bottom: '12%'
     });
