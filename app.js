@@ -37,7 +37,7 @@ function animateMe(el) {
       duration: 1,
       fontSize: "1.5em",
       ease: "power1",
-      bottom: "4%",
+      bottom: "6%",
     });
 
     const boxes = document.querySelectorAll(".box");

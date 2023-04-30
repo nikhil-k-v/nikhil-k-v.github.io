@@ -1,9 +1,9 @@
 /* Theme Colors */
 :root {
-  --dark-primary: #030d18;
-  --dark-secondary: #091a2a;
-  --dark-accent: #071420;
-  --dark-hover: #071420;
+  --dark-primary: #040e19;
+  --dark-secondary: #0b2135;
+  --dark-accent: #091b2b;
+  --dark-hover: #091b2b;
   --light-primary: #f0f0f0;
   --light-secondary: #e0e0e0;
   --light-accent: #ff6b81;
@@ -163,7 +163,7 @@ body.dark-theme .themeButton {
   top: 50%;
   left: 50%;
   max-width: 200%;
-  transform: translate(-51.5%, -50%);
+  transform: translate(-51.5%, -51%);
   z-index: 1;
 }
 
@@ -174,7 +174,7 @@ body.dark-theme .themeButton {
   bottom: 6%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2vmin;
+  font-size: 1.5em;
   font-weight: bold;
   color: var(--light-primary);
   text-align: center;
