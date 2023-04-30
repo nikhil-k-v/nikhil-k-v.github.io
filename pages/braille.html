@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Braille Display</title>
+  <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
+  <link rel="stylesheet" href="page-styles.css">
+</head>
+<body>
+  <header>
+    <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
+    <h1 class="page-title">BRAILLE DISPLAY</h1>
+  </header>
+
+  <main>
+    <div class="img-container">
+      <figcaption>VIEW OF THE INTERNAL MECHANISMS OF THE FIRST PROTOTYPE</figcaption>  
+      <img class="anim" src="../assets/BraileAnim.gif" alt="Your image description" draggable="false" loop>
+    </div>
+
+    <div class="img-container">
+        <figcaption>FIRST PROTOTYPE WORKING SUCCESFULLY!</figcaption>  
+        <img class="anim" src="../assets/BraileAnim.gif" alt="pictures of the prototype" draggable="false" loop>
+    </div>
+
+    <div class="p-container">
+        <p>A functioning prototype of the display! The display refreshes at an average range of 100-200 wpm, and has a final build cost of only around 30$. 
+        To enable such fast, precise, and repeatable actuating, the two servos utilize the De Brujin Sequence to mechanically allow the quickest “path” 
+        (there is only one path, it’s just optimized to be fast) to the next character. For each character refresh, the servos generally have to rotate only 
+        10-30 degrees, at an average of 17.6! 
+        </p>
+    </div>
+
+    <div class="p-container">
+        <p>After being shown the current, expensive (LINK) solutions to internet-braille interfaces by a friend, I haven’t been able to stop imagining better 
+        solutions. Through a two year journey of stumbling across various ideas in mechanisms, software, and use-cases, (<- here a bunch of links, in a separate 
+        block maybe with arrows/lines pointing/connecting to them) I have finally prototyped a refreshable braille display that is extremely cheap, fast, and 
+        dependable. 
+        </p>
+    </div>
+
+    <div class="img-container">
+        <figcaption>THE CURRENT SOLUTIONS TO THE INTERNET X BRAILLE PROBLEM...</figcaption>  
+        <img class="anim" src="../assets/BraileAnim.gif" alt="pictures of the current refreshable displays (screenshot of the website pages - with the price tags on them)" draggable="false" loop>
+    </div>
+
+    <div class="p-container">
+        <p>Current refreshable braille displays use arrays of individual cells of braille, each dot having its own (apparently failure-prone) actuator - 
+        displays with 40 characters often have 320 actuators, a nightmare in many ways, especially maintenance. One single actuator failing could produce gibberish 
+        and render the entire display unusable. On top of that, the cost is often in the 4 figures, and in decades past that 4 would easily become 5, even 6 - not 
+        including maintenance. 
+        </p>
+    </div>
+
+    <div class="img-container">
+        <figcaption>THE SOLUTION</figcaption>  
+        <img class="anim" src="../assets/BraileAnim.gif" alt="pictures/animations of the entire prototype, various angles, renders, and real photos" draggable="false" loop>
+    </div>
+
+    <div class="p-container">
+        <p>The solution involves only 2 actuators for the braille, and a couple more for other functionality. By moving a refreshing cell of braille under your 
+        finger at a speed controlled through the pot/joystick, you can simulate reading braille manually off of paper, where you can choose your current speed 
+        and easily go backwards and forwards in the text. This prototype is functional - it can take any text and display the braille at a refreshing rate of 
+        anywhere from 0 to 200 wpm, backwards and forwards. 
+        </p>
+    </div>
+
+    <div class="img-container">
+        <figcaption>THE DE BRUJIN SEQUENCE</figcaption>  
+        <img class="anim" src="../assets/BraileAnim.gif" alt="picture of the sectors which attach to the servos
+        - animated graphic for the de brujin sequence
+        - two rows of the sequences themselves moving back and forth, with a rectangle around the middle 8 (2x4) characters" draggable="false" loop>
+    </div>
+
+    <div class="p-container">
+        <p>Each servo is attached to a circle sector with 16 braille dots on its circumference - or rather 16 SPACES for braille dots. Some are “off” (0), while 
+        some are “on” (1), and the overall sequence is 000011110110101 - the De Brujin Sequence for (2,4), something which you may be familiar with if you are 
+        interested in algorithms, computer science, or even biology. The two sequences work together to produce any 4x2 braille cell, and then other motors in 
+        the case move the entire subassembly past your finger (at a user controlled, variable speed) to simulate the feeling of running your finger across a page 
+        of cells manually. 
+        </p>
+    </div>
+
+    <div class="p-container">
+        <p>This project can be improved in many ways, and I encourage you to reach out to me if you have any ideas! It is still very early in its development, 
+        and many of the issues you may see on the current prototype are already being worked on. For the time-being, this is what I am working on:
+        <h4>Future Goals:</h4>
+            <li>Smaller form factor</li>
+            <li>Embedded Keyboard</li>
+            <li>Silent - using quieter motors and fixing sources of friction</li>
+            <li>Seamless interfacing with smartphone “voice readers” - all speech will be converted to braille automatically</li>
+        </p>
+    </div>
+
+    </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

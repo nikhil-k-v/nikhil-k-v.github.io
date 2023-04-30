@@ -17,9 +17,9 @@ body {
   overflow-y: hidden;
 }
 
-/* make all of the page have text font of monospace, and color of #eceff4 */
 * {
-    font-family: "Monospace", monospace;
+    font-family: "montserrat", sans-serif;
+    font-style: normal;
 }
     
 /* center the h1 with id title horizontally on the page, and change the font to be larger and bold */
@@ -28,8 +28,8 @@ body {
     position: fixed;
     margin: 0 0 0 34px;
     font-size: 2.5em;
-    font-weight: bold;
-    color: #e0e0e0;
+    font-weight: 700;
+    color: var(--light-primary);
 }
 
 /* make the social elements stuck to the top right of the page */
@@ -60,9 +60,8 @@ body {
   margin: 5px;
   text-align: center;
   color: #eceff4;
-  font-family: "Monospace", monospace;
   font-size: 20px;
-  font-weight: bolder;
+  font-weight: 700;
   vertical-align: middle;
   background-color: var(--dark-accent);
   border: 2px solid var(--dark-accent);
@@ -139,7 +138,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   font-size: 1.5em;
-  font-weight: bold;
+  font-weight: 700;
   color: var(--light-primary);
   text-align: center;
   margin: 0;
@@ -172,7 +171,7 @@ body {
 
 .divider {
     position: absolute;
-    bottom: 23.5%;
+    bottom: 23%;
     border: 1px solid var(--light-secondary);
     width: 50%;
     margin: 0 25%;

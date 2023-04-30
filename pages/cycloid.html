@@ -3,25 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>See More</title>
+  <title>Cycloidal Actuator</title>
+  <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
   <link rel="stylesheet" href="page-styles.css">
 </head>
 <body>
   <header>
     <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
-    <h1 class="page-title">Page Title</h1>
+    <h1 class="page-title">CYDLOIDAL ACTUATOR</h1>
   </header>
 
   <main>
+    <div class="img-container">
+      <figcaption>28:1 CYCLOIDAL GEARBOX I CREATED FOR A 6DOF ROBOTIC ARM</figcaption>  
+      <img class="anim" src="../assets/CycloidAnim.gif" alt="Your image description" draggable="false" loop>
+    </div>
+    <div class="p-container">
+        <p>Gearboxes, transmissions, and actuators are extremely interesting to me, and for my current main project - creating a 6 degree of freedom robotic arm 
+          with a friend (Sahil link) - we needed reducers to increase our NEMA stepper motors’ torque output and precision. Rather than buy/find actuators online, 
+          I chose to generate them myself to learn function driven modeling and apply some of my knowledge in parametric functions & cycloids. Using the Desmos API 
+          & Fusion 360s Equation Driven Curve add-in, I created a parametric cycloidal gear generator which can test the parameters and animate visualize/animate the 
+          cycloid you want. The generator was successfully used in creating the actuators for the robotic arm, and you can try it out HERE (linked).
+        </p>
+    </div>
     <div class="p-container">
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sit amet neque mi. Nullam facilisis enim ac facilisis iaculis. Praesent imperdiet feugiat enim, eget aliquet enim accumsan nec.</p>
-    </div>
-    <div class="img-container">
-        <img class="anim" src="../assets/CycloidAnim.gif" alt="Your image description" draggable="false" loop>
-        <figcaption>Image Caption</figcaption>
-    </div>
-    <div class="p-container">
-        <p>Maecenas in convallis sapien, vitae commodo odio. Etiam interdum odio vel turpis egestas, id sagittis odio tempus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Proin id ipsum sit amet urna consectetur semper.</p>
     </div>
     </main>
 

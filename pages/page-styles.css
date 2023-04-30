@@ -11,16 +11,19 @@
     --light-accent: #ff6b81;
   }
 
-* {
-    font-family: "Monospace", monospace;
-    color: var(--light-secondary);
-    overflow-x: hidden;
+.wf-loading { visibility: hidden; } /* font is loading and hidden */
+.wf-active, .wf-inactive { visibility: visible; } /* font has loaded and is visible */
 
+* {
+    font-family: "Montserrat", sans-serif  !important;
+    font-style: normal;
+    /* text-rendering: optimizeLegibility; */
+    color: var(--light-primary);
+    overflow-x: hidden;
 }
 
 body {
-    background-color: var(--dark-secondary);
-    font-family: sans-serif;
+    background-color: var(--dark-primary);
     color: var(--light-primary);
     margin: 0;
     padding: 0;
@@ -36,46 +39,84 @@ body {
     position: absolute;
     top: 1rem;
     left: 1rem;
-    background-color: var(--dark-primary);
+    background-color: var(--dark-secondary);
     border: none;
+    border-radius: 6px;
     color: var(--light-primary);
     padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font-size: 1.5rem;
     cursor: pointer;
   }
   
   .page-title {
-    font-size: 2rem;
+    font-weight: 300 !important;
+    font-size: 3rem;
     margin-bottom: 1rem;
   }
 
   .p-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 0 auto;
-    max-width: 1000px;
+    display: block;
+    width: 60vw;
+    margin: auto;
+    margin-top: 1.5vh;
+    margin-bottom: 1.5vh;
+    text-align: center;
+    color: #eceff4;
+    font-size: 1.2rem;
+    font-weight: 300 !important;
+    text-align: left;
+    background-color: var(--dark-accent);
+    border: 2px solid var(--dark-accent);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    /* add padding, more on the top and bottom and less on the right and left */
+    padding: 0rem 1.5rem 0rem 1.5rem;
   }
 
+
   .img-container {
-    display: inline-block;
-    width: 100%;
-    background-color: var(--dark-primary);
-    padding: 1rem;
-    justify-content: center;
-    overflow-x: hidden;
+    display: flex;
+    height: 40vh;
+    width: 50vw;
+    margin: auto;
+    margin-bottom: 1vw;
+    text-align: center;
+    color: #eceff4;
+    font-size: 20px;
+    /* font-weight: bolder; */
+    vertical-align: middle;
+    background-color: var(--dark-secondary);
+    border: 2px solid var(--dark-secondary);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
   }
   
   figcaption {
+    position: absolute;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75em;
+    color: var(--light-primary);
     text-align: center;
+    font-weight: 300;
+    font-style: italic;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+    white-space: nowrap;
+    /* add some drop shadow to this text */
+    text-shadow: 0 0 4px #000000;
   }
   
   .anim {
-    position: relative;
-    left: 20%;
-    max-width: 60%;
-    /* transform: translate(-51.5%, -51%); */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: 100%;
+    transform: translate(-51.5%, -52%);
     z-index: 1;
-    overflow-x: hidden;
   }
   
