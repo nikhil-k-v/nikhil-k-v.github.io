@@ -136,3 +136,8 @@ window.addEventListener('scroll', function() {
   });
 });
 
+document.getElementById("back-to-home").addEventListener("click", function () {
+  window.location.href = "index.html"; // Replace 'index.html' with the name of your homepage file.
+});
+
+

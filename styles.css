@@ -165,6 +165,7 @@ body {
   color: var(--light-primary);
   cursor: pointer;
   z-index: 2;
+  white-space: nowrap;
 }
 
 /* style the divider to be a thin, solid line with color light primary, and move it down */
@@ -180,3 +181,4 @@ body {
     /* add some drop shadow to this divider */
     box-shadow: 0 0 3px #000000;
 }
+

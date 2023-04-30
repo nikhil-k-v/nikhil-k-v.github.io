@@ -1,0 +1,81 @@
+/* Theme Colors */
+
+
+:root {
+    --dark-primary: #051220;
+    --dark-secondary: #0b2135;
+    --dark-accent: #091b2b;
+    --dark-hover: #091b2b;
+    --light-primary: #f0f0f0;
+    --light-secondary: #e0e0e0;
+    --light-accent: #ff6b81;
+  }
+
+* {
+    font-family: "Monospace", monospace;
+    color: var(--light-secondary);
+    overflow-x: hidden;
+
+}
+
+body {
+    background-color: var(--dark-secondary);
+    font-family: sans-serif;
+    color: var(--light-primary);
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    position: relative;
+    text-align: center;
+    padding: 1rem;
+  }
+  
+  #back-to-home {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: var(--dark-primary);
+    border: none;
+    color: var(--light-primary);
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .p-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 1000px;
+  }
+
+  .img-container {
+    display: inline-block;
+    width: 100%;
+    background-color: var(--dark-primary);
+    padding: 1rem;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+  
+  figcaption {
+    text-align: center;
+  }
+  
+  .anim {
+    position: relative;
+    left: 20%;
+    max-width: 60%;
+    /* transform: translate(-51.5%, -51%); */
+    z-index: 1;
+    overflow-x: hidden;
+  }
+  
