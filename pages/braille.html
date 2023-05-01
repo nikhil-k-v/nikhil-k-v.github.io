@@ -19,18 +19,23 @@
       <img class="anim" src="../assets/BraileAnim.gif" alt="Your image description" draggable="false" loop>
     </div>
 
-    <div class="img-container">
-        <figcaption>FIRST PROTOTYPE WORKING SUCCESFULLY!</figcaption>  
-        <img class="anim" src="../assets/BraileAnim.gif" alt="pictures of the prototype" draggable="false" loop>
-    </div>
+    <div class="double-cont">
 
-    <div class="p-container">
-        <p>A functioning prototype of the display! The display refreshes at an average range of 100-200 wpm, and has a final build cost of only around 30$. 
-        To enable such fast, precise, and repeatable actuating, the two servos utilize the De Brujin Sequence to mechanically allow the quickest “path” 
-        (there is only one path, it’s just optimized to be fast) to the next character. For each character refresh, the servos generally have to rotate only 
-        10-30 degrees, at an average of 17.6! 
-        </p>
+        <div class="in-img-container">
+            <figcaption>FIRST PROTOTYPE WORKING SUCCESFULLY!</figcaption>  
+            <img class="image" id="braille-proto" src="../assets/ImposedBrailleProto.PNG" alt="pictures of the prototype" draggable="false">
+        </div>
+    
+        <div class="in-p-container">
+            <p>A functioning prototype of the display! The display refreshes at an average range of 100-200 wpm, and has a final build cost of only around 30$. 
+            To enable such fast, precise, and repeatable actuating, the two servos utilize the De Brujin Sequence to mechanically allow the quickest “path” 
+            (there is only one path, it’s just optimized to be fast) to the next character. For each character refresh, the servos generally have to rotate only 
+            10-30 degrees, at an average of 17.6! 
+            </p>
+        </div>
+
     </div>
+    
 
     <div class="p-container">
         <p>After being shown the current, expensive (LINK) solutions to internet-braille interfaces by a friend, I haven’t been able to stop imagining better 
@@ -41,8 +46,8 @@
     </div>
 
     <div class="img-container">
-        <figcaption>THE CURRENT SOLUTIONS TO THE INTERNET X BRAILLE PROBLEM...</figcaption>  
-        <img class="anim" src="../assets/BraileAnim.gif" alt="pictures of the current refreshable displays (screenshot of the website pages - with the price tags on them)" draggable="false" loop>
+        <figcaption class="dark">THE CURRENT SOLUTIONS TO THE TECHNOLOGY X BRAILLE PROBLEM...</figcaption>  
+        <img class="image" src="../assets/BrailleCurrent.PNG" alt="pictures of the current refreshable displays (screenshot of the website pages - with the price tags on them)" draggable="false" loop>
     </div>
 
     <div class="p-container">
@@ -53,9 +58,9 @@
         </p>
     </div>
 
-    <div class="img-container">
-        <figcaption>THE SOLUTION</figcaption>  
-        <img class="anim" src="../assets/BraileAnim.gif" alt="pictures/animations of the entire prototype, various angles, renders, and real photos" draggable="false" loop>
+    <div class="img-container" id="sol-cont">
+        <figcaption class="dark">THE SOLUTION</figcaption>  
+        <img class="image" id="BSol-image" src="../assets/BrailleSolution.PNG" alt="pictures/animations of the entire prototype, various angles, renders, and real photos" draggable="false" loop>
     </div>
 
     <div class="p-container">
@@ -66,9 +71,9 @@
         </p>
     </div>
 
-    <div class="img-container">
-        <figcaption>THE DE BRUJIN SEQUENCE</figcaption>  
-        <img class="anim" src="../assets/BraileAnim.gif" alt="picture of the sectors which attach to the servos
+    <div class="img-container" id="debrujin-cont">
+        <figcaption class="dark">THE DE BRUJIN SEQUENCE</figcaption>  
+        <img class="image" id="debrujin-image" src="../assets/DeBrujin.PNG" alt="picture of the sectors which attach to the servos
         - animated graphic for the de brujin sequence
         - two rows of the sequences themselves moving back and forth, with a rectangle around the middle 8 (2x4) characters" draggable="false" loop>
     </div>

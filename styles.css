@@ -23,13 +23,13 @@ body {
 }
     
 /* center the h1 with id title horizontally on the page, and change the font to be larger and bold */
-#title {
+h1 {
     text-align: left;
     position: absolute;
     left: 1vw;
-    top: 4vh;
-    font-size: 2.5em;
-    font-weight: 700;
+    top: 4.5vh;
+    font-size: 5vh !important;
+    font-weight: 600 !important;
     color: var(--light-primary);
 }
 
@@ -139,7 +139,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   font-size: 2vw;
-  font-weight: 700;
+  font-weight: 500;
   color: var(--light-primary);
   text-align: center;
   margin: 0;
@@ -172,7 +172,7 @@ body {
 
 .divider {
     position: absolute;
-    bottom: 17.25vh;
+    bottom: 17.75vh;
     border: 1px solid var(--light-secondary);
     width: 50%;
     margin: 0 25%;
