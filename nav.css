@@ -1,39 +1,78 @@
+/* Theme Colors */
+:root {
+  --dark-primary: #051220;
+  --dark-secondary: #0b2135;
+  --dark-accent: #091b2b;
+  --dark-hover: #091b2b;
+  --light-primary: #f0f0f0;
+  --light-secondary: #e0e0e0;
+  --light-accent: #ff6b81;
+}
+
+* {
+    font-family: "montserrat", sans-serif;
+    font-style: normal;
+    color: var(--light-primary);
+}
+
+
+#title {
+  text-align: left;
+  position: fixed;
+  margin: 0 0 0 34px;
+  font-size: 2.5em;
+  font-weight: 700;
+  color: var(--light-primary);
+}
+
 /* make the links clickable and add a hover effect */
 .navigation {
-    background-color: rgb(44, 44, 36);
+    background-color: var(--dark-secondary);
     position: fixed;
+    padding: 0;
     top: 5px;
     height: 40px;
-    padding: 10px;
     left: 40%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     list-style-type: none;
-    gap: 15px;
+    gap: 0px;
     font-size: 1.2rem;
     border-radius: 5px;
   }
   .navigation a {
-    color: #ec8349;
     text-decoration: none;
-    padding-right: 5px;
+    padding: 10px;
+    display: flex;
+    margin: auto;
+  }
+
+  .navigation li {
+    background-color: var(--dark-secondary);
+    height: 100%;
+    left: 0%;
+    padding: 0;
+    overflow: hidden;
+
+  }
+
+  .navigation li:hover {
+    background-color: var(--dark-accent);
+    height: 100%;
+    left: 0%;
+    padding: 0;
+  }
+
+  .navigation li.active {
+    background-color: var(--dark-primary);
+    height: 100%;
+    left: 0%;
+    padding: 0;
   }
   
-  .navigation li:after {
-    content: "|";
-    float: right;
-    color: #fff;
-  }
   
-  .navigation li:last-child::after {
-    display: none;
-  }
-  
-  .navigation a:hover, a.active {
-    color:  #f5bfa3;
-    font-weight: bold;
-  }
+
   
   /* make the social elements stuck to the top right of the page */
   .socials {

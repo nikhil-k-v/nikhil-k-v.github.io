@@ -24,8 +24,8 @@ function animateMe(el) {
   boxes.forEach((box) => {
     const boxIsActive = box.classList.contains("active");
     const boxWidth = boxIsActive ? "60vw" : "30vw";
-    const titleFontSize = boxIsActive ? "2.4em" : "1.2em";
-    const titleBottom = boxIsActive ? "13%" : "6%";
+    const titleFontSize = boxIsActive ? "3.5vw" : "2vw";
+    const titleBottom = boxIsActive ? "9.7vh" : "4vh";
     const durationToggle = boxIsActive ? 1 : 0.5;
     const opacityToggle = boxIsActive ? 1 : 0;
     const activeToggle = boxIsActive ? "block" : "none";
