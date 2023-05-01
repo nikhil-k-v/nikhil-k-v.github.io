@@ -13,6 +13,7 @@
     font-family: "montserrat", sans-serif;
     font-style: normal;
     color: var(--light-primary);
+    font-weight: 600;
 }
 
 
@@ -21,7 +22,7 @@
   position: fixed;
   margin: 0 0 0 34px;
   font-size: 2.5em;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--light-primary);
 }
 
@@ -30,45 +31,60 @@
     background-color: var(--dark-secondary);
     position: fixed;
     padding: 0;
-    top: 5px;
-    height: 40px;
-    left: 40%;
-    display: flex;
+    top: 2vh;
+    height: 6vh;
+    left: 28vw;
+    display: inline-flex;
+    width: 70vw;
     justify-content: center;
     align-items: center;
     list-style-type: none;
     gap: 0px;
-    font-size: 1.2rem;
+    font-size: 1.2vw;
     border-radius: 5px;
+    text-align: center;
   }
+
+
+  /* center the .navigation a element inside the .navigation li element*/
   .navigation a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
     text-decoration: none;
-    padding: 10px;
-    display: flex;
-    margin: auto;
   }
 
   .navigation li {
-    background-color: var(--dark-secondary);
-    height: 100%;
-    left: 0%;
+    background-color: var(--dark-accent);
     padding: 0;
+    display: inline-block;
     overflow: hidden;
-
+    vertical-align: middle;
+    width: 33.34%;
+    height: 100%;
+    border-bottom: 4px solid var(--dark-secondary);
+    border-left: 4px solid var(--dark-secondary);
+    border-right: 4px solid var(--dark-secondary);
+    border-top: 4px solid var(--dark-secondary);
+    border-radius: 3px;
   }
 
   .navigation li:hover {
-    background-color: var(--dark-accent);
-    height: 100%;
+    background-color: var(--dark-secondary);
     left: 0%;
     padding: 0;
   }
 
   .navigation li.active {
     background-color: var(--dark-primary);
-    height: 100%;
     left: 0%;
     padding: 0;
+    border-left: 2px solid var(--light-primary);
+    border-right: 2px solid var(--light-primary);
+    border-top: 2px solid var(--light-primary);
+    border-bottom: 0px solid var(--dark-secondary);
   }
   
   
