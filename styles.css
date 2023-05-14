@@ -131,6 +131,20 @@ body {
   max-width: 180%;
 }
 
+#arm-anim {
+  left: 56%;
+  top: 49%;
+  max-height: 140%;
+}
+
+#sumo-anim {
+  left: 56%;
+  top: 49%;
+  max-height: 140%;
+}
+
+
+
 
 /* make the s-title class always display at the bottom within the box element, centered horizontally */
 .s-title {

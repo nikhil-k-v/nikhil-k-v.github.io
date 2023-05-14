@@ -208,7 +208,7 @@ body {
   }
   
   .in-p-container {
-    display: inline-flex;
+    display: block;
     width: 25vw;
     margin: 0.5vw;
     margin-top: 1.5vh;
@@ -246,4 +246,25 @@ body {
     overflow: hidden;
   }
 
+  .title-cont {
+    display: inline-flex;
+    margin-left: 30vw;
+    margin-top: 0vw;
+    margin-bottom: .4vw;
+    width: 40vw;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+  }
+
+  h1 {
+    font-weight: 500 !important;
+    font-size: 2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin-bottom: 2%;
+  }
   
