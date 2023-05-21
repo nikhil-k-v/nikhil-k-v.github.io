@@ -152,7 +152,7 @@ body {
   bottom: 4vh;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2vw;
+  font-size: 1.8vw;
   font-weight: 500;
   color: var(--light-primary);
   text-align: center;

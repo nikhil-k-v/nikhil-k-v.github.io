@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cycloidal Actuator</title>
+  <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
+  <link rel="stylesheet" href="page-styles.css">
+</head>
+<body>
+  <header>
+    <button id="back-to-home" onclick="window.location.href='/nkvengineering/index.html'; event.stopPropagation();">BACK</button>
+    <h1 class="page-title">CYDLOIDAL ACTUATOR</h1>
+  </header>
+
+  <main>
+    <div class="img-container">
+      <figcaption>ANIMATION OF A POSSIBLE CYCLOID/EPITROCHOID FUNCTION MADE WITH THE GENERATOR</figcaption>  
+      <img class="anim" src="../assets/desmosAnim.gif" draggable="false" loop>
+    </div>
+    <div class="p-container">
+        <p>A <strong>cycloidal gear generator</strong> made using the desmos API! It generates an epitrochoid function (aka - a circle rolling around another circle) using four of your parameters:
+            overall radius (R), number of teeth/pins (N), radius of pins (S), and eccentricity (E). </p> <p>In order to use the generator, you can copy the format I provided to add your own function into the <strong>Equation Driven
+            Curve Add-In</strong> in <strong>Fusion 360!</strong> You can try out the generator in the embed below, and actually get an exportable cycloid using this link: <a href="https://www.desmos.com/calculator/qfcupuubfp" target="_blank">HERE</a>.
+        </p>
+    </div>
+
+    <div class="p-container">
+        <p>
+          I made the generator using parametric trig functions, but there are many ways to generate cycloids. This was designed with an X and Y component in mind to use for the Equation Driven Curve Add-In though, so 
+          its based around two individual functions x(t) and y(t) which use the same 4 variables (R,S,E,N), and a z(t) component of 0. </p> 
+          <p>
+            The generator also has a few other features, such as the ability to animate the cycloid, and a slider to change the number of teeth/pins. I had a lot of "remnant" functions from when I was 
+            trying to create the generator, as I made many which would "work" but wouldn't be able to easily be utilized in Fusion 360, so I decided to keep them in the generator (though they are turned off) in case you want to play around
+            or see simpler/condensed ways to generate epitrochoids.
+          </p>
+          <p>I personally
+          used the generator to create all of the cycloidal gears in my 6DOF robotic arm project, and they have turned out well with nearly zero backlash and backdrivability!
+        </p> 
+    </div>
+
+    <div class="p-container">
+      <p>
+        A more comprehensive write-up is coming soon!
+      </p>
+  </div>
+
+
+  <iframe height="634" style="width: 55%; margin-left: 22.5%;" scrolling="no" title="desmos" src="https://codepen.io/nikhil-k-v/embed/YzOyYpx?default-tab=result&theme-id=dark" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+    See the Pen <a href="https://codepen.io/nikhil-k-v/pen/YzOyYpx">
+    desmos</a> by nv (<a href="https://codepen.io/nikhil-k-v">@nikhil-k-v</a>)
+    on <a href="https://codepen.io">CodePen</a>.
+  </iframe>
+
+  <script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+
+
+    </main>
+
+    <div class="gallery">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/in1.png" alt="Image 2">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/in2.png" alt="Image 2">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/in3.png" alt="Image 2">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/cy1.png" alt="Image 2">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/cy2.PNG" alt="Image 2">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/cy3.jpg" alt="Image 2">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/cy4.jpg" alt="Image 2">
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="modalImage">
+    </div>
+    
+
+  <script src="app.js"></script>
+</body>
+</html>
