@@ -165,9 +165,9 @@ body {
     overflow: hidden;
   }
 
-  #debrujin-image {
+  #debruijn-image {
     position: absolute;
-    top: 50%;
+    /* top: 50%; */
     left: 50%;
     max-width: 101%;
     transform: translate(-50%, -50%);
