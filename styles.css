@@ -197,8 +197,8 @@ body {
 }
 
 .gallery {
-  width: 80vw;
-  margin-left: 10vw;
+  width: 90vw;
+  margin-left: 5vw;
   margin-top: 12vh;
   column-count: 7;
   column-gap: 18px;
@@ -216,7 +216,7 @@ body {
 }
 
 .gallery-img:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .modal {
