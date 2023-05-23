@@ -1,35 +1,85 @@
-<body>
+<body style="overflow-y: auto;">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.3/draggable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+
 
     <script src="app.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="nav.css">
 
-    <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
-    <h1 id="title">NIKHIL VIJAY</h1>
-    <!-- add navigation to all pages -->
-    <ul class='navigation'>
-      <li><a  onclick="window.location.href='/nkvengineering/index.html'">PROJECTS</a></li>
-      <li><a  onclick="window.location.href='/nkvengineering/updates.html'">UPDATES & MINI-PROJECTS</a></li>
-      <li  class="active"><a  onclick="window.location.href='/nkvengineering/about.html'">ABOUT ME</a></li>
-    </ul>
 
-    <div class="p-container" style="margin-top: 35vh;" >
-      <p style="font-weight: 400;">This page is under construction! Please check back soon. 
-      </p>
-  </div>
+
+
+
+    <div style="position: fixed; z-index: 3;">
+      <h1 id="title">NIKHIL VIJAY</h1>
+      <!-- add navigation to all pages -->
+      <ul class='navigation'>
+        <li><a  onclick="window.location.href='/nkvengineering/index.html'">PROJECTS</a></li>
+        <li><a  onclick="window.location.href='/nkvengineering/updates.html'">UPDATES & MINI-PROJECTS</a></li>
+        <li class="active"><a  onclick="window.location.href='/nkvengineering/about.html'">ABOUT ME</a></li>
+      </ul>
+    </div>
+    <div style="top: 0; height: 12vh; width: 100vw; position: fixed; background-color: var(--dark-primary); z-index: 2;">
+    </div>
+
+    <div class="p-container"  style="margin-top: 15vh;">
+      <div class="contact-container">
+        <a href="https://github.com/nikhil-k-v" class="icon fa-4x" target="_blank"><i class="fab fa-github-square"></i></a>
+        <a href="https://www.youtube.com/@nikhilvijay.engineering" class="icon fa-4x" target="_blank"><i class="fab fa-youtube-square"></i></a>
+        <a href="https://www.instagram.com/nikhilkv.engineering/" class="icon fa-4x" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/nikhil-vijay-42a98b277/" class="icon fa-4x" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a> nikhilvijay.engineering@gmail.com</a>
+      </div>
+    </div>
+
+    <div class="p-container" style="margin-top: 2vh;" >
+      <h2 id="about-me">ABOUT ME</h2>
+        <p style="font-weight: 300;">I am a high school student at The Academy for Mathematics, Sciences and Engineering, and I am extremely interested in <strong>robotics, mechatronics,</strong> and <strong>assistive technologies.</strong> I am <strong>currently seeking an internship</strong> in one of these fields, and I would be honored to play any role in a lab. </p>
+        <p style="font-weight: 300;">Most of my projects are either for pure interest or for learning a new skill/machine - and I love to involve <strong>math and programming</strong> in any mechanical project I make. </p>
+    </div>
+    <div class="p-container" style="margin-top: 2vh; line-height: 160%;" >
+      <p style="font-weight: 300;">While I have enough experience with web design to create this website, my <strong>main skills</strong> include:</p>
+      <ul>
+      <li>CAD/CAM:<ul>
+      <li style="font-weight: 300;">Fusion 360</li>
+      <li style="font-weight: 300;">Onshape</li>
+      <li style="font-weight: 300;">Illustrator, AutoCAD, etc.</li>
+      </ul>
+      </li>
+      <li>Engineering + Robotics:<ul>
+      <li style="font-weight: 300;">Electronics (working with arduino + other microntrollers)</li>
+      <li style="font-weight: 300;">FTC Robotics</li>
+      <li style="font-weight: 300;">Actuators + motor controllers (see my projects page)</li>
+      </ul>
+      </li>
+      <li style="font-weight: 300;"><strong style="font-weight: 500;">Design</strong> (I am really passionate about filmaking!):<ul>
+      <li style="font-weight: 300;">Adobe Suite<ul>
+      <li style="font-weight: 300;">Premiere Pro</li>
+      <li style="font-weight: 300;">Photoshop</li>
+      <li style="font-weight: 300;">Illustrator</li>
+      </ul>
+      </li>
+      <li style="font-weight: 300;">DaVinci Resolve (limited - for color)</li>
+      </ul>
+      </li>
+      <li>Learning:<ul>
+      <li style="font-weight: 300;">Kinematics/Inverse Kinematics</li>
+      <li style="font-weight: 300;">ROS, VIAM</li>
+      <li style="font-weight: 300;">Embedded Systems & creating development boards</li>
+      <li style="font-weight: 300;">MATLAB - eventually...</li>
+      </ul>
+      </li>
+      </ul>
+      </li>
+      </ul>
+    </div>
 
   <div class="p-container">
   <p style="font-weight: 400;">
     Contact me at <strong style="font-weight: 700;">nikhilvijay.engineering@gmail.com</strong> if you have any questions, criticism, or suggestions. 
-  </p>  
-</div>
-
-<div class="p-container">
-  <p style="font-weight: 400;">
-    My youtube channel can be found <strong><a href="https://www.youtube.com/@nikhilvijay.engineering" target="_blank">here.</a></strong>
   </p>  
 </div>
 

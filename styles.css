@@ -259,14 +259,14 @@ body {
 
 .p-container {
   display: block;
-  width: 40vw;
+  width: 60vw;
   margin: auto;
   margin-top: 1.5vh;
   margin-bottom: 1.5vh;
   text-align: center;
   color: #eceff4;
   font-size: 1.2rem;
-  font-weight: 300 !important;
+  font-weight: 100 !important;
   text-align: left;
   background-color: var(--dark-accent);
   border: 2px solid var(--dark-accent);
@@ -275,4 +275,24 @@ body {
   overflow: hidden;
   /* add padding, more on the top and bottom and less on the right and left */
   padding: 0rem 1.5rem 0rem 1.5rem;
+}
+
+.contact-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+.contact-box {
+  flex-grow: 1;
+  flex-basis: 0;
+  margin: 10px;
+  background-color: lightblue; /* Just to distinguish the divs */
+  text-align: center; /* To center text inside the div */
+  display: flex;
+  align-items: center; /* To center content vertically */
+  justify-content: center; /* To center content horizontally */
 }
