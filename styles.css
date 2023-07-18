@@ -320,7 +320,7 @@ body {
 #loader::before {
   content: "";
   display: block;
-  background: url('assets/desmosAnim.gif') no-repeat center center / contain;
+  background: url('assets/desmosAnim1.gif') no-repeat center center / contain;
   width: 25%;
   height: 25%;
   min-width: 100px;
