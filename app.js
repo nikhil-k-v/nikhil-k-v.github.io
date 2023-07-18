@@ -171,15 +171,15 @@ window.onload = function() {
 //loading stuff
 
 document.getElementById('loader').style.display = 'flex';  // Show loader
-scrambleText(document.getElementById('loaderText'), 'LOADING', 1000);  // Scramble text
+scrambleText(document.getElementById('loaderText'), 'LOADING', 2000);  // Scramble text
 
 if (sessionStorage.getItem("firstLoadDone") === null) {
     // This code block will run only once per session
-    setTimeout(removeLoader, 2000); // wait for 2 seconds for the first load
+    setTimeout(removeLoader, 1000); // wait for 2 seconds for the first load
     sessionStorage.setItem("firstLoadDone", 1);
 } else {
     // This code will run on every page load in the session
-    setTimeout(removeLoader, 1500); // wait for 1.5 seconds for subsequent loads
+    setTimeout(removeLoader, 500); // wait for 1.5 seconds for subsequent loads
 }
 
 function removeLoader() {
@@ -203,6 +203,6 @@ function scrambleText(targetElement, finalText, time) {
             clearInterval(scrambleInterval);
             targetElement.textContent = finalText; // Ensure final text is set correctly
         }
-    }, time / (finalText.length * 10));  // 10 times more scrambles per character
+    }, time / (finalText.length * 5));  // 10 times more scrambles per character
 }
 
