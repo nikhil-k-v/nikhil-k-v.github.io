@@ -11,6 +11,12 @@
 <body>
 
   
+  <div id="loader">
+    <div id="loaderText"></div>
+  </div>
+
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.3/draggable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
@@ -46,7 +52,7 @@
     <div class="container" id="containers">
       <!-- braille -->
 
-      <div onclick="animateMe(this)" class="box skew">
+      <div onclick="animateMe(this)" class="box active">
         <span class="s-title">CYCLOID GENERATOR</span>
         <img class= "anims" id="sumo-anim" src="assets/desmosAnim.gif" draggable="false" alt="Your GIF" loop>
         I
@@ -54,7 +60,7 @@
         <div class="divider"></div>
       </div>
 
-      <div onclick="animateMe(this)" class="box active">
+      <div onclick="animateMe(this)" class="box skew">
         <span class="s-title">BRAILLE DISPLAY</span>
         <img class= "anims" id="braille-anim" src="assets/BraileAnim.gif" draggable="false" alt="Your GIF" loop>
         II

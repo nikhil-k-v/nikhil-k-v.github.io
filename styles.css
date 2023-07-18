@@ -296,3 +296,36 @@ body {
   align-items: center; /* To center content vertically */
   justify-content: center; /* To center content horizontally */
 }
+
+#loader {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: var(--dark-primary); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;  /* Stack text and gif vertically */
+}
+
+#loaderText {
+  font-size: 2em; /* Adjust this as needed */
+  font-weight: 600;
+  margin-bottom: 1em; /* Space between text and gif */
+}
+
+#loader::before {
+  content: "";
+  display: block;
+  background: url('assets/desmosAnim.gif') no-repeat center center / contain;
+  width: 25%;
+  height: 25%;
+  min-width: 100px;
+  min-height: 100px;
+}
+
+
+

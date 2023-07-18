@@ -167,3 +167,45 @@ window.onload = function() {
     }
   });
 }
+
+//loading stuff
+
+function scrambleText(targetElement, finalText, time) {
+  let randomChars = "!@#$%^&*()_+?><:{}[]";
+  let charIndex = 0;
+
+  let scrambleInterval = setInterval(function() {
+      if (charIndex <= finalText.length) {
+          let newText = finalText.substring(0, charIndex);
+          for (let i = charIndex; i < finalText.length; i++) {
+              newText += randomChars[Math.floor(Math.random() * randomChars.length)];
+          }
+          targetElement.textContent = newText;
+          charIndex++;
+      } else {
+          clearInterval(scrambleInterval);
+          targetElement.textContent = finalText; // Ensure final text is set correctly
+      }
+  }, time / (finalText.length * 10));  // 10 times more scrambles per character
+}
+
+
+
+// ...
+
+document.getElementById('loader').style.display = 'none';  // Hidden by default
+
+if (sessionStorage.getItem("firstLoadDone") === null) {
+  // This code block will run only once per session
+  document.getElementById('loader').style.display = 'flex';  // Show loader
+  scrambleText(document.getElementById('loaderText'), 'LOADING', 1000);  // Scramble text
+  setTimeout(removeLoader, 3000); // wait for 2 seconds
+  sessionStorage.setItem("firstLoadDone", 1);
+} else {
+  // This code will run on every page load in the session
+  removeLoader();
+}
+
+function removeLoader() {
+  document.getElementById('loader').style.display = 'none';
+}
