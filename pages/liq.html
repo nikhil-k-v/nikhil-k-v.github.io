@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liquid Piston</title>
+  <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
+  <link rel="stylesheet" href="page-styles.css">
+</head>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZPCC960TZ2');
+</script>
+
+<body>
+  <header>
+    <button id="back-to-home" onclick="window.location.href='/nkvengineering/index.html'; event.stopPropagation();">BACK</button>
+    <img style="opacity: 1%; position: absolute;" src="https://res.cloudinary.com/deymtjufx/image/upload/v1684981657/nkvengineering/anywhere.png" alt="logo" id="logo">
+    <img style="opacity: 1%; position: absolute;" src="https://res.cloudinary.com/deymtjufx/image/upload/v1684981550/nkvengineering/pages/cycloid%20generator.png" alt="logo" id="logo">
+
+    <h1 class="page-title">LIQUID PISTON PNEUMATIC ENGINE</h1>
+  </header>
+
+  <main>
+    <div class="img-container">
+      <figcaption>ANIMATION OF THE PROTOTYPE PNEUMATIC ENGINE</figcaption>  
+      <img class="anim" src="../assets/liq.gif" draggable="false" loop>
+    </div>
+    <div class="p-container">
+        <p>My final projects involving cycloids and parametric functions for now, I made a <strong>liquid piston engine</strong> using the same Desmos cycloid 
+          generator I created for the robotic arm project! All I needed to do was play around with the parameters until I found something which would work smoothly </p> 
+          <p>The actual numbers I used and plugged into Fusion's equation driven curve add-in are below in the Desmos API embed.
+        </p>
+    </div>
+
+    <div class="p-container">
+        <p>
+          This is one of the nicest looking projects I have ever made, and I'm super lucky that I got to use the laser cutters at my school to make all these acrylic parts, 
+          because it would be nothing if it weren't see-through. If you want to make something similar for yourself, I used layers of 1/8" acrylic, both blue and clear, along with MR106 bearings, M3 bolts,
+          and synthetic grease.
+        </p> 
+
+        <p>
+          There is an intake and exhaust at the top, so it doesn't function in the same ignition cycle as an actual liquid piston engine, but my main goal was to exploit
+          my Equation Driven Curve/Desmos API setup to see if I could actually make the geometry just by modifying parameters. For something more functional made with that, 
+          definetely check out the cycloidal actuators I made for an actual robotic arm!
+        </p>
+    </div>
+
+    <div class="container">
+        <iframe height="700" width="1020"  scrolling="no" title="desmos" src="https://codepen.io/nikhil-k-v/embed/rNQKBPp?default-tab=" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+            See the Pen <a href="https://codepen.io/nikhil-k-v/pen/rNQKBPp">
+            liqDesmos</a> by nv (<a href="https://codepen.io/nikhil-k-v">@nikhil-k-v</a>)
+            on <a href="https://codepen.io">CodePen</a>.
+        </iframe>    
+    </div>
+
+
+    
+    <script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
+
+    <div class="p-container">
+      <p>
+        A more comprehensive write-up is coming soon!
+      </p>
+  </div>
+
+
+    </main>
+
+    <div class="gallery">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/liq1.png" alt="Image 2">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/liq2.png" alt="Image 2">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/liq3.png" alt="Image 2">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/liq4.png" alt="Image 2">
+      <img class="gallery-img" src="/nkvengineering/assets/img-gal/liq5.png" alt="Image 2">
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="modalImage">
+    </div>
+    
+
+  <script src="app.js"></script>
+  <script src="desmos.js"></script>
+</body>
+</html>

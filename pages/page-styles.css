@@ -330,3 +330,12 @@ body {
     cursor: pointer;
   }
   
+  /* create a class for a container div that is full width, and all child elements are centered horizontally */
+  .container {
+    display: flex;
+    width: 100vw;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+  }
+

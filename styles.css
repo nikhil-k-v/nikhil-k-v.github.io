@@ -1,20 +1,23 @@
-/* Theme Colors */
+/* color variables */
 :root {
-  --dark-primary: #051220;
-  --dark-secondary: #0b2135;
-  --dark-accent: #091b2b;
+  --dark-primary: #051220; /* background */
+  --dark-secondary: #0b2135; /* active box */
+  --dark-accent: #091b2b; /* box */
   --dark-hover: #091b2b;
-  --light-primary: #f0f0f0;
+  --light-primary: #f0f0f0; /* text */
   --light-secondary: #e0e0e0;
   --light-accent: #ff6b81;
 }
 
 
+/* body, text, scrolling */
 
 body {
   min-height: 100vh;
   margin: 0;
   overflow-y: hidden;
+  background-color: var(--dark-primary);
+  color: var(--dark-primary);
 }
 
 * {
@@ -22,7 +25,6 @@ body {
     font-style: normal;
 }
     
-/* center the h1 with id title horizontally on the page, and change the font to be larger and bold */
 h1 {
     text-align: left;
     position: absolute;
@@ -32,15 +34,6 @@ h1 {
     font-weight: 600 !important;
     color: var(--light-primary);
 }
-
-/* make the social elements stuck to the top right of the page */
-/* .socials {
-    position: fixed;
-    top: 18;
-    right: 34;
-    margin: 10px;
-} */
-
 
 .container {
   display: flex;
@@ -53,32 +46,6 @@ h1 {
   margin-top: 2%;
   overflow-x: auto;
 }
-
-.box {
-  display: inline-block;
-  height: 75vh;
-  width: 30vw;
-  margin: 5px;
-  text-align: center;
-  color: #eceff4;
-  font-size: 20px;
-  font-weight: 700;
-  vertical-align: middle;
-  background-color: var(--dark-accent);
-  border: 2px solid var(--dark-accent);
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-}
-
-/* 
-.skew { 
-  margin-left: 5px !important;
-}
-
-.active {
-  z-index: 2;
-} */
 
 ::-webkit-scrollbar {
     display: none;
@@ -109,12 +76,23 @@ h1 {
   cursor: pointer;
 }
 
+/* boxes on home page */
 
-/* Default Theme (dark) */
-body {
-  background-color: var(--dark-primary);
-  color: var(--dark-primary);
-  /* transition: background-color 0.7s ease; */
+.box {
+  display: inline-block;
+  height: 75vh;
+  width: 30vw;
+  margin: 5px;
+  text-align: center;
+  color: #eceff4;
+  font-size: 20px;
+  font-weight: 700;
+  vertical-align: middle;
+  background-color: var(--dark-accent);
+  border: 2px solid var(--dark-accent);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
 }
 
 .anims {
@@ -126,27 +104,6 @@ body {
   z-index: 1;
 }
 
-#braille-anim {
-  left: 56%;
-  max-width: 180%;
-}
-
-#arm-anim {
-  left: 56%;
-  top: 49%;
-  max-height: 140%;
-}
-
-#sumo-anim {
-  left: 56%;
-  top: 49%;
-  max-height: 140%;
-}
-
-
-
-
-/* make the s-title class always display at the bottom within the box element, centered horizontally */
 .s-title {
   position: absolute;
   bottom: 4vh;
@@ -163,7 +120,6 @@ body {
   /* add some drop shadow to this text */
   text-shadow: 0 0 4px #000000;
 }
-
 
 .see-more {
   position: absolute;
@@ -182,8 +138,6 @@ body {
   white-space: nowrap;
 }
 
-/* style the divider to be a thin, solid line with color light primary, and move it down */
-
 .divider {
     position: absolute;
     bottom: 17.75vh;
@@ -196,6 +150,8 @@ body {
     box-shadow: 0 0 3px #000000;
 }
 
+/* image gallery in updates page */
+
 .gallery {
   width: 90vw;
   margin-left: 5vw;
@@ -204,7 +160,6 @@ body {
   column-gap: 18px;
   padding: 20px;
 }
-
 
 .gallery-img {
   width: 100%;
@@ -257,6 +212,8 @@ body {
   cursor: pointer;
 }
 
+/* paragraphs & blocks for about page */
+
 .p-container {
   display: block;
   width: 60vw;
@@ -296,6 +253,8 @@ body {
   align-items: center; /* To center content vertically */
   justify-content: center; /* To center content horizontally */
 }
+
+/* loading screen */
 
 #loader {
   position: fixed;
