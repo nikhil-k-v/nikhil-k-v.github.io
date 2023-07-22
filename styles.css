@@ -95,6 +95,23 @@ h1 {
   overflow: hidden;
 }
 
+@media screen and (max-width: 600px) {
+  .box {
+    height: 60vh;
+  } 
+
+  .container {
+    width: 300%;
+  }
+
+  .scrollbar {
+    width: 50%;
+    left: 25%;
+  }
+
+}
+
+
 .anims {
   position: absolute;
   top: 50%;

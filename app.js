@@ -3,6 +3,8 @@ let active = false;
 function animateMe(el) {
   const isActive = el.classList.contains("active");
   const boxes = document.querySelectorAll(".box");
+  
+  const pageWidth = window.innerWidth;
 
   // Reset all boxes
   boxes.forEach((box) => {
@@ -23,9 +25,11 @@ function animateMe(el) {
   // Animate boxes and text size
   boxes.forEach((box) => {
     const boxIsActive = box.classList.contains("active");
-    const boxWidth = boxIsActive ? "60vw" : "30vw";
-    const titleFontSize = boxIsActive ? "3.5vw" : "1.8vw";
-    const titleBottom = boxIsActive ? "9.7vh" : "4vh";
+    const boxWidth = (boxIsActive ? (pageWidth < 600 ? "200vw" : "60vw") : (pageWidth < 600 ? "100vw" : "30vw"));
+    const titleFontSize = boxIsActive ? (pageWidth < 600 ? "5vw" : "3.5vw") : (pageWidth < 600 ? "2.5vw" : "1.8vw");
+    const seeMoreFontSize = boxIsActive ? (pageWidth < 600 ? "3vw" : "1.8vw") : (pageWidth < 600 ? "2.5vw" : "1.8vw");
+    const titleBottom = boxIsActive ?  (pageWidth < 600 ? "8vh" : "9.7vh") : (pageWidth < 600 ? "4vh" : "4.7vh");
+    const divBottom = boxIsActive ?  (pageWidth < 600 ? "12.5vh" : "17.75vh") : (pageWidth < 600 ? "17.75vh" : "17.75vh");
     const durationToggle = boxIsActive ? 1 : 0.5;
     const opacityToggle = boxIsActive ? 1 : 0;
     const activeToggle = boxIsActive ? "block" : "none";
@@ -55,6 +59,7 @@ function animateMe(el) {
       duration: durationToggle,
       opacity: opacityToggle,
       display: activeToggle,
+      bottom: divBottom,
       ease: "power1",
     });
 
@@ -62,10 +67,12 @@ function animateMe(el) {
       duration: durationToggle,
       opacity: opacityToggle,
       display: activeToggle,
+      fontSize: seeMoreFontSize,
       ease: "power1",
     });
   });
 }
+
 
 
 
