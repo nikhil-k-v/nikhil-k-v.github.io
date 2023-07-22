@@ -25,11 +25,11 @@ function animateMe(el) {
   // Animate boxes and text size
   boxes.forEach((box) => {
     const boxIsActive = box.classList.contains("active");
-    const boxWidth = (boxIsActive ? (pageWidth < 750 ? "200vw" : "60vw") : (pageWidth < 750 ? "100vw" : "30vw"));
-    const titleFontSize = boxIsActive ? (pageWidth < 750 ? "5vw" : "3.5vw") : (pageWidth < 750 ? "2.5vw" : "1.8vw");
-    const seeMoreFontSize = boxIsActive ? (pageWidth < 750 ? "3vw" : "1.8vw") : (pageWidth < 750 ? "2.5vw" : "1.8vw");
-    const titleBottom = boxIsActive ?  (pageWidth < 750 ? "8vh" : "9.7vh") : (pageWidth < 750 ? "4vh" : "4.7vh");
-    const divBottom = boxIsActive ?  (pageWidth < 750 ? "12.5vh" : "17.75vh") : (pageWidth < 750 ? "17.75vh" : "17.75vh");
+    const boxWidth = (boxIsActive ? (pageWidth < 850 ? "200vw" : "60vw") : (pageWidth < 850 ? "100vw" : "30vw"));
+    const titleFontSize = boxIsActive ? (pageWidth < 850 ? "5vw" : "3.5vw") : (pageWidth < 850 ? "2.5vw" : "1.8vw");
+    const seeMoreFontSize = boxIsActive ? (pageWidth < 850 ? "3vw" : "1.8vw") : (pageWidth < 850 ? "2.5vw" : "1.8vw");
+    const titleBottom = boxIsActive ?  (pageWidth < 850 ? "8vh" : "9.7vh") : (pageWidth < 850 ? "4vh" : "4.7vh");
+    const divBottom = boxIsActive ?  (pageWidth < 850 ? "12.5vh" : "17.75vh") : (pageWidth < 850 ? "17.75vh" : "17.75vh");
     const durationToggle = boxIsActive ? 1 : 0.5;
     const opacityToggle = boxIsActive ? 1 : 0;
     const activeToggle = boxIsActive ? "block" : "none";

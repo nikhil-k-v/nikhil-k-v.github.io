@@ -17,7 +17,7 @@
 }
 
 /* Media query for screen width less than 600px */
-@media (max-width: 750px) {
+@media (max-width: 850px) {
   .navigation {
       top: 11vh !important; /* adjust as per requirement */
       left: 5vw !important;
