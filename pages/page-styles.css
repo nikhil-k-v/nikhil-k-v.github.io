@@ -22,6 +22,24 @@
     overflow-x: hidden;
 }
 
+@media (max-width: 850px) {
+    .p-container {
+        width: 80vw !important;
+    }
+
+    .img-container {
+        width: 90vw !important;
+    }
+
+    figcaption {
+        font-size: 0.6em !important;
+    }
+
+    .page-title {
+        margin-top: 6vh !important;
+    }
+}
+
 body {
     background-color: var(--dark-primary);
     color: var(--light-primary);
