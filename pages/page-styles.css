@@ -22,22 +22,66 @@
     overflow-x: hidden;
 }
 
-@media (max-width: 850px) {
+@media (max-width: 1370px) {
     .p-container {
-        width: 80vw !important;
+        width: 90vw !important;
+        padding: 2.5% 2.5% 2.5% 2.5%!important;
+    }
+
+    p {
+        font-size: 1.1rem !important;
+        width: 95% !important;
+        margin: 2.5% 0% 0% 0% !important;
     }
 
     .img-container {
         width: 90vw !important;
+        height: 30vh !important;
     }
 
     figcaption {
         font-size: 0.6em !important;
+        width: 90% !important;
+        white-space: wrap !important;
+
     }
 
     .page-title {
         margin-top: 6vh !important;
     }
+
+    .desmos-embed {
+        width: 95vw !important;
+        height: 60vh !important;
+    }
+
+    .container {
+        width: 100vw !important;
+        left: 0 !important;
+        align-items: center !important;
+    }
+
+    .gallery {
+      width: 90vw !important;
+      margin-left: 0 !important;
+      margin-top: 1vh;
+      column-count: 3 !important;
+      column-gap: 8px !important;
+      /* padding: 2px !important; */
+      align-items: center !important;
+    }
+
+      
+  .gallery-img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 6px !important;
+  }
+}
+
+.desmos-embed {
+  width: 1020px;
+  height: 700px;
 }
 
 body {
@@ -291,7 +335,7 @@ body {
     width: 80vw;
     margin-left: 10vw;
     margin-top: 2vh;
-    column-count: 3;
+    column-count: 5;
     column-gap: 18px;
     padding: 20px;
   }

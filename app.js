@@ -25,12 +25,13 @@ function animateMe(el) {
   // Animate boxes and text size
   boxes.forEach((box) => {
     const boxIsActive = box.classList.contains("active");
-    const boxWidth = (boxIsActive ? (pageWidth < 850 ? "200vw" : "60vw") : (pageWidth < 850 ? "100vw" : "30vw"));
-    const titleFontSize = boxIsActive ? (pageWidth < 850 ? "5vw" : "3.5vw") : (pageWidth < 850 ? "2.5vw" : "1.8vw");
-    const seeMoreFontSize = boxIsActive ? (pageWidth < 850 ? "3vw" : "1.8vw") : (pageWidth < 850 ? "2.5vw" : "1.8vw");
-    const titleBottom = boxIsActive ?  (pageWidth < 850 ? "8vh" : "9.7vh") : (pageWidth < 850 ? "4vh" : "4.7vh");
-    const divBottom = boxIsActive ?  (pageWidth < 850 ? "12.5vh" : "17.75vh") : (pageWidth < 850 ? "17.75vh" : "17.75vh");
+    const boxWidth = (boxIsActive ? (pageWidth < 1380 ? "40vw" : "40vw") : (pageWidth < 1380 ? "23vw" : "23vw"));
+    const titleFontSize = boxIsActive ? (pageWidth < 1380 ? "4vw" : "3vw") : (pageWidth < 1380 ? "2vw" : "1.5vw");
+    const seeMoreFontSize = boxIsActive ? (pageWidth < 1380 ? "3vw" : "1.8vw") : (pageWidth < 1380 ? "2.5vw" : "1.8vw");
+    const titleBottom = boxIsActive ?  (pageWidth < 1380 ? "9vh" : "9.7vh") : (pageWidth < 1380 ? "4vh" : "4.7vh");
+    const divBottom = boxIsActive ?  (pageWidth < 1380 ? "12.5vh" : "17.75vh") : (pageWidth < 1380 ? "17.75vh" : "17.75vh");
     const durationToggle = boxIsActive ? 1 : 0.5;
+    const divToggle = pageWidth > 1380 ?"block" : "none";
     const opacityToggle = boxIsActive ? 1 : 0;
     const activeToggle = boxIsActive ? "block" : "none";
     const bgColor = boxIsActive
@@ -59,6 +60,7 @@ function animateMe(el) {
       duration: durationToggle,
       opacity: opacityToggle,
       display: activeToggle,
+      display: divToggle,
       bottom: divBottom,
       ease: "power1",
     });
@@ -69,6 +71,7 @@ function animateMe(el) {
       display: activeToggle,
       fontSize: seeMoreFontSize,
       ease: "power1",
+      padding: ".1vh 7% .1vh 7%",
     });
   });
 }
@@ -82,6 +85,17 @@ let isDragging = false;
 let initialPointerPosition = 0;
 let initialHandlePosition = 0;
 
+function getHandlePositionBasedOnScroll() {
+  const maxScrollPosition = document.documentElement.scrollWidth - window.innerWidth;
+  const scrollPercentage = window.scrollX / maxScrollPosition;
+  
+  const scrollbar = document.querySelector('.scrollbar');
+  const handle = document.querySelector('.handle');
+  const maxHandlePosition = scrollbar.clientWidth - handle.clientWidth;
+  
+  return scrollPercentage * maxHandlePosition;
+}
+
 function initializeDraggable() {
   const handle = document.querySelector('.handle');
   const scrollbar = document.querySelector('.scrollbar');
@@ -92,15 +106,16 @@ function initializeDraggable() {
     initialHandlePosition = handle.offsetLeft;
     handle.setPointerCapture(e.pointerId);
   });
+  
 
   handle.addEventListener('pointermove', (e) => {
     if (!isDragging) return;
     const deltaX = e.clientX - initialPointerPosition;
     const newHandlePosition = initialHandlePosition + deltaX;
-    const maxHandlePosition = scrollbar.clientWidth - (handle.clientWidth);
+    const borderSize = 4; // 2px for left and 2px for right
+    const maxHandlePosition = scrollbar.clientWidth - handle.clientWidth;
     const clampedHandlePosition = Math.min(Math.max(newHandlePosition, 0), maxHandlePosition);
     
-    handle.style.left = (clampedHandlePosition * (0.115)) + 'px';
     const scrollPosition = (clampedHandlePosition / maxHandlePosition) * (document.documentElement.scrollWidth - window.innerWidth);
     window.scrollTo(scrollPosition, 0);
   });
@@ -122,23 +137,23 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('wheel', function(e) {
-    if (e.deltaY !== 0) {
-        window.scrollBy((e.deltaY * 0.4), 0);
-        //animate the custom scrollbar at the top of the page using the scrollbar, handle, and mousearea elements
-        gsap.to(".handle", {
-          duration: 0.5,
-          x: window.scrollX * 0.12,
-          ease: "power2",
-        });
-    }
-    e.preventDefault();
+  if (e.deltaY !== 0) {
+      window.scrollBy((e.deltaY * 0.4), 0);
+      const handlePosition = getHandlePositionBasedOnScroll();
+      gsap.to(".handle", {
+        duration: 0.5,
+        x: handlePosition,
+        ease: "power2",
+      });
+  }
+  e.preventDefault();
 });
 
 window.addEventListener('scroll', function() {
-  // Animate the custom scrollbar when scrolling horizontally
+  const handlePosition = getHandlePositionBasedOnScroll();
   gsap.to(".handle", {
     duration: 0.5,
-    x: window.scrollX * 0.115,
+    x: handlePosition,
     ease: "power2",
   });
 });
