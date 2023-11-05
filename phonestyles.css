@@ -1,7 +1,7 @@
 @media screen and (max-width: 1380px) {
     .box {
       height: 60vh !important;
-      margin-top: 8vh !important;
+      margin-top: 10vh !important;
     }
   
     .container {
@@ -62,16 +62,15 @@
     }
 
     .page-top {
-      margin-top: 18vh !important;
+      margin-top: 17vh !important;
     }
 
     .iframe-thumbnail {
       background-color: #ffffff;
       width: 80vw !important;
-      height: 550;
+      height: 550px !important;
     } 
 
-    
     .content {
       justify-content: flex-start !important; 
     } 
@@ -79,6 +78,7 @@
     .blog-thumbnail {
       background-color: #ffffff;
       width: 30vw !important;
+      height: 13.5vw !important;
     } 
 
     .p-container {
