@@ -219,7 +219,7 @@ h1 {
 
 .p-container {
   display: block;
-  width:950px;
+  width:1050px;
   margin: auto;
   margin-top: 1.5vh;
   margin-bottom: 1.5vh;
@@ -228,8 +228,8 @@ h1 {
   font-size: 1.2rem;
   font-weight: 100 !important;
   text-align: left;
-  background-color: var(--dark-secondary);
-  border: 2px solid var(--dark-secondary);
+  background-color: var(--dark-primary);
+  border: 2px solid var(--dark-primary);
   border-radius: 12px;
   position: relative;
   overflow: hidden;

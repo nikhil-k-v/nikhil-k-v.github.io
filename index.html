@@ -35,16 +35,23 @@
     <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
 
    
+    <div style="position: fixed; z-index: 3;">
+      <h1 id="title">NIKHIL VIJAY</h1>
 
-    <h1 id="title">NIKHIL VIJAY</h1>
+      <!-- add navigation to all pages -->
+      <ul class='navigation'>
+        <li class="active first"><a href="/index.html">PROJECTS</a></li>
+        <li><a href="/updates.html">GALLERY</a> <li class="vertical-row"><a>|</a></li></li>
+        <li><a href="/blog.html">THOUGHTS</a> <li class="vertical-row"><a>|</a></li></li>
+        <li class="last"><a href="/about.html">ABOUT ME</a></li>
+      </ul>
+  
+    </div>
 
-    <!-- add navigation to all pages -->
-    <ul class='navigation'>
-      <li class="active first"><a href="/index.html">PROJECTS</a></li>
-      <li><a href="/updates.html">GALLERY</a> <li class="vertical-row"><a>|</a></li></li>
-      <li><a href="/blog.html">THOUGHTS</a> <li class="vertical-row"><a>|</a></li></li>
-      <li class="last"><a href="/about.html">ABOUT ME</a></li>
-    </ul>
+
+    <div id="blocker" style="top: 0; width: 100vw; position: fixed; background-color: var(--dark-primary); z-index: 0;"> </div>
+
+
     <div class="container" id="containers">
 
       <div onclick="animateMe(this)" class="box active">

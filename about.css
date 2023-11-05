@@ -19,7 +19,7 @@
   }
 
 .iframe-post {
-    background-color: var(--dark-primary);
+    background-color: var(--dark-secondary);
     display: flex;
     flex-direction: column; /* Ensures thumbnail and text are side by side */
     justify-content: center;
