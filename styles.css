@@ -293,3 +293,64 @@ h1 {
   height: 12vh;
 }
 
+
+/* Add this to your styles.css */
+/* Add this to your styles.css */
+.content {
+  margin-top: 12vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.blog-post {
+  display: flex;
+  flex-direction: row; /* Ensures thumbnail and text are side by side */
+  justify-content: center;
+  align-items: center;
+
+  max-width: 70%; /* Set this to the maximum width you want for the blog post */
+  margin: auto;
+  margin-bottom: 2rem;
+  box-sizing: border-box; /* Ensures padding and borders are included in the width */
+}
+
+.blog-thumbnail {
+  margin-right: 1rem;
+  object-fit: cover;
+  border-radius: 10px; /* Optional: if you want rounded corners */
+}
+
+.blog-info {
+  flex: 1; /* Takes up the remaining space after the thumbnail */
+}
+
+.blog-subtitle {
+  font-style: italic;
+  font-weight: 400;
+  margin-top: 0.6rem;
+}
+.blog-date {
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+.blog-title {
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+/* Under Maintenance Notification Styles */
+.under-maintenance {
+  padding: 10px;
+  text-align: center;
+  margin: 20px auto;
+  font-weight: bold;
+  color: var(--light-primary); /* Uses the color variable defined for the primary text */
+  font-family: "montserrat", sans-serif; /* Uses the same font-family as the rest of the site */
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-ZPCC960TZ2');
+  </script>
+  <link rel="icon" type="image/x-icon" href="/assets/favicon2.png">
+  <title>Nikhil Vijay - Blog</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.3/draggable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+  <script src="app.js"></script>
+  <link rel="stylesheet" href="phonestyles.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="nav.css">
+  <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
+</head>
+<body style="overflow-y: auto;">
+
+  <div id="loader">
+    <div id="loaderText"></div>
+  </div>
+
+  <div style="position: fixed; z-index: 3;">
+    <h1 id="title">NIKHIL VIJAY</h1>
+    <ul class='navigation'>
+      <li class="first"><a href="/index.html">PROJECTS</a></li>
+      <li class="vertical-row"><a>|</a></li>
+      <li class="vertical-left-in"><a href="/updates.html">GALLERY</a></li>
+      <li class="active"><a href="/blog.html">THOUGHTS</a></li>
+      <li class="vertical-right last"><a href="/about.html">ABOUT ME</a></li>
+    </ul>
+  </div>
+
+  <div id="blocker" style="top: 0; width: 100vw; position: fixed; background-color: var(--dark-primary); z-index: 2;">
+  </div>
+
+  
+
+
+  <!-- Content starts here -->
+<div class="content" style="margin-top: 14vh; display: flex; flex-direction: column; align-items: center;">
+    <!-- Example Blog Post -->
+    <!-- Under Maintenance Notification -->
+<div class="under-maintenance">
+    <span style="font-weight: 100;">⌛</span>
+    Under Maintenance: Please come back later when everything is functioning!
+  </div>
+  
+    <div class="blog-post">
+        <img class="blog-thumbnail" src="/assets/thumbnails/post1.png" alt="Thumbnail" style="width: 667px; height: 300px;">
+        <div class="blog-info" style="flex: 1;">
+          <p class="blog-date">10.03.2023</p>
+          <h2 class="blog-title">V. INFINITELY VARIABLE TRANSMISSIONS</h2>
+          <h3 class="blog-subtitle">Solving an actuation problem that affects robotics, automotive, and biomechanical engineering. <br><br> +  math behind more of the "oid" gears: hypoids & hyperboloids</h3>
+  
+        </div>
+    </div>
+    <div class="blog-post">
+      <img class="blog-thumbnail" src="/assets/thumbnails/post5.png" alt="Thumbnail" style="width: 667px; height: 300px;">
+      <div class="blog-info" style="flex: 1;">
+        <p class="blog-date">4.19.2023</p>
+        <h2 class="blog-title">IV. ARCHIMEDES & THE SAND-RECKONER</h2>
+        <h3 class="blog-subtitle">What we can learn about geometry and engineering from Ancient Greek history: it only takes 8 vigintillion grains of sand to fill the Universe.</h3>
+      </div>
+    </div>
+
+
+      <div class="blog-post">
+        <img class="blog-thumbnail" src="/assets/thumbnails/post2.png" alt="Thumbnail" style="width: 667px; height: 300px;">
+        <div class="blog-info" style="flex: 1;">
+            <p class="blog-date">3.15.2023</p>
+          <h2 class="blog-title">III. WHAT DOES "TOROIDAL PROPELLER" EVEN MEAN?</h2>
+          <h3 class="blog-subtitle">Trying to answering that question + figuring out all the other types of propellers. <br> <br>+ learning aerodynamics, from the four fundamental (aero) forces to the lattice Boltzmann method
+          </h3>
+
+        </div>
+      </div>
+
+      <div class="blog-post">
+        <img class="blog-thumbnail" src="/assets/thumbnails/post3.png" alt="Thumbnail" style="width: 667px; height: 300px;">
+        <div class="blog-info" style="flex: 1;">
+            <p class="blog-date">9.28.2022</p>
+          <h2 class="blog-title">II. ROBOTIC ARMS & TONY STARK</h2>
+          <h3 class="blog-subtitle">Why was making Dummy such a big deal for Iron Man? The difference between VERSO & what won Stark fame and fortune.</h3>
+
+        </div>
+      </div>
+
+      <div class="blog-post">
+        <img class="blog-thumbnail" src="/assets/thumbnails/post4.png" alt="Thumbnail" style="width: 667px; height: 300px;">
+        <div class="blog-info" style="flex: 1;">
+            <p class="blog-date">5.11.2022</p>
+          <h2 class="blog-title">I. THE BRAILLE PROBLEM</h2>
+          <h3 class="blog-subtitle">Why hasn't it been solved? Why has the (other) biggest contributor to this problem been ANOTHER guy named "Vijay"? <br><br> hint: I still have no idea...</h3>
+
+        </div>
+      </div>
+
+    <!-- Additional blog posts would be added here -->
+  </div>
+  
+
+  <!-- Script to hide loader after page load -->
+  <script>
+    window.addEventListener('load', function() {
+      var loader = document.getElementById('loader');
+      if (loader) {
+        loader.style.display = 'none';
+      }
+    });
+  </script>
+
+</body>
+</html>

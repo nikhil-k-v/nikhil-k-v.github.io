@@ -29,20 +29,19 @@
 
 /* make the links clickable and add a hover effect */
 .navigation {
-    background-color: var(--dark-secondary);
     position: fixed;
     padding: 0;
     top: 2vh;
     height: 6vh;
-    left: 28vw;
+    right: 2vw;
     display: inline-flex;
-    width: 70vw;
+    width: 60vw;
     justify-content: center;
     align-items: center;
     list-style-type: none;
     gap: 0px;
     font-size: 1.2vw;
-    border-radius: 5px;
+    font-weight: 400;
     text-align: center;
   }
 
@@ -59,46 +58,75 @@
 
   .navigation li {
     background-color: var(--dark-accent);
+    transition: ease-in-out 0.3s !important;
     padding: 0;
     display: inline-block;
     overflow: hidden;
     vertical-align: middle;
     width: 33.34%;
     height: 100%;
-    border-bottom: 4px solid var(--dark-secondary);
-    border-left: 4px solid var(--dark-secondary);
-    border-right: 4px solid var(--dark-secondary);
+    border-bottom: 2px solid var(--light-primary);
     border-top: 4px solid var(--dark-secondary);
-    border-radius: 3px;
+    
+    /* border-top: 2px solid var(--dark-secondary); */
   }
 
-  .navigation li:hover {
-    background-color: var(--dark-secondary);
-    left: 0%;
-    padding: 0;
+  .last {
+    border-top-right-radius: 8px;
+    border-right: 4px solid var(--dark-secondary);
   }
+
+  .first {
+    border-top-left-radius: 8px;
+    border-left: 4px solid var(--dark-secondary);
+  }
+
+   .navigation li:hover{
+    background-color: var(--dark-secondary) !important;
+    /* border: var(--dark-primary) ; */
+    transition: ease-in-out 0.3s !important;
+
+  }
+
+  .navigation:hover > .vertical-row a{
+    opacity: 0% !important;
+    transition: ease-in-out 0.3s !important;
+  }
+
+  
+
+
+   .vertical-row {
+    width: 1.5px !important;
+   } 
+
+   .vertical-row a{
+    transition: ease-in-out 0.3s !important;
+
+    color: var(--light-secondary) !important;
+    bottom: 20% !important; 
+    font-size: 1.9rem !important;
+    opacity: 50% !important;
+   } 
+   
+
 
   .navigation li.active {
-    background-color: var(--dark-primary);
+    background-color: var(--dark-primary) !important;;
     left: 0%;
     padding: 0;
-    border-left: 2px solid var(--light-primary);
-    border-right: 2px solid var(--light-primary);
-    border-top: 2px solid var(--light-primary);
+    border: 2px solid var(--light-primary);
+    /* border-left: 2px solid var(--light-primary); */
+    /* border-right: 2px solid var(--light-primary);
+    /* border-top: 2px solid var(--light-primary);
+    border-left: 2px solid var(--light-primary); */
+    /* border-left: 0px solid var(--dark-secondary);
+    border-right: 0px solid var(--dark-secondary); */
     border-bottom: 0px solid var(--dark-secondary);
-  }
-  
-  
+    height: 105%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 
-  
-  /* make the social elements stuck to the top right of the page */
-  .socials {
-      position: fixed;
-      top: 18px;
-      right: 34px;
-      margin: 10px;
-      border: none;
-      background-color: transparent;
   }
 
   img { border-style: none; }

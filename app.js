@@ -228,3 +228,8 @@ function scrambleText(targetElement, finalText, time) {
     }, time / (finalText.length * 5));  // 10 times more scrambles per character
 }
 
+
+
+
+
+

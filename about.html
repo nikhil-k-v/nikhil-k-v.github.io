@@ -13,27 +13,35 @@
   <title>Nikhil Vijay</title>
 </head>
 <body style="overflow-y: auto;">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+  
+   
+  <div id="loader">
+    <div id="loaderText"></div>
+  </div>
 
   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.3/draggable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
-
 
     <script src="app.js"></script>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="phonestyles.css">
-
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="nav.css">
+
+
+    <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
 
     <div style="position: fixed; z-index: 3;">
       <h1 id="title">NIKHIL VIJAY</h1>
       <!-- add navigation to all pages -->
       <ul class='navigation'>
-        <li><a  onclick="window.location.href='/index.html'">PROJECTS</a></li>
-        <li><a  onclick="window.location.href='/updates.html'">UPDATES & MINI-PROJECTS</a></li>
-        <li class="active"><a  onclick="window.location.href='/about.html'">ABOUT ME</a></li>
+
+        <li class="first"><a href="/index.html">PROJECTS</a> <li class="vertical-row"><a>|</a></li></li>
+        <li><a href="/updates.html">GALLERY</a> <li class="vertical-row"><a>|</a></li></li>
+        <li><a href="/blog.html">THOUGHTS</a></li>
+        <li  class="active"><a href="/about.html">ABOUT ME</a></li>
       </ul>
     </div>
     <div style="top: 0; height: 12vh; width: 100vw; position: fixed; background-color: var(--dark-primary); z-index: 2;">
