@@ -219,22 +219,26 @@ h1 {
 
 .p-container {
   display: block;
-  width: 60vw;
+  width:950px;
   margin: auto;
   margin-top: 1.5vh;
   margin-bottom: 1.5vh;
-  text-align: center;
+  text-align: center !important;
   color: #eceff4;
   font-size: 1.2rem;
   font-weight: 100 !important;
   text-align: left;
-  background-color: var(--dark-accent);
-  border: 2px solid var(--dark-accent);
+  background-color: var(--dark-secondary);
+  border: 2px solid var(--dark-secondary);
   border-radius: 12px;
   position: relative;
   overflow: hidden;
   /* add padding, more on the top and bottom and less on the right and left */
-  padding: 0rem 1.5rem 0rem 1.5rem;
+  padding: 0.2rem 3rem 0.4rem 3rem;
+}
+
+.p-container p, li  {
+  text-align: left;
 }
 
 .contact-container {

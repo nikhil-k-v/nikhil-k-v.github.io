@@ -1,0 +1,53 @@
+/* color variables */
+:root {
+    --dark-primary: #051220; /* background */
+    --dark-secondary: #0b2135; /* active box */
+    --dark-accent: #091b2b; /* box */
+    --dark-hover: #091b2b;
+    --light-primary: #f0f0f0; /* text */
+    --light-secondary: #e0e0e0;
+    --light-accent: #ff6b81;
+  }
+
+.iframe-content {
+    margin-top: 12vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+.iframe-post {
+    background-color: var(--dark-primary);
+    display: flex;
+    flex-direction: column; /* Ensures thumbnail and text are side by side */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  
+    height: fit-content; /* Set this to the maximum width you want for the blog post */
+    width: fit-content;
+    margin: auto;
+    margin-bottom: 2rem;
+    padding: 0.2rem 3rem 2rem 3rem;
+
+    border-radius: 1.5rem;
+    box-sizing: border-box; /* Ensures padding and borders are included in the width */
+}
+
+.iframe-info {
+    max-width: 650px;
+}
+
+.blog-date {
+    text-align: center !important;
+}
+
+
+.iframe-thumbnail {
+    background-color: #ffffff;
+    width: 950;
+    height: 550;
+    border-radius: 10px; Optional: if you want rounded corners
+}
