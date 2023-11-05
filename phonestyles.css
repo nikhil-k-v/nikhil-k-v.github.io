@@ -1,7 +1,7 @@
 @media screen and (max-width: 1380px) {
     .box {
       height: 60vh !important;
-      margin-top: 5vh !important;
+      margin-top: 8vh !important;
     }
   
     .container {
@@ -57,7 +57,33 @@
     }
 
     #blocker {
+      width: 100%  !important;
       height: 18vh;
     }
 
+    .page-top {
+      margin-top: 18vh !important;
+    }
+
+    .iframe-thumbnail {
+      background-color: #ffffff;
+      width: 80vw !important;
+      height: 550;
+    } 
+
+    
+    .content {
+      justify-content: flex-start !important; 
+    } 
+
+    .blog-thumbnail {
+      background-color: #ffffff;
+      width: 30vw !important;
+    } 
+
+    .p-container {
+      background-color: #ffffff;
+      width: 85vw !important;
+      padding-left: 0 !important;
+    }
   }
