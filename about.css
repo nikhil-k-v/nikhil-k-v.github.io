@@ -47,7 +47,7 @@
 
 .iframe-thumbnail {
     background-color: #ffffff;
-    width: 950;
-    height: 550;
+    width: 950px !important;
+    height: 550px !important;
     border-radius: 10px;
 }
