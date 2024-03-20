@@ -6,6 +6,7 @@
   <title>Braille Display</title>
   <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
   <link rel="stylesheet" href="page-styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Century+Schoolbook">
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
@@ -13,18 +14,47 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-ZPCC960TZ2');
 </script>
 
-<body>
+
   <header>
     <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
 
-    <h1 class="page-title">BRAILLE DISPLAY</h1>
+    <div class="mdbody">
+        <div class="mdh1">Modular, Refreshable Braille Display</div>
+        <div class="mdp">
+            The motivation of this project is reducing the cost and improving the actuation
+            efficiency/complexity of refreshable braille displays, which are currently in the thousand to
+            ten-thousand dollar range. Generally, every dot on every braille cell is individually actuated, which I find an inefficient solution. The maintenance costs are also extremely high for current devices.
+            <br> &nbsp &nbsp &nbsp I aim to streamline that with new mechanisms, in order to decrease cost, increase reliability, and improve overall ease-of-use for users and educators.
+        </div>
+        <div class="columns">
+            <div class="left-column mdh2">1</div>
+            <div class="right-column mdh2">Solution</div>
+        </div>
+        <div class="mdp">
+            I’ve created a method for actuating multiple dots at once, in a very efficient way! You will see in subsection 1.2.2 that it decreases the price of braille displays by hundreds, possibly thousands of dollars. To understand how the solution works, realize: the up/down of a braille dot can be represented with the 0/1 of binary.
+        </div>
+        <div class="columns">
+            <div class="left-column mdh3">1.1</div>
+            <div class="right-column mdh3">A Binary Solution</div>
+        </div>
+        <div class="mdp">
+            Take a braille cell, with 6 dots. We’ll assume that it is horizontal: there are 2 rows, and 3 columns, represented by a 2x3 array.
+        </div>
+
+
+
+    </div>
+
+
+
+
+
   </header>
 
-  <main>
+  <!-- <main>
     <div class="img-container">
       <figcaption>VIEW OF THE INTERNAL MECHANISMS OF THE FIRST PROTOTYPE</figcaption>  
       <img class="anim" src="../assets/BraileAnim.gif" alt="Your image description" draggable="false" loop>
@@ -139,5 +169,4 @@
     </div>
 
   <script src="app.js"></script>
-</body>
 </html>

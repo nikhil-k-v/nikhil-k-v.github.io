@@ -400,4 +400,51 @@ body {
     justify-content: center;
     align-items: center;
   }
+  
+  .mdbody {
+    text-align: left !important;
+    width: 1050px;
+    margin: auto;
+    margin-top: 6rem !important;
+  }
+
+  .mdbody div {
+    font-family: 'Century Schoolbook', serif !important;
+    font-weight: 100 !important;
+    margin-bottom: 1rem;
+    strong {
+      font-weight: 800;
+    }
+  }
+
+  .mdh1 {
+    font-size: 2.8rem;
+    text-align: center;
+  }
+
+  .mdh2 {
+    font-size: 2rem;
+  }
+
+  .mdh3 {
+    font-size: 1.3rem;
+  }
+
+  .mdp {
+    font-size: 1.1rem;
+  }
+
+  .column {
+    width: 100%;
+  }
+
+  .left-column {
+    width: 4rem;
+    float: left;
+    margin-bottom: 0 !important;
+  }
+  
+  .right-column {
+    margin-bottom: 0 !important;
+  }
 
