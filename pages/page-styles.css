@@ -1,5 +1,6 @@
 /* Theme Colors */
 
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 
 :root {
     --dark-primary: #051220;
@@ -92,7 +93,9 @@ body {
   }
   
   header {
-    position: relative;
+    position: absolute;
+    width: 100%;
+    height: 10vh;
     text-align: center;
     padding: 1rem;
   }
@@ -406,32 +409,33 @@ body {
     width: 1050px;
     margin: auto;
     margin-top: 6rem !important;
+    text-align: justify !important;
   }
 
   .mdbody div {
-    font-family: 'Century Schoolbook', serif !important;
-    font-weight: 100 !important;
+    font-family: 'Varela Round', sans-serif !important;
+    font-weight: 200;
     margin-bottom: 1rem;
-    strong {
-      font-weight: 800;
-    }
   }
 
   .mdh1 {
-    font-size: 2.8rem;
+    font-size: 2.6rem;
+    font-weight: 700 !important;
     text-align: center;
   }
 
   .mdh2 {
-    font-size: 2rem;
+    font-size: 1.6rem;
+    font-weight: 600 !important;
   }
 
   .mdh3 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
+    font-weight: 600 !important;
   }
 
   .mdp {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .column {
@@ -446,5 +450,34 @@ body {
   
   .right-column {
     margin-bottom: 0 !important;
+  }
+
+  .mdimg {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.3rem !important;
+  }
+
+  .mdic {
+    text-align: center;
+    margin-top: 0 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .mdimg img {
+    margin: auto !important;
+    /* width: 60%; */
+    margin-bottom: 0 !important;
+    max-width: 40em !important;
+    width: auto;
+  }
+
+  .mdc {
+    background-color: var(--dark-secondary);
+    padding: 14px;
+    border-radius: 6px;
+    padding-bottom: 0px !important;
   }
 

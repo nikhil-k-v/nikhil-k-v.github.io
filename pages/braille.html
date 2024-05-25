@@ -6,7 +6,7 @@
   <title>Braille Display</title>
   <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
   <link rel="stylesheet" href="page-styles.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Century+Schoolbook">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Century+Schoolbook">  
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
@@ -17,156 +17,161 @@
   gtag('config', 'G-ZPCC960TZ2');
 </script>
 
-
+<body>
   <header>
     <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
+  </header>
 
     <div class="mdbody">
         <div class="mdh1">Modular, Refreshable Braille Display</div>
-        <div class="mdp">
-            The motivation of this project is reducing the cost and improving the actuation
-            efficiency/complexity of refreshable braille displays, which are currently in the thousand to
-            ten-thousand dollar range. Generally, every dot on every braille cell is individually actuated, which I find an inefficient solution. The maintenance costs are also extremely high for current devices.
-            <br> &nbsp &nbsp &nbsp I aim to streamline that with new mechanisms, in order to decrease cost, increase reliability, and improve overall ease-of-use for users and educators.
-        </div>
-        <div class="columns">
-            <div class="left-column mdh2">1</div>
-            <div class="right-column mdh2">Solution</div>
-        </div>
-        <div class="mdp">
-            I’ve created a method for actuating multiple dots at once, in a very efficient way! You will see in subsection 1.2.2 that it decreases the price of braille displays by hundreds, possibly thousands of dollars. To understand how the solution works, realize: the up/down of a braille dot can be represented with the 0/1 of binary.
-        </div>
-        <div class="columns">
-            <div class="left-column mdh3">1.1</div>
-            <div class="right-column mdh3">A Binary Solution</div>
-        </div>
-        <div class="mdp">
-            Take a braille cell, with 6 dots. We’ll assume that it is horizontal: there are 2 rows, and 3 columns, represented by a 2x3 array.
+        <div class="mdc">
+            <div class="columns">
+                <div class="left-column mdh2">1</div>
+                <div class="right-column mdh2">Introduction</div>
+            </div>
+            <div class="mdp">
+                The motivation of this project is <strong>reducing the cost</strong> and <strong>improving the actuation efficiency/complexity</strong> of refreshable braille displays, which are currently in the thousand to ten-thousand dollar range. Generally, every dot on every braille cell is individually actuated, which I find an inefficient solution. The <strong>maintenance costs</strong> are also extremely high for current devices.<br><br>I aim to streamline that with new mechanisms, in order to decrease cost, increase reliability, and improve overall ease-of-use for users and educators.
+            </div>
         </div>
 
+
+        <div class="mdc">
+
+            <div class="columns">
+                <div class="left-column mdh2">2</div>
+                <div class="right-column mdh2">Solution</div>
+            </div>
+            <div class="mdp">
+                I’ve created a method for actuating multiple dots at once, in a very efficient way! You will see in subsection 3.2 that it decreases the price of braille displays by hundreds, possibly thousands of dollars. To understand how the solution works, realize: <strong>the up/down of a braille dot can be represented with the 0/1 of binary.</strong>
+            </div>
+            <div class="columns">
+                <div class="left-column mdh3">2.1</div>
+                <div class="right-column mdh3">A Binary Solution</div>
+            </div>
+            <div class="mdp">
+                Take a braille cell, with 6 dots. We’ll assume that it is horizontal: there are 2 rows, and 3 columns, represented by a 2x3 array.
+            </div>
+            <div class="mdimg">
+                <img src="braille-assets/bfig1.png" alt="Figure 1">
+            </div>
+            <div class="mdic">
+                <strong>Figure 1:</strong> Example 2x3 braille cell and corresponding array
+            </div>
+            <div class="mdp">
+                Now, take one row, [x, x, x], and represent this as a string “xxx”. We will refer to this as the <strong>row string.</strong>
+            </div>
+            <div class="mdimg">
+                <img src="braille-assets/bfig2.png" alt="Figure 2"  style="width: 15em;">
+            </div>
+            <div class="mdic">
+                <strong>Figure 2:</strong> All dots are down, so [0, 0, 0] -> “000”
+            </div>
+            <div class="mdp">
+                There are 3 dots (n = 3), and each can be up or down (k = 2), meaning there are 8 possible combinations. Therefore, there exists 8 possible row strings: “000”, “001”, “010”, and so on.<br><br>A <strong>key </strong>can be inserted into the row: moving some dots up and leaving some alone, like the pins inside a lock. If the key is much longer than the row, you’ll get different results depending on how far you insert it before turning.
+            </div>
+            <div class="mdimg">
+                <img src="braille-assets/bfig3.png" alt="Figure 3" style="width: 25em;">
+            </div>
+            <div class="mdic">
+                <strong>Figure 3:</strong> Key “10111000” inserted 3 places in before turning
+            </div>
+            <div class="mdp">
+                Keys with every combination on them “000” + “001” + “010”... = “000001010…” would work to produce all the combinations, but they’d be 24 characters long. There exists a more efficient solution. As shown in Figure 1.3, <strong>an extremely short key</strong> (“10111000”, length of 8)<strong> actually allows for every combination.</strong> It actually boils down to an algorithmic problem.<br><br>Inserting a key i characters before turning is the same as looking at the (i, i+3) substring of the key. Our goal is to get every possible sequence of three up-down dots as a substring somewhere in the key string. <strong>A De Bruijn Sequence is the shortest string containing every possible combination of n characters in the size-k alphabet as a substring, exactly once.</strong><br><br>Here, k is 2 (the alphabet size is 2, since it is binary), and the length n is 3. The table in Figure 1.4 shows this.
+            </div>
+            <div class="mdimg">
+                <img src="braille-assets/bfig4.png" alt="Figure 4">
+            </div>
+            <div class="mdic">
+                <strong>Figure 4:</strong> De Bruijn Sequence (k = 2, n = 3)
+            </div>
+            <div class="mdp">
+                <strong>Note: All 0s are mechanically represented by nothing. </strong>This is why the strings in the “De Bruijn Sequence” column of Figure 1.4 are 10 long instead of 8: the first two characters (both 0) don’t really exist, just like all the other 0s; they’re just there for illustration. The De Bruijn Sequence is also cyclic, which you may have realized if you tried checking for all 8 substrings in “10111000”.
+            </div>
+        </div>
+
+        
+
+
+        <div class="mdc">
+            <div class="columns">
+                <div class="left-column mdh2">3</div>
+                <div class="right-column mdh2">Current Device</div>
+            </div>
+            <div class="columns">
+                <div class="left-column mdh3">3.1</div>
+                <div class="right-column mdh3">Modular, 3D Printed Device</div>
+            </div>
+            <div class="mdp">
+                Everything is designed and modeled in Fusion 360 and 3D printed. Rigid parts use PLA while softer materials (such as the actual braille dots themselves) are printed with TPU for comfort & compliance. 
+            </div>
+            <div class="mdimg">
+                <img src="braille-assets/bfig5.png" alt="Figure 5">
+            </div>
+            <div class="mdic">
+                <strong>Figure 5:</strong> CAD for one of my prototypes using the De Bruijn Sequence for (k = 2, n = 4)
+            </div>
+            <div class="mdp">
+                It is completely modular and fastens together only using press-fits, so after the 6-7 steps to assemble one cell, you can repeat the process for as many as you want and continue to attach them together.
+            </div>
+            <!-- figure 6 -->
+            <div class="mdp">
+                This allows schools to choose how they want to use the device and allows for easier troubleshooting/replacement of parts. Current braille displays (yes, the $10000 ones) are notorious for having horrible maintenance costs. And of course, they do: hundreds of tiny fragile individually-actuated dots are being touched and pressed and torqued constantly. <strong>Reducing the number of parts doesn’t just make it cheaper to manufacture but cheaper to repair, harder to break, and easier to fix.</strong>
+            </div>
+            
+            <div class="columns">
+                <div class="left-column mdh3">3.2</div>
+                <div class="right-column mdh3">Cost, Functionality, and Code</div>
+            </div>
+            <div class="mdp">
+                Since there are only 2 MG90 servos per cell, the device is extremely cheap and very small. There are only two other parts: the 3D printed pieces and the microcontroller. I currently use an ATmega32U4 board (Arduino Pro Micro) due to its small size.
+            </div>
+            <!-- figure 7 -->
+            <div class="mdp">
+                <strong>Cost per cell:</strong> ($1.90/servo x 2 sides) + $0.13/prints = <strong>$2.03&nbsp</strong>
+                <br><br> <strong>Cost in total:</strong> ($2.03/cell x 4 cells) + $7.00/microcontroller =<strong> $15.02</strong>
+            </div>
+            <div class="mdp">
+                However, compared to the Focus 14, which is an “industry standard” for braille displays, my 4 cells are still limited. This is what 14 would cost with my device:
+            </div>
+            <div class="mdp">
+                <strong>Cost overall: </strong>($2.03/cell x 14 cells) + $40.00/electronics = <strong>$68.02</strong>
+            </div>
+            <div class="mdp">
+                Assuming that 14 servos requires a bigger microcontroller with more IO pins + a different power source/shield (though this is a very low torque application so you can still do this on cheap microcontrollers with I2C and cycle through them quickly). But that's not all that the Focus 14 does! Let’s add the rest: a Bluetooth module ($16), 9 keyboard switches ($3: splurging on very nice Akko Jelly Black switches), 12 push buttons ($15: this gets you a box of 240 for some variety), and a USB-C breakout ($5). That’s all the main functionality, but let's throw in $50 so we can order a custom PCB, whatever other electronics we need, and a whole kilogram of 3D-printing filament (I’ve bought all of these for other projects, which is where the numbers come from–everything is heavily rounded up). Another $50 on top just in case.
+            </div>
+            <!-- figure 8 -->
+            <div class="mdp">
+                That’s a lot! How much could the Focus 14 cost? Maybe $300 because they have extra parts like rubber feet? $500 because they have a metal housing?
+            </div>
+            <!-- figure 9 -->
+            <div class="mdp">
+                If it seems like I’m misrepresenting the situation: the software isn’t included and must be purchased separately, the manual also needs to be purchased (and is somehow out-of-stock?), the leather carrying case they sell for these displays is over $100, and they only include a 2-year warranty… for a target market of people with a permanent condition.
+                <br><br> Thanks to the simplicity of the De Bruijn Sequence and the simple components required, the electronics and code in this project are far, far simpler than the mechanisms and ideas, so I will not waste space here with too many details.
+            </div>
+
+            <div class="mdp">
+                Currently, it takes English input through a GUI and converts it to rotation angles for the servos in a 2-D array. Then it rotates the servos to those angles, displaying the text. This is what educators at Morris Knolls, the high school I’m working with, have asked for: a simple way for sighted-supervisors to write words out in braille without needing to use complex, outdated, or expensive tools. I’m working on additional functionality for the device such as control systems (keyboards + other inputs) so that users can interact with technology.
+                <br><br>  This shows the principles of the current functionality:
+            </div>
+            <!-- figure 10 -->
+            <div class="mdp">
+                In reality, I don’t need braille anywhere in the code. I simply convert characters directly to rotation angles, as it requires very little memory to store the character-angle conversion directly. However, the code shown above could still work because this situation is not bottlenecked by computational efficiency or servo rotation speed, but rather human reaction time.
+            </div>
+        </div>
+
+        <div class="mdc">
+            <div class="columns">
+                <div class="left-column mdh3">3.3</div>
+                <div class="right-column mdh3">Additional Documentation</div>
+            </div>
+        </div>
 
 
     </div>
-
-
-
-
-
-  </header>
-
-  <!-- <main>
-    <div class="img-container">
-      <figcaption>VIEW OF THE INTERNAL MECHANISMS OF THE FIRST PROTOTYPE</figcaption>  
-      <img class="anim" src="../assets/BraileAnim.gif" alt="Your image description" draggable="false" loop>
-    </div>
-
-    <div class="p-container title-cont">
-        <h1>FIRST PROTOTYPE</h1>
-    </div>
-
-    <div class="double-cont">
-
-        <div class="in-img-container">
-            <figcaption>FIRST PROTOTYPE WORKING SUCCESFULLY!</figcaption>  
-            <img class="image" id="braille-proto" src="../assets/ImposedBrailleProto.PNG" alt="pictures of the prototype" draggable="false">
-        </div>
     
-        <div class="in-p-container">
+</body>
 
-            <p>A <strong>functioning prototype</strong> of the display! </p>
-            <p>The display refreshes at an <strong>average range of 100-200 wpm</strong>, and has a <strong>final build cost of around 10$</strong>. </p>
-            <p>To enable such <em>fast, precise, and repeatable actuating</em>, the two servos utilize the <strong>De Bruijn Sequence</strong> to <strong>mechanically allow</strong> the &quot;quickest path” to the next character. </p>
-            <p>For each character refresh, the servos generally have to rotate only 10-30 degrees, at an average of 17.6! </p>
-        </div>
 
-    </div>
-    
-    <div class="p-container title-cont">
-        <h1>THE PROBLEM</h1>
-    </div>
+    <script src="app.js"></script>
 
-    <div class="p-container">
-        <p>After being shown the current, expensive solutions to internet-braille interfaces by a friend, I haven’t been able to stop imagining better 
-        solutions. Through a two year journey of stumbling across various ideas in mechanisms, software, and use-cases, (<- here a bunch of links, in a separate 
-        block maybe with arrows/lines pointing/connecting to them) I have finally prototyped a refreshable braille display that is extremely cheap, fast, and 
-        dependable. 
-        </p>
-    </div>
-
-    <div class="img-container">
-        <figcaption class="dark">THE CURRENT SOLUTIONS TO THE TECHNOLOGY X BRAILLE PROBLEM...</figcaption>  
-        <img class="image" src="../assets/BrailleCurrent.PNG" alt="pictures of the current refreshable displays (screenshot of the website pages - with the price tags on them)" draggable="false" loop>
-    </div>
-
-    <div class="p-container">
-        <p>Current refreshable braille displays use arrays of individual cells of braille, each dot having its own (apparently failure-prone) actuator - 
-        displays with 40 characters often have 320 actuators, a nightmare in many ways, especially maintenance. One single actuator failing could produce gibberish 
-        and render the entire display unusable. On top of that, the cost is often in the 4 figures, and in decades past that 4 would easily become 5, even 6 - not 
-        including maintenance. 
-        </p>
-    </div>
-
-    <div class="img-container" id="sol-cont">
-        <figcaption class="dark">THE SOLUTION</figcaption>  
-        <img class="image" id="BSol-image" src="../assets/BrailleSolution.PNG" alt="pictures/animations of the entire prototype, various angles, renders, and real photos" draggable="false" loop>
-    </div>
-
-    <div class="p-container">
-        <p>The solution involves only 2 actuators for the braille, and a couple more for other functionality. By moving a refreshing cell of braille under your 
-        finger at a speed controlled through the pot/joystick, you can simulate reading braille manually off of paper, where you can choose your current speed 
-        and easily go backwards and forwards in the text. This prototype is functional - it can take any text and display the braille at a refreshing rate of 
-        anywhere from 0 to 200 wpm, backwards and forwards. 
-        </p>
-    </div>
-
-    <div class="p-container title-cont">
-        <h1>DE BRUIJN</h1>
-    </div>
-
-    <div class="img-container" id="debrujin-cont">
-        <img class="image" id="debruijn-image" src="../assets/DeBrujin.PNG" alt="picture of the sectors which attach to the servos
-        - animated graphic for the de brujin sequence
-        - two rows of the sequences themselves moving back and forth, with a rectangle around the middle 8 (2x4) characters" draggable="false" loop>
-        <figcaption class="dark">THE DE BRUIJN SEQUENCE</figcaption> 
-    </div>
-
-    <div class="p-container">
-        <p>Each servo is attached to a circle sector with 16 braille dots on its circumference - or rather 16 SPACES for braille dots. Some are “off” (0), while 
-        some are “on” (1), and the overall sequence is 000011110110101 - the De Bruijn Sequence for (2,4), something which you may be familiar with if you are 
-        interested in algorithms, computer science, or even biology. The two sequences work together to produce any 4x2 braille cell, and then other motors in 
-        the case move the entire subassembly past your finger (at a user controlled, variable speed) to simulate the feeling of running your finger across a page 
-        of cells manually. 
-        </p>
-    </div>
-
-    <div class="p-container">
-        <p>This project can be improved in many ways, and I encourage you to reach out to me if you have any ideas! It is still very early in its development, 
-        and many of the issues you may see on the current prototype are already being worked on. For the time-being, this is what I am working on:
-        <h4>Future Goals:</h4>
-            <li>Smaller form factor</li>
-            <li>Embedded Keyboard</li>
-            <li>Silent - using quieter motors and fixing sources of friction</li>
-            <li>Seamless interfacing with smartphone “voice readers” - all speech will be converted to braille automatically</li>
-        </p>
-    </div>
-
-    </main>
-
-    
-    <div class="gallery">
-        <img class="gallery-img" src="/assets/DeBrujin.PNG" alt="Image 1">
-        <img class="gallery-img" src="/assets/img-gal/ba1.png" alt="Image 2">
-        <img class="gallery-img" src="/assets/ImposedBrailleProto.PNG" alt="Image 2">
-        <img class="gallery-img" src="/assets/img-gal/ba2.png" alt="Image 2">
-        <img class="gallery-img" src="/assets/img-gal/ba3.png" alt="Image 2">
-        <img class="gallery-img" src="/assets/img-gal/ba4.png" alt="Image 2">
-      </div>
-
-          <!-- Modal -->
-    <div id="modal" class="modal">
-        <span class="close">&times;</span>
-        <img class="modal-content" id="modalImage">
-    </div>
-
-  <script src="app.js"></script>
 </html>
