@@ -16,10 +16,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    
   }
 
 .iframe-post {
-    background-color: var(--dark-secondary);
+    background-color: var(--dark-accent);
     display: flex;
     flex-direction: column; /* Ensures thumbnail and text are side by side */
     justify-content: center;
@@ -27,13 +28,14 @@
     text-align: center;
   
     height: fit-content; /* Set this to the maximum width you want for the blog post */
-    width: fit-content;
+    width: 60vw;
     margin: auto;
-    margin-bottom: 2rem;
-    padding: 0.2rem 3rem 2rem 3rem;
+    padding: 0.5rem 1.5rem 0.5rem 1.5rem;
 
+
+    /*
     border-radius: 1.5rem;
-    box-sizing: border-box; /* Ensures padding and borders are included in the width */
+    box-sizing: border-box;  */
 }
 
 .iframe-info {
@@ -46,8 +48,12 @@
 
 
 .iframe-thumbnail {
-    background-color: #ffffff;
-    width: 950px !important;
-    height: 550px !important;
-    border-radius: 10px;
+    /* background-color: #ffffff; */
+    width: 100% !important;
+    height: 600px !important;
+    /* border-radius: 10px; */
+    border: 0px;
+    margin-bottom: 1rem;
+
 }
+

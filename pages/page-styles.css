@@ -10,7 +10,7 @@
     --light-primary: #f0f0f0;
     --light-secondary: #e0e0e0;
     --light-accent: #ff6b81;
-  }
+}
 
 .wf-loading { visibility: hidden; } /* font is loading and hidden */
 .wf-active, .wf-inactive { visibility: visible; } /* font has loaded and is visible */
@@ -44,11 +44,10 @@
         font-size: 0.6em !important;
         width: 90% !important;
         white-space: wrap !important;
-
     }
 
     .page-title {
-        margin-top: 6vh !important;
+        font-size: 2.4rem !important;
     }
 
     .desmos-embed {
@@ -68,16 +67,14 @@
       margin-top: 1vh;
       column-count: 3 !important;
       column-gap: 8px !important;
-      /* padding: 2px !important; */
       align-items: center !important;
     }
 
-      
-  .gallery-img {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 6px !important;
-  }
+    .gallery-img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 6px !important;
+    }
 }
 
 .desmos-embed {
@@ -90,337 +87,376 @@ body {
     color: var(--light-primary);
     margin: 0;
     padding: 0;
-  }
+}
   
-  header {
-    position: absolute;
-    width: 100%;
-    height: 10vh;
-    text-align: center;
-    padding: 1rem;
-  }
+header {
+  position: absolute;
+  width: 100%;
+  height: 10vh;
+  text-align: center;
+  padding: 1rem;
+}
   
-  #back-to-home {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    background-color: var(--dark-secondary);
-    border: none;
-    border-radius: 6px;
-    color: var(--light-primary);
-    padding: 0.5rem 1rem;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
+#back-to-home {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: var(--dark-secondary);
+  border: none;
+  border-radius: 6px;
+  color: var(--light-primary);
+  padding: 0.5rem 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
   
-  .page-title {
-    font-weight: 300 !important;
-    font-size: 3rem;
-    margin-bottom: 1rem;
-  }
+.page-title {
+  font-weight: 200 !important;
+  font-size: 4.5rem;
+  margin-bottom: 1rem;
+}
 
-  .p-container {
-    display: block;
-    width: 60vw;
-    margin: auto;
-    margin-top: 1.5vh;
-    margin-bottom: 1.5vh;
-    text-align: center;
-    color: #eceff4;
-    font-size: 1.2rem;
-    font-weight: 300 !important;
-    text-align: left;
-    background-color: var(--dark-accent);
-    border: 2px solid var(--dark-accent);
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-    /* add padding, more on the top and bottom and less on the right and left */
-    padding: 0rem 1.5rem 0rem 1.5rem;
-  }
+/* Center the title inside the animation box, behind the GIF */
+#arm-anim-container .page-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  z-index: 0;            /* behind the image */
+  pointer-events: none;  /* clicks go through */
+}
 
+.p-container {
+  display: block;
+  width: 60vw;
+  margin: auto;
+  margin-top: 1.5vh;
+  margin-bottom: 1.5vh;
+  text-align: center;
+  color: #eceff4;
+  font-size: 1.2rem;
+  font-weight: 300 !important;
+  text-align: left;
+  background-color: var(--dark-accent);
+  /* border: 2px solid var(--dark-accent); */
+  /* border-radius: 12px; */
+  position: relative;
+  overflow: hidden;
+  padding: 0rem 1.5rem 0rem 1.5rem;
 
-  .img-container {
-    display: flex;
-    height: 40vh;
-    width: 50vw;
-    margin: auto;
-    margin-bottom: 1vw;
-    text-align: center;
-    color: #eceff4;
-    font-size: 20px;
-    /* font-weight: bolder; */
-    vertical-align: middle;
-    background-color: var(--dark-secondary);
-    border: 4px solid var(--dark-secondary);
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  figcaption {
-    position: absolute;
-    bottom: 3%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.75em;
-    color: var(--light-primary);
-    text-align: center;
-    font-weight: 300;
-    /* font-style: italic; */
-    margin: 0;
-    padding: 0;
-    z-index: 2;
-    white-space: nowrap;
-    /* add some drop shadow to this text */
-    text-shadow: 0 0 4px #000000;
-  }
-  
-  .anim {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    max-width: 100%;
-    transform: translate(-51.5%, -52%);
-    z-index: 1;
-  }
-
-  .image {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    max-width: 100%;
-    transform: translate(-50%, -20%);
-    z-index: 1;
-  }
-
-  #braille-proto {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    max-width: 101%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-  }
-
-  #BSol-image {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    max-width: 101%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-  }
-
-  #sol-cont {
-    display: flex;
-    height: 70vh;
-    width: 40vw;
-    margin: auto;
-    margin-bottom: 1vw;
-    text-align: center;
-    color: #eceff4;
-    font-size: 20px;
-    /* font-weight: bolder; */
-    vertical-align: middle;
-    background-color: var(--dark-secondary);
-    border: 4px solid var(--dark-secondary);
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  #debruijn-image {
-    position: absolute;
-    /* top: 50%; */
-    left: 50%;
-    max-width: 101%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-  }
-
-  #debrujin-cont {
-    display: flex;
-    height: 51vh;
-    width: 55vw;
-    margin: auto;
-    margin-bottom: 1vw;
-    text-align: center;
-    color: #eceff4;
-    font-size: 20px;
-    /* font-weight: bolder; */
-    vertical-align: middle;
-    background-color: var(--dark-secondary);
-    border: 4px solid var(--dark-secondary);
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .dark {
-    color: var(--dark-primary);
-    font-size: 1em;
-    font-weight: 600 !important;
-    text-shadow: none;
-  }
-
-  .double-cont {
-    display: inline-flex;
-    width: 100vw;
-    vertical-align: middle;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .in-p-container {
-    display: block;
-    width: 25vw;
-    margin: 0.5vw;
-    margin-top: 1.5vh;
-    margin-bottom: 1.5vh;
-    text-align: center;
-    color: #eceff4;
-    font-size: 1.2rem;
-    font-weight: 300 !important;
-    text-align: left;
-    background-color: var(--dark-accent);
-    border: 2px solid var(--dark-accent);
-    border-radius: 12px;
-    /* position: relative; */
-    overflow: hidden;
-    /* add padding, more on the top and bottom and less on the right and left */
-    padding: 0rem 1.5rem 0rem 1.5rem;
-  }
+}
 
 
-  .in-img-container {
-    display: inline-flex;
-    height: 32vh;
-    width: 40vw;
-    margin: 0.5vw;
-    margin-bottom: 1vw;
-    text-align: center;
-    color: #eceff4;
-    font-size: 20px;
-    /* font-weight: bolder; */
-    vertical-align: middle;
-    background-color: var(--dark-secondary);
-    border: 4px solid var(--dark-secondary);
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-  }
+.img-container {
+  display: flex;
+  height: 450px;
+  max-width: 450px;
+  margin: auto;
+  margin-bottom: 1vw;
+  text-align: center;
+  color: #eceff42c;
+  font-size: 20px;
+  vertical-align: middle;
+  background-color: var(--dark-secondary);
+  border: 4px solid var(--dark-secondary);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  overflow: visible !important;
+}
 
-  .title-cont {
-    display: inline-flex;
-    margin-left: 30vw;
-    margin-top: 0vw;
-    margin-bottom: .4vw;
-    width: 40vw;
-    vertical-align: middle;
-    justify-content: center;
-    align-items: center;
-  }
+/* 6DOF animation container: remove solid box look and add vignette overlay */
+#arm-anim-container {
+  position: relative;
+  background-color: transparent;
+  border: none;
+}
 
-  h1 {
-    font-weight: 500 !important;
-    font-size: 2rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
+/* vignette-like background: fades to page background well before edges */
+#arm-anim-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at center,
+    var(--dark-secondary) 0%,
+    var(--dark-secondary) 40%,
+    var(--dark-primary) 75%,
+    var(--dark-primary) 100%
+  );
+  pointer-events: none;
+  z-index: -1; /* sits behind title and GIF */
+}
 
-  p {
-    margin-bottom: 2%;
-  }
+::-webkit-scrollbar {
+    display: none;
+}
+
+figcaption {
+  position: absolute;
+  bottom: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75em;
+  color: var(--light-primary);
+  text-align: center;
+  font-weight: 300;
+  margin: 0;
+  padding: 0;
+  z-index: 2;
+  white-space: nowrap;
+  text-shadow: 0 0 4px #000000;
+}
+
+/* base anim rule (kept for other pages if needed) */
+.anim {
+  position: absolute;
+  opacity: 80%;
+  top: 50%;
+  left: 50%;
+  max-width: 170%;
+  transform: translate(-51.5%, -52%);
+  z-index: 1;
+}
+
+/* on this page: center the GIF cleanly within the vignette box */
+#arm-anim-container .anim {
+  transform: translate(-50%, -50%);
+}
+
+.image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: 100%;
+  transform: translate(-50%, -20%);
+  z-index: 1;
+}
+
+#braille-proto {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: 101%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+#BSol-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: 101%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+#sol-cont {
+  display: flex;
+  height: 70vh;
+  width: 40vw;
+  margin: auto;
+  margin-bottom: 1vw;
+  text-align: center;
+  color: #eceff4;
+  font-size: 20px;
+  vertical-align: middle;
+  background-color: var(--dark-secondary);
+  border: 4px solid var(--dark-secondary);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+#debruijn-image {
+  position: absolute;
+  left: 50%;
+  max-width: 101%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+#debrujin-cont {
+  display: flex;
+  height: 51vh;
+  width: 55vw;
+  margin: auto;
+  margin-bottom: 1vw;
+  text-align: center;
+  color: #eceff4;
+  font-size: 20px;
+  vertical-align: middle;
+  background-color: var(--dark-secondary);
+  border: 4px solid var(--dark-secondary);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark {
+  color: var(--dark-primary);
+  font-size: 1em;
+  font-weight: 600 !important;
+  text-shadow: none;
+}
+
+.double-cont {
+  display: inline-flex;
+  width: 100vw;
+  vertical-align: middle;
+  justify-content: center;
+  align-items: center;
+}
   
-  .gallery {
-    position: relative;
-    width: 80vw;
-    margin-left: 10vw;
-    margin-top: 2vh;
-    column-count: 5;
-    column-gap: 18px;
-    padding: 20px;
-  }
+.in-p-container {
+  display: block;
+  width: 25vw;
+  margin: 0.5vw;
+  margin-top: 1.5vh;
+  margin-bottom: 1.5vh;
+  text-align: center;
+  color: #eceff4;
+  font-size: 1.2rem;
+  font-weight: 300 !important;
+  text-align: left;
+  background-color: var(--dark-accent);
+  border: 2px solid var(--dark-accent);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 0rem 1.5rem 0rem 1.5rem;
+}
+
+.in-img-container {
+  display: inline-flex;
+  height: 32vh;
+  width: 40vw;
+  margin: 0.5vw;
+  margin-bottom: 1vw;
+  text-align: center;
+  color: #eceff4;
+  font-size: 20px;
+  vertical-align: middle;
+  background-color: var(--dark-secondary);
+  border: 4px solid var(--dark-secondary);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.title-cont {
+  display: inline-flex;
+  margin-left: 30vw;
+  margin-top: 0vw;
+  margin-bottom: .4vw;
+  width: 40vw;
+  vertical-align: middle;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  white-space: nowrap;
+  overflow: visible !important;
+  font-weight: 500 !important;
+  font-size: 2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-bottom: 2%;
+}
   
+.gallery {
+  position: relative;
+  width: 1020px;
+  margin: auto;
+  margin-top: 2vh;
+  column-count: 5;
+  column-gap: 18px;
+  padding: 20px;
+}
   
-  .gallery-img {
-    width: 100%;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform .2s;
-    display: inline-block;
-    margin-bottom: 20px;
-  }
+.gallery-img {
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform .2s;
+  display: inline-block;
+  margin-bottom: 20px;
+}
   
-  .gallery-img:hover {
-    transform: scale(1.02);
-  }
+.gallery-img:hover {
+  transform: scale(1.02);
+}
   
-  .modal {
-    visibility: hidden;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.8);
-  }
+/* full-screen centered modal with dark overlay */
+.modal {
+  visibility: hidden;
+  opacity: 0;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0,0,0,0.8);
+}
   
-  .modal-content {
-    margin: auto;
-    display: block;
-    /* width: 80%;
-    max-width: 700px; */
-    margin-top: 20vh;
-    height: 50vh;
-  }
+.modal-content {
+  display: block;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
   
-  .close {
-    position: absolute;
-    top: 15px;
-    right: 35px;
-    color: #f1f1f1;
-    font-size: 40px;
-    font-weight: bold;
-    transition: 0.3s;
-  }
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
   
-  .close:hover,
-  .close:focus {
-    color: #bbb;
-    text-decoration: none;
-    cursor: pointer;
-  }
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
   
-  /* create a class for a container div that is full width, and all child elements are centered horizontally */
-  .container {
-    display: flex;
-    width: 100vw;
-    vertical-align: middle;
-    justify-content: center;
-    align-items: center;
-  }
+/* create a class for a container div that is full width, and all child elements are centered horizontally */
+.container {
+  display: flex;
+  width: 100vw;
+  vertical-align: middle;
+  justify-content: center;
+  align-items: center;
+}
   
-  .mdbody {
-    text-align: left !important;
-    width: 1050px;
-    margin: auto;
-    margin-top: 6rem !important;
-    text-align: justify !important;
-  }
+.mdbody {
+  text-align: left !important;
+  width: 1050px;
+  margin: auto;
+  margin-top: 6rem !important;
+  text-align: justify !important;
+}
 
   .mdbody div {
-    font-family: 'Varela Round', sans-serif !important;
-    font-weight: 200;
+    /* font-family: 'Varela Round', sans-serif !important; */
+    font-weight: 400;
     margin-bottom: 1rem;
   }
 
   .mdh1 {
     font-size: 2.6rem;
-    font-weight: 700 !important;
+    font-weight: 600 !important;
     text-align: center;
   }
 
@@ -436,6 +472,8 @@ body {
 
   .mdp {
     font-size: 1rem;
+
+    border-radius: 0px;
   }
 
   .column {
@@ -476,8 +514,150 @@ body {
 
   .mdc {
     background-color: var(--dark-secondary);
-    padding: 14px;
-    border-radius: 6px;
+    padding: 20px;
+    /* border-radius: 6px; */
     padding-bottom: 0px !important;
   }
 
+/* ===== project meta strip (4 boxes) ===== */
+
+.project-meta {
+  width: 1020px;
+  max-width: 95vw;
+  margin: 1.5rem auto 1.5rem auto;
+  display: flex;
+  gap: 10px;
+}
+
+.meta-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.7rem 1rem;
+  background-color: var(--dark-secondary);
+  border-radius: 0;
+  border: 1px solid var(--dark-accent);
+}
+
+.meta-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+  margin-bottom: 0.15rem;
+}
+
+.meta-value {
+  font-size: 0.95rem;
+}
+
+/* explicit width ratios – tweak these to change layout */
+.meta-timeframe   { flex: 0 0 16%; }
+.meta-summary     { flex: 0 0 34%; }
+.meta-affiliation { flex: 0 0 30%; }
+.meta-status      { flex: 0 0 20%; }
+
+@media (max-width: 900px) {
+  .project-meta {
+    flex-direction: column;
+    width: 90vw;
+  }
+
+  .meta-timeframe,
+  .meta-summary,
+  .meta-affiliation,
+  .meta-status {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
+
+/* ===== media grid (Macy.js layout) ===== */
+
+.media-grid-wrapper {
+  width: 1020px;
+  max-width: 95vw;
+  margin: 2rem auto;
+}
+
+.media-grid {
+  width: 100%;
+}
+
+/* each item is a block Macy will position */
+.media-grid-item {
+  display: block;
+  margin-bottom: 10px;
+  background-color: var(--dark-secondary);
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* aspect ratio helpers using pseudo-elements */
+
+/* base: square-ish (1:1) */
+.media-grid-item--square::before,
+.media-grid-item--landscape::before,
+.media-grid-item--portrait::before {
+  content: "";
+  display: block;
+}
+
+/* iPhone-like horizontal photo/video ~ 4:3 */
+.media-grid-item--landscape::before {
+  padding-bottom: 75%;   /* height = 0.75 * width */
+}
+
+/* iPhone-like vertical photo/video ~ 3:4 */
+.media-grid-item--portrait::before {
+  padding-bottom: 133.33%; /* height = 4/3 * width */
+}
+
+/* simple square */
+.media-grid-item--square::before {
+  padding-bottom: 100%;
+}
+
+/* actual media fills the box */
+.media-grid-item img,
+.media-grid-item video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ===== video carousel (Splide) ===== */
+
+.video-carousel-wrapper {
+  width: 1020px;
+  max-width: 95vw;
+  margin: 2.5rem auto 1.5rem auto;
+}
+
+/* narrow padding to show prev/next slides peeking in */
+#arm-splide {
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+/* frame with fixed aspect ratio (16:9) */
+.carousel-frame {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  overflow: visible;
+  border-radius: 0;
+  background-color: var(--dark-secondary);
+}
+
+.carousel-frame video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

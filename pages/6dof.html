@@ -7,7 +7,11 @@
   <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
   <link rel="stylesheet" href="page-styles.css">
   <link rel="stylesheet" href="../about.css">
-
+  <!-- Splide CSS for video carousel -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"
+  >
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
@@ -15,22 +19,47 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-ZPCC960TZ2');
 </script>
 
 <body>
   <header>
-    <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
-
-    <h1 class="page-title">6DOF ROBOTIC ARM</h1>
   </header>
-  
+
+  <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
+
   <main>
-    <div class="img-container" style="margin-top: 6rem !important;">
-      <figcaption>MY VERSION OF THE 6DOF ARM</figcaption>  
-      <img style="max-height: 130%; " class="anim" src="../assets/armanim-compressed.gif" alt="Your image description" draggable="false" loop>
+    <!-- Animation box with centered title behind the GIF -->
+    <div id="arm-anim-container" class="img-container" style="margin-top: 2rem !important;">
+      <h1 class="page-title">6DOF DESKTOP ARM</h1>
+      <img
+        style="max-height: 130%;"
+        class="anim"
+        src="../assets/armanim-compressed.gif"
+        alt="Your image description"
+        draggable="false"
+      >
     </div>
+
+    <!-- Project meta strip (timeframe, info, affiliation, status) -->
+    <section class="project-meta">
+      <div class="meta-box meta-timeframe">
+        <span class="meta-label">Timeframe</span>
+        <span class="meta-value">2022–2024</span>
+      </div>
+      <div class="meta-box meta-summary">
+        <span class="meta-label">Overview</span>
+        <span class="meta-value">Cycloidal-drive 6DOF research platform</span>
+      </div>
+      <div class="meta-box meta-affiliation">
+        <span class="meta-label">Affiliation</span>
+        <span class="meta-value">Verso Robotics / Rutgers RAM Lab</span>
+      </div>
+      <div class="meta-box meta-status">
+        <span class="meta-label">Status</span>
+        <span class="meta-value">Open-sourced hardware</span>
+      </div>
+    </section>
 
     <div class="p-container">
       <p>We have created an open-source compilation of all of the work done by Sahil & I on this project, and released it here:</p>
@@ -40,8 +69,7 @@
       <div class="iframe-post">
         <div class="iframe-info">
           <p class="blog-date">OPEN-SOURCE HARDWARE</p>
-          <h2 class="blog-title"><a href="https://versorobotics.com/" target="_blank">VERSO ROBOTICS</a></h2>
-          <h3 class="blog-subtitle" >Creating an open-source 6DOF robotic arm platform! My involvement in this project: co-founder.</h3>
+          <h2 class="blog-title"><a href="https://versorobotics.com/" target="_blank">VERSOROBOTICS.COM</a></h2>
         </div>
         <iframe class="iframe-thumbnail" src="https://versorobotics.com/"></iframe>
       </div>
@@ -53,20 +81,19 @@
         or we have writeups & other tools we made to understand & use them.</p>
     </div>
 
-
     <div class="p-container">
-      <p>We made a framework for creating 6DOF robotic arms - our arms are very different from each other, but they use the same "things".</p> <p>My main contributions towards the project were creating the <b><a href="https://nikhil-k-v.github.io/pages/desmos.html">cycloidal function generator</a></b> & designing the <b><a href="https://nikhil-k-v.github.io/pages/cycloid.html">actuators</a></b>, creating the mechanics for my arm, and 
+      <p>We made a framework for creating 6DOF robotic arms - our arms are very different from each other, but they use the same "things".</p>
+      <p>My main contributions towards the project were creating the <b><a href="https://nikhil-k-v.github.io/pages/desmos.html">cycloidal function generator</a></b> & designing the <b><a href="https://nikhil-k-v.github.io/pages/cycloid.html">actuators</a></b>, creating the mechanics for my arm, and 
         creating the <b><a href="https://nikhil-k-v.github.io/pages/controller.html">miniature tele-op controller</a></b>.</p>
     </div>
 
     <div class="container">
-      <iframe height="700" width="1020"  scrolling="no" title="desmos" src="https://codepen.io/nikhil-k-v/embed/YzOyYpx?default-tab=result&theme-id=dark" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+      <iframe height="700" width="1020" scrolling="no" title="desmos" src="https://codepen.io/nikhil-k-v/embed/YzOyYpx?default-tab=result&theme-id=dark" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
         See the Pen <a href="https://codepen.io/nikhil-k-v/pen/YzOyYpx">
         desmos</a> by nv (<a href="https://codepen.io/nikhil-k-v">@nikhil-k-v</a>)
         on <a href="https://codepen.io">CodePen</a>.
       </iframe>
     </div>
-
 
     <div class="p-container">
       <p>We brought the price down to around $300 (and that includes fabrication, electronics, etc.). </p>
@@ -78,48 +105,110 @@
       <p>If you have any questions, PLEASE feel free to contact me at nikhilvijay.engineering@gmail.com</p>
       <p>As you wait for the open-source documentation to go live, below is a compilation of my arm, and the cycloidal generator & actuators that I made.</p>
     </div>
-    </main>
 
-    
-    <div class="gallery">
-      <img class="gallery-img" src="/assets/img-gal/finalarm6.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm2.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm3.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm4.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm5.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm7.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cont1.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cont2.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cont3.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cont4.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cont5.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/in1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/in2.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/in3.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy2.PNG" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy3.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy4.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy5.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy6.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy7.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/arm6.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/arm7.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/arm9.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/arm3.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/arm4.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/arm5.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/arm1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/arm2.png" alt="Image 2">
-    </div>
-
-        <!-- Modal -->
-        <div id="modal" class="modal">
-          <span class="close">&times;</span>
-          <img class="modal-content" id="modalImage">
+    <!-- Media grid (images + videos)
+    <section class="media-grid-wrapper">
+      <div class="media-grid">
+        <div class="media-grid-item media-grid-item--landscape">
+          <img src="/assets/img-gal/finalarm2.jpg" alt="Arm landscape 1">
         </div>
+        <div class="media-grid-item media-grid-item--landscape">
+          <img src="/assets/img-gal/finalarm4.jpg" alt="Arm landscape 2">
+        </div>
+        <!-- iPhone-like portrait cells -->
+        <!-- <div class="media-grid-item media-grid-item--portrait">
+          <img src="/assets/img-gal/finalarm6.jpg" alt="Arm portrait 1">
+        </div>
+        <div class="media-grid-item media-grid-item--portrait">
+          <img src="/assets/img-gal/cont1.jpg" alt="Controller portrait">
+        </div>
+        <div class="media-grid-item media-grid-item--square">
+          <img src="/assets/img-gal/cy1.png" alt="Cycloidal render square">
+        </div>
+        <div class="media-grid-item media-grid-item--square">
+          <img src="/assets/img-gal/cy3.jpg" alt="Cycloidal photo square">
+        </div>
+        <div class="media-grid-item media-grid-item--landscape">
+          <video src="/pages/platform-assets/8mbvideo-QVE-iTiyHNtz.mp4"  autoplay muted loop playsinline></video>
+        </div>
+        <div class="media-grid-item media-grid-item--landscape">
+          <video src="/pages/platform-assets/8mbvideo-QVE-iTiyHNtz.mp4"  autoplay muted loop playsinline></video>
+        </div>
+      </div>
+    </section> -->
 
-  <script src="app.js"></script>
+    <!-- Video carousel (Splide) -->
+    <!-- <section class="video-carousel-wrapper">
+      <div id="arm-splide" class="splide">
+        <div class="splide__track">
+          <ul class="splide__list">
+            <li class="splide__slide" data-splide-interval="9000">
+              <div class="carousel-frame">
+                <video src="/pages/platform-assets/8mbvideo-QVE-iTiyHNtz.mp4" autoplay muted loop playsinline></video>
+              </div>
+            </li>
+            <li class="splide__slide" data-splide-interval="6000">
+              <div class="carousel-frame">
+                <video src="/pages/platform-assets/8mbvideo-QVE-iTiyHNtz.mp4" autoplay muted loop playsinline></video>
+              </div>
+            </li>
+            <li class="splide__slide" data-splide-interval="12000">
+              <div class="carousel-frame">
+                <video src="/pages/platform-assets/8mbvideo-QVE-iTiyHNtz.mp4" autoplay muted loop playsinline></video>
+              </div>  
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main> -->
+
+  <div class="gallery">
+    <img class="gallery-img" src="/assets/img-gal/finalarm6.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/finalarm2.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/finalarm3.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/finalarm4.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/finalarm5.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/finalarm7.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/finalarm1.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cont1.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cont2.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cont3.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cont4.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cont5.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/in1.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/in2.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/in3.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cy1.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cy2.PNG" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cy3.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cy4.jpg" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cy5.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cy6.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/cy7.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/arm6.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/arm7.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/arm9.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/arm3.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/arm4.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/arm5.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/arm1.png" alt="Image 2">
+    <img class="gallery-img" src="/assets/img-gal/arm2.png" alt="Image 2">
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage"> 
+  </div>
+
+  <!-- GSAP for smooth fades -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" referrerpolicy="no-referrer"></script>
+  <!-- Macy.js for masonry-style media grid -->
+  <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+  <!-- Splide JS for video carousel -->
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+  <!-- Project-pages-specific JS (no scroll hijacking) -->
+  <script src="pages.js"></script>
 </body>
 </html>
