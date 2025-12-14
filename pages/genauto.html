@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEN AUTO</title>
+  <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
+  <link rel="stylesheet" href="page-styles.css">
+  <link rel="stylesheet" href="../about.css">
+  <!-- Splide CSS for video carousel -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"
+  >
+</head>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ZPCC960TZ2');
+</script>
+
+<body>
+  <header>
+  </header>
+
+  <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
+
+  <main>
+    <!-- Animation box with centered title behind the GIF -->
+    <div id="arm-anim-container" class="img-container" style="margin-top: 2rem !important;">
+      <h1 class="page-title">STEERING ROBOT</h1>
+      <img
+        style="max-width: 300%; left:42%; top: 50%; filter: opacity(0.75) brightness(1.75);"
+        class="anim"
+        src="../assets/steeringAnim.gif"
+        alt="Your image description"
+        draggable="false"
+      >
+    </div>
+
+
+    <section class="project-meta">
+      <div class="meta-box meta-timeframe">
+        <span class="meta-label">Timeframe</span>
+        <span class="meta-value">2025–PRESENT</span>
+      </div>
+      <div class="meta-box meta-summary">
+        <span class="meta-label">Overview</span>
+        <span class="meta-value">Steering robot <em>/</em> Control System Design <em>/</em> LiDAR <em>/</em> IMU-GPS Module <em>/</em> Multithreading <em>/</em> Mechanical Design <em>/</em> NVIDIA AGX Orin <em>/</em> ROS2  </span>
+      </div>
+      <div class="meta-box meta-affiliation">
+        <span class="meta-label">Affiliation</span>
+        <span class="meta-value">Gen Auto AI</span>
+      </div>
+      <div class="meta-box meta-status">
+        <span class="meta-label">Status</span>
+        <span class="meta-value">IP Process <em>/</em> Public Demo Soon </span>
+      </div>
+    </section>
+
+
+    
+    <div class="splide" id="splide1"role="group" aria-label="Splide Basic HTML Example">
+        <div class="splide__track">
+            <ul class="splide__list">
+            <li class="splide__slide">
+                <video width="100%" height="100%" autoplay muted loop playsinline>
+                    <source src="../assets/GenAutoVids/mountedActuation.mp4" type="video/mp4">
+                </video>
+            </li>
+            <li class="splide__slide">
+                <video width="100%" height="100%" autoplay muted loop playsinline>
+                    <source src="../assets/GenAutoVids/lidarWave.mp4" type="video/mp4">
+                </video>
+            </li>
+            <li class="splide__slide">
+                <video width="100%" height="100%" autoplay muted loop playsinline>
+                    <source src="../assets/GenAutoVids/toggleClamp.mp4" type="video/mp4">
+                </video>
+            </li>
+            <li class="splide__slide">
+                <video width="100%" height="100%" autoplay muted loop playsinline>
+                    <source src="../assets/GenAutoVids/gui.mp4" type="video/mp4">
+                </video>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="splide" id="splide2"role="group" aria-label="Splide Basic HTML Example">
+        <div class="splide__track">
+            <ul class="splide__list">
+            <li class="splide__slide">
+                <video width="100%" height="100%" autoplay muted loop playsinline>
+                    <source src="../assets/GenAutoVids/lidarZoom.mp4" type="video/mp4">
+                </video>
+            </li>
+            <li class="splide__slide">
+                <video width="100%" height="100%" autoplay muted loop playsinline>
+                    <source src="../assets/GenAutoVids/attachedDemo.mp4" type="video/mp4">
+                </video>
+            </li>
+            <li class="splide__slide">
+                <video width="100%" height="100%" autoplay muted loop playsinline>
+                    <source src="../assets/GenAutoVids/cfprints.mp4" type="video/mp4">
+                </video>
+            </li>
+            <li class="splide__slide">
+                <video width="100%" height="100%" autoplay muted loop playsinline>
+                    <source src="../assets/GenAutoVids/attachment.mp4" type="video/mp4">
+                </video>
+            </li>
+            <li class="splide__slide">
+                <video width="100%" height="100%" autoplay muted loop playsinline>
+                    <source src="../assets/GenAutoVids/attachedMoving.mp4" type="video/mp4">
+                </video>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <div class="gallery" id="content-gallery">
+        <img class="gallery-img" src="../assets/GenAutoVids/noMotor.jpg" alt="Image 2">
+        <img class="gallery-img" src="../assets/GenAutoVids/clampCF.jpg" alt="Image 2">
+        <img class="gallery-img" src="../assets/GenAutoVids/clampSide.jpg" alt="Image 2">
+        <img class="gallery-img" src="../assets/GenAutoVids/clampZoomed.jpg" alt="Image 2">
+        <img class="gallery-img" src="../assets/GenAutoVids/gearSide.jpg" alt="Image 2">
+        <img class="gallery-img" src="../assets/GenAutoVids/gearStraight.jpg" alt="Image 2">
+        <img class="gallery-img" src="../assets/GenAutoVids/gearUp.jpg" alt="Image 2">
+    </div>
+
+
+
+  </main>
+
+  <div class="gallery">
+
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage"> 
+  </div>
+
+  <!-- GSAP for smooth fades -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" referrerpolicy="no-referrer"></script>
+  <!-- Macy.js for masonry-style media grid -->
+  <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+  <!-- Splide JS for video carousel -->
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+  <!-- Project-pages-specific JS (no scroll hijacking) -->
+  <script src="pages.js"></script>
+
+</body>
+</html>

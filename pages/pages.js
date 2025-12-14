@@ -124,7 +124,8 @@ window.addEventListener('load', function () {
       new Splide( '#splide2', {
         type   : 'loop',
         height   : '30rem',
-        focus    : 'center',
+        perPage: 2,
+        focus : 'center',
         autoWidth: true,
       } ).mount();
     }
