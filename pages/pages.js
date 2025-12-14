@@ -123,7 +123,7 @@ window.addEventListener('load', function () {
     if (document.getElementById('splide2')) {
       new Splide( '#splide2', {
         type   : 'loop',
-        height   : '40rem',
+        height   : '30rem',
         focus    : 'center',
         autoWidth: true,
       } ).mount();
