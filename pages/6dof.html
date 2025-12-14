@@ -49,15 +49,15 @@
       </div>
       <div class="meta-box meta-summary">
         <span class="meta-label">Overview</span>
-        <span class="meta-value">Cycloidal-drive 6DOF research platform</span>
+        <span class="meta-value">6DOF Arm <em>/</em> Custom Actuators <em>/</em> PCB Design <em>/</em> Cycloidal Gears <em>/</em> Inverse Kinematics <em>/</em> Mechanical Design <em>/</em> Fabrication</span>
       </div>
       <div class="meta-box meta-affiliation">
         <span class="meta-label">Affiliation</span>
-        <span class="meta-value">Verso Robotics / Rutgers RAM Lab</span>
+        <span class="meta-value">Verso Robotics</span>
       </div>
       <div class="meta-box meta-status">
         <span class="meta-label">Status</span>
-        <span class="meta-value">Open-sourced hardware</span>
+        <span class="meta-value">Released Open-sourced Docs</span>
       </div>
     </section>
 
@@ -68,8 +68,9 @@
     <div id="iframe-content">
       <div class="iframe-post">
         <div class="iframe-info">
-          <p class="blog-date">OPEN-SOURCE HARDWARE</p>
-          <h2 class="blog-title"><a href="https://versorobotics.com/" target="_blank">VERSOROBOTICS.COM</a></h2>
+          <!-- <p class="blog-date">OPEN-SOURCE HARDWARE</p> -->
+          <h2 class="iframe-title"><a href="https://versorobotics.com/" target="_blank" style="text-decoration: none;
+">versorobotics.com⿻</a></h2>
         </div>
         <iframe class="iframe-thumbnail" src="https://versorobotics.com/"></iframe>
       </div>
@@ -106,62 +107,44 @@
       <p>As you wait for the open-source documentation to go live, below is a compilation of my arm, and the cycloidal generator & actuators that I made.</p>
     </div>
 
-    <!-- Media grid (images + videos)
-    <section class="media-grid-wrapper">
-      <div class="media-grid">
-        <div class="media-grid-item media-grid-item--landscape">
-          <img src="/assets/img-gal/finalarm2.jpg" alt="Arm landscape 1">
-        </div>
-        <div class="media-grid-item media-grid-item--landscape">
-          <img src="/assets/img-gal/finalarm4.jpg" alt="Arm landscape 2">
-        </div>
-        <!-- iPhone-like portrait cells -->
-        <!-- <div class="media-grid-item media-grid-item--portrait">
-          <img src="/assets/img-gal/finalarm6.jpg" alt="Arm portrait 1">
-        </div>
-        <div class="media-grid-item media-grid-item--portrait">
-          <img src="/assets/img-gal/cont1.jpg" alt="Controller portrait">
-        </div>
-        <div class="media-grid-item media-grid-item--square">
-          <img src="/assets/img-gal/cy1.png" alt="Cycloidal render square">
-        </div>
-        <div class="media-grid-item media-grid-item--square">
-          <img src="/assets/img-gal/cy3.jpg" alt="Cycloidal photo square">
-        </div>
-        <div class="media-grid-item media-grid-item--landscape">
-          <video src="/pages/platform-assets/8mbvideo-QVE-iTiyHNtz.mp4"  autoplay muted loop playsinline></video>
-        </div>
-        <div class="media-grid-item media-grid-item--landscape">
-          <video src="/pages/platform-assets/8mbvideo-QVE-iTiyHNtz.mp4"  autoplay muted loop playsinline></video>
-        </div>
-      </div>
-    </section> -->
-
     <!-- Video carousel (Splide) -->
-    <!-- <section class="video-carousel-wrapper">
-      <div id="arm-splide" class="splide">
-        <div class="splide__track">
-          <ul class="splide__list">
-            <li class="splide__slide" data-splide-interval="9000">
-              <div class="carousel-frame">
-                <video src="/pages/platform-assets/8mbvideo-QVE-iTiyHNtz.mp4" autoplay muted loop playsinline></video>
-              </div>
-            </li>
-            <li class="splide__slide" data-splide-interval="6000">
-              <div class="carousel-frame">
-                <video src="/pages/platform-assets/8mbvideo-QVE-iTiyHNtz.mp4" autoplay muted loop playsinline></video>
-              </div>
-            </li>
-            <li class="splide__slide" data-splide-interval="12000">
-              <div class="carousel-frame">
-                <video src="/pages/platform-assets/8mbvideo-QVE-iTiyHNtz.mp4" autoplay muted loop playsinline></video>
-              </div>  
-            </li>
-          </ul>
-        </div>
+
+    <div class="splide" id="splide2" role="group" aria-label="Splide Basic HTML Example">
+      <div class="splide__track">
+        <ul class="splide__list">
+
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/arm-vids/armInsta.mp4" type="video/mp4">
+            </video>          
+          </li>
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/arm-vids/armGood.mov" type="video/mp4">
+            </video>   
+          </li>
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/arm-vids/cycloidHand.mp4" type="video/mp4">
+            </video>
+          </li>
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/arm-vids/cycloidMotor.mp4" type="video/mp4">
+            </video>   
+          </li>
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/arm-vids/cycloidBLDC.mp4" type="video/mp4">
+            </video>   
+          </li>
+        </ul>
       </div>
-    </section>
-  </main> -->
+    </div>
+    
+
+
+  </main>
 
   <div class="gallery">
     <img class="gallery-img" src="/assets/img-gal/finalarm6.jpg" alt="Image 2">
@@ -210,5 +193,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
   <!-- Project-pages-specific JS (no scroll hijacking) -->
   <script src="pages.js"></script>
+
 </body>
 </html>

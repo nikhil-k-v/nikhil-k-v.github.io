@@ -1,3 +1,4 @@
+
 /* Modal gallery logic */
 window.addEventListener('load', function() {
   var modal = document.getElementById('modal');
@@ -111,112 +112,40 @@ window.addEventListener('load', function () {
   });
 });
 
-/* Splide video carousel init */
-window.addEventListener('load', function () {
-  if (typeof Splide === 'undefined') {
-    console.log('[Splide] Not loaded');
-    return;
-  }
-
-  var root = document.getElementById('arm-splide');
-  if (!root) {
-    console.log('[Splide] #arm-splide not found');
-    return;
-  }
-
-  console.log('[Splide] Initializing…');
-
-  var defaultInterval = 7000;
-  var autoplayTimer = null;
-
-  var splide = new Splide('#arm-splide', {
-    // IMPORTANT: keep this simple and disable built-in autoplay/loop
-    type: 'slide',        // no loop/clones → avoids a lot of weirdness
-    perPage: 1,
-    focus: 'center',
-    gap: '1rem',
-    drag: true,
-    trimSpace: false,
-    autoplay: false,
-    pauseOnHover: false,
-    pauseOnFocus: false,
-    arrows: false,
-    pagination: false,
-  });
-
-  function logActiveSlide(prefix) {
-    var idx = splide.index;
-    var slideObj = splide.Components.Slides.getAt(idx);
-    var slideEl = slideObj && slideObj.slide;
-    if (!slideEl) {
-      console.log(prefix, 'no active slide element');
-      return null;
+  document.addEventListener( 'DOMContentLoaded', function() {
+    if (document.getElementById('splide1')) {
+      new Splide( '#splide1', {
+        type   : 'loop',
+        padding: '8rem',
+      } ).mount();
     }
 
-    var rect = slideEl.getBoundingClientRect();
-    console.log(prefix, 'index=', idx, 'rect=', {
-      width: rect.width,
-      height: rect.height,
-      top: rect.top,
-      left: rect.left
-    });
-
-    var video = slideEl.querySelector('video');
-    if (!video) {
-      console.log(prefix, 'no <video> in active slide');
-    } else {
-      console.log(prefix, 'video src=', video.currentSrc || video.src);
+    if (document.getElementById('splide2')) {
+      new Splide( '#splide2', {
+        type   : 'loop',
+        height   : '40rem',
+        focus    : 'center',
+        autoWidth: true,
+      } ).mount();
     }
 
-    return { slideEl, video };
-  }
-
-  function scheduleNext() {
-    if (autoplayTimer) {
-      clearTimeout(autoplayTimer);
-      autoplayTimer = null;
+    if (document.getElementById('splide3')) {
+      new Splide( '#splide3', {
+      type  : 'loop',
+      perPage: 2,
+      focus : 'center',
+      padding: '5rem',
+      } ).mount();
     }
 
-    var active = logActiveSlide('[Splide] scheduleNext');
-    if (!active) return;
-
-    var slideEl = active.slideEl;
-    var video = active.video;
-
-    // Try to play the video on the active slide
-    if (video) {
-      var playPromise = video.play();
-      if (playPromise && typeof playPromise.catch === 'function') {
-        playPromise.catch(function (err) {
-          console.log('[Splide] video.play() error:', err);
-        });
-      }
+    if (document.getElementById('splide4')) {
+      new Splide( '#splide4', {
+        type   : 'loop',
+        padding: '20rem',
+      } ).mount();
     }
 
-    var attr =
-      slideEl.getAttribute('data-splide-interval') ||
-      slideEl.getAttribute('data-duration');
+    
 
-    var dur = parseInt(attr, 10);
-    if (isNaN(dur) || dur <= 0) dur = defaultInterval;
+  } );
 
-    console.log('[Splide] scheduling next in', dur, 'ms');
-
-    autoplayTimer = setTimeout(function () {
-      console.log('[Splide] advancing from index', splide.index);
-      splide.go('>');
-    }, dur);
-  }
-
-  splide.on('mounted', function () {
-    console.log('[Splide] mounted');
-    scheduleNext();
-  });
-
-  splide.on('moved', function (newIndex) {
-    console.log('[Splide] moved to index', newIndex);
-    scheduleNext();
-  });
-
-  splide.mount();
-});

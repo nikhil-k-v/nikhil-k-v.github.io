@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>6DOF ARM</title>
+  <title>PLATFORM</title>
   <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
   <link rel="stylesheet" href="page-styles.css">
   <link rel="stylesheet" href="../about.css">
+  <!-- Splide CSS for video carousel -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"
+  >
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
@@ -21,15 +26,14 @@
   <header>
   </header>
 
-      <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
+  <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
 
-  
   <main>
     <!-- Animation box with centered title behind the GIF -->
     <div id="arm-anim-container" class="img-container" style="margin-top: 2rem !important;">
       <h1 class="page-title">MOTION PLATFORM</h1>
       <img
-        style="margin-left: 10px; margin-top: -10px; max-width: 180%; filter: contrast(1.3) brightness(1);"
+        style="max-width: 200%; top: 54%; filter: contrast(1.3) opacity(0.8);"
         class="anim"
         src="../assets/platform.gif"
         alt="Your image description"
@@ -37,90 +41,156 @@
       >
     </div>
 
-    <div id="iframe-content">
-      <div class="iframe-post">
-        <div class="iframe-info">
-          <p class="blog-date">OPEN-SOURCE HARDWARE</p>
-          <h2 class="blog-title"><a href="https://versorobotics.com/" target="_blank">VERSOROBOTICS.COM</a></h2>
-        </div>
-        <iframe class="iframe-thumbnail" src="https://versorobotics.com/"></iframe>
+    <!-- Project meta strip (timeframe, info, affiliation, status) -->
+    <section class="project-meta">
+      <div class="meta-box meta-timeframe">
+        <span class="meta-label">Timeframe</span>
+        <span class="meta-value">2024–PRESENT</span>
+      </div>
+      <div class="meta-box meta-summary">
+        <span class="meta-label">Overview</span>
+        <span class="meta-value">3-DOF Motion Platform <em>/</em> Robotic Testbed <em>/</em> Academic Research <em>/</em> Novel Linkage Design <em>/</em> Python Kinematic Solver <em>/</em> MATLAB Simulation </span>
+      </div>
+      <div class="meta-box meta-affiliation">
+        <span class="meta-label">Affiliation</span>
+        <span class="meta-value">RAM Lab</span>
+      </div>
+      <div class="meta-box meta-status">
+        <span class="meta-label">Status</span>
+        <span class="meta-value">In-use for locomotion papers</span>
+      </div>
+    </section>
+
+        <!-- <section class="project-meta">
+      <div class="meta-box meta-timeframe">
+        <span class="meta-label">Timeframe</span>
+        <span class="meta-value">2025–PRESENT</span>
+      </div>
+      <div class="meta-box meta-summary">
+        <span class="meta-label">Overview</span>
+        <span class="meta-value">Steering robot <em>/</em> Control System Design <em>/</em> LiDAR <em>/</em> IMU-GPS Module <em>/</em> Multithreading <em>/</em> Mechanical Design <em>/</em> NVIDIA AGX Orin <em>/</em> ROS2  </span>
+      </div>
+      <div class="meta-box meta-affiliation">
+        <span class="meta-label">Affiliation</span>
+        <span class="meta-value">Gen Auto AI</span>
+      </div>
+      <div class="meta-box meta-status">
+        <span class="meta-label">Status</span>
+        <span class="meta-value">IP Process <em>/</em> Public Demo Soon </span>
+      </div>
+    </section> -->
+
+
+    
+    <div class="splide" id="splide1"role="group" aria-label="Splide Basic HTML Example">
+      <div class="splide__track">
+        <ul class="splide__list">
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/platform-vids/8mbvideo-QVE-iTiyHNtz.mp4" type="video/mp4">
+            </video>          
+          </li>
+                    <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/platform-vids/platformNewAngle.mp4" type="video/mp4">
+            </video>          
+          </li>
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/platform-vids/platformRandomMove.mp4" type="video/mp4">
+            </video>   
+          </li>
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/platform-vids/platformBackForth.mp4" type="video/mp4">
+            </video>
+          </li>
+        </ul>
       </div>
     </div>
 
-    <div class="p-container">
-      <p>We designed this arm almost completely from scratch - every arm part, linkage, & assembly, the cycloidal actuators and the equations which define their curves, the motor driver circuitry and PCB, the forward kinematics tele-op controllers, and much of the code.</p>
-      <p>The things we COULDNT do from scratch, like creating an inverse kinematics solver, were still studied and worked on - we either plan to do them in the future, 
-        or we have writeups & other tools we made to understand & use them.</p>
+        <div class="splide" id="splide3"role="group" aria-label="Splide Basic HTML Example">
+      <div class="splide__track">
+        <ul class="splide__list">
+
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/platform-vids/solderVid.mp4" type="video/mp4">
+            </video>          
+          </li>
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/platform-vids/sliderVid.mp4" type="video/mp4">
+            </video>
+          </li>
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/platform-vids/sliderPart.mp4" type="video/mp4">
+            </video>   
+          </li>
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/platform-vids/platformMan.mp4" type="video/mp4">
+            </video>   
+          </li>
+          <li class="splide__slide">
+            <video width="100%" height="100%" autoplay muted loop playsinline>
+              <source src="../assets/platform-vids/panAround.mp4" type="video/mp4">
+            </video>   
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <div class="p-container">
-      <p>We made a framework for creating 6DOF robotic arms - our arms are very different from each other, but they use the same "things".</p>
-      <p>My main contributions towards the project were creating the <b><a href="https://nikhil-k-v.github.io/pages/desmos.html">cycloidal function generator</a></b> & designing the <b><a href="https://nikhil-k-v.github.io/pages/cycloid.html">actuators</a></b>, creating the mechanics for my arm, and 
-        creating the <b><a href="https://nikhil-k-v.github.io/pages/controller.html">miniature tele-op controller</a></b>.</p>
+
+
+    <div style="width: 54.5vw; margin: auto;">
+      <video width="100%" height="100%" autoplay muted loop playsinline>
+        <source src="../assets/platform-vids/dynamics.mp4" type="video/mp4">
+      </video>   
     </div>
 
-    <div class="container">
-      <iframe height="700" width="1020" scrolling="no" title="desmos" src="https://codepen.io/nikhil-k-v/embed/YzOyYpx?default-tab=result&theme-id=dark" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-        See the Pen <a href="https://codepen.io/nikhil-k-v/pen/YzOyYpx">
-        desmos</a> by nv (<a href="https://codepen.io/nikhil-k-v">@nikhil-k-v</a>)
-        on <a href="https://codepen.io">CodePen</a>.
-      </iframe>
+
+    <div class="gallery" id="content-gallery">
+      <img class="gallery-img" src="../assets/platform-vids/sliderTilted.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/baseAlmostDone.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/baseCompleteWide.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/baseHalfDone.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/assortedPartsWide.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/sliderAttached.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/sliderBottom.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/baseIsoView.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/baseStructure.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/baseStructureWide.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/sliderTop.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/bipedPlatformWide.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/baseTopView.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/baseConnectorWide.jpg" alt="Image 2">
+      <img class="gallery-img" src="../assets/platform-vids/assortedParts2.jpg" alt="Image 2">
     </div>
 
-    <div class="p-container">
-      <p>We brought the price down to around $300 (and that includes fabrication, electronics, etc.). </p>
-      <p>The arm mostly 3-D printed, but it also uses laser cut parts for the cycloidal actuators & covers - those can be 3D printed if laser-cutting is not an option.</p>
-      <p>It is BY FAR the most time I have spent on any project - we spent hundreds of hours each creating this across a full year of planning, designing, testing, evaluating, failing, replanning, and so on.</p>
-    </div>
 
-    <div class="p-container">
-      <p>If you have any questions, PLEASE feel free to contact me at nikhilvijay.engineering@gmail.com</p>
-      <p>As you wait for the open-source documentation to go live, below is a compilation of my arm, and the cycloidal generator & actuators that I made.</p>
-    </div>
+
   </main>
 
   <div class="gallery">
-    <img class="gallery-img" src="/assets/img-gal/finalarm6.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm2.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm3.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm4.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm5.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm7.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm1.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cont1.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cont2.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cont3.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cont4.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cont5.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/in1.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/in2.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/in3.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy1.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy2.PNG" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy3.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy4.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy5.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy6.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy7.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm6.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm7.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm9.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm3.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm4.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm5.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm1.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm2.png" alt="Image 2">
+
   </div>
 
   <!-- Modal -->
   <div id="modal" class="modal">
     <span class="close">&times;</span>
-    <img class="modal-content" id="modalImage">
+    <img class="modal-content" id="modalImage"> 
   </div>
 
   <!-- GSAP for smooth fades -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" referrerpolicy="no-referrer"></script>
+  <!-- Macy.js for masonry-style media grid -->
+  <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
+  <!-- Splide JS for video carousel -->
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
   <!-- Project-pages-specific JS (no scroll hijacking) -->
   <script src="pages.js"></script>
+
 </body>
 </html>

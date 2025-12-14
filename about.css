@@ -20,7 +20,7 @@
   }
 
 .iframe-post {
-    background-color: var(--dark-accent);
+    background-color: var(--dark-secondary);
     display: flex;
     flex-direction: column; /* Ensures thumbnail and text are side by side */
     justify-content: center;
@@ -28,10 +28,8 @@
     text-align: center;
   
     height: fit-content; /* Set this to the maximum width you want for the blog post */
-    width: 60vw;
+    width: 63vw !important;
     margin: auto;
-    padding: 0.5rem 1.5rem 0.5rem 1.5rem;
-
 
     /*
     border-radius: 1.5rem;
@@ -46,14 +44,33 @@
     text-align: center !important;
 }
 
+.iframe-title {
+    text-align: center !important;
+    font-weight: 400 !important;
+    text-transform: uppercase !important;
+    font-size: 1.6rem;
+    letter-spacing: 0.07em;
+    opacity: 0.75;
+    text-decoration: none !important;
+    margin-top: 1.3rem !important;
+    margin-bottom: 1rem !important;
+
+    border-bottom: 1px solid;
+}
+
 
 .iframe-thumbnail {
     /* background-color: #ffffff; */
-    width: 100% !important;
+    width: 60vw !important;
     height: 600px !important;
-    /* border-radius: 10px; */
+    border-radius: 10px;
     border: 0px;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.6;
+    transition: opacity 0.3s ease-in;
+}
 
+.iframe-thumbnail:hover {
+    opacity: 1;
 }
 

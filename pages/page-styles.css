@@ -129,7 +129,7 @@ header {
 
 .p-container {
   display: block;
-  width: 60vw;
+  width: 63vw;
   margin: auto;
   margin-top: 1.5vh;
   margin-bottom: 1.5vh;
@@ -143,8 +143,13 @@ header {
   /* border-radius: 12px; */
   position: relative;
   overflow: hidden;
-  padding: 0rem 1.5rem 0rem 1.5rem;
+  /* padding: 0rem 1.5rem 0rem 1.5rem; */
 
+}
+
+.p-container p {
+  max-width: 60vw;
+  margin: 1.5rem 1.3rem 1.1rem 1.3rem;
 }
 
 
@@ -325,7 +330,7 @@ figcaption {
   border: 2px solid var(--dark-accent);
   border-radius: 12px;
   overflow: hidden;
-  padding: 0rem 1.5rem 0rem 1.5rem;
+  /* padding: 0rem 1.5rem 0rem 1.5rem; */
 }
 
 .in-img-container {
@@ -371,17 +376,23 @@ p {
   
 .gallery {
   position: relative;
-  width: 1020px;
+  width: 62.5vw;
   margin: auto;
   margin-top: 2vh;
   column-count: 5;
   column-gap: 18px;
-  padding: 20px;
+  /* padding: 20px; */
+}
+
+#content-gallery {
+    column-count: 3!important;
+    max-width: 55vw !important;
+
 }
   
 .gallery-img {
   width: 100%;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   cursor: pointer;
   transition: transform .2s;
   display: inline-block;
@@ -522,40 +533,44 @@ p {
 /* ===== project meta strip (4 boxes) ===== */
 
 .project-meta {
-  width: 1020px;
-  max-width: 95vw;
+  max-width: 63.5vw !important;
   margin: 1.5rem auto 1.5rem auto;
   display: flex;
-  gap: 10px;
 }
 
 .meta-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0.7rem 1rem;
+  text-align: center;
+  padding: 1rem 0.8rem 1rem 0.8rem;
   background-color: var(--dark-secondary);
-  border-radius: 0;
-  border: 1px solid var(--dark-accent);
+  box-sizing: border-box !important;
+  border: 5px solid var(--dark-primary);
 }
 
 .meta-label {
   font-size: 0.7rem;
+  font-weight: 500 !important;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   opacity: 0.7;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.2rem;
 }
 
 .meta-value {
-  font-size: 0.95rem;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  font-weight: 500 !important;
+  opacity: 1;
 }
 
 /* explicit width ratios – tweak these to change layout */
-.meta-timeframe   { flex: 0 0 16%; }
-.meta-summary     { flex: 0 0 34%; }
-.meta-affiliation { flex: 0 0 30%; }
-.meta-status      { flex: 0 0 20%; }
+.meta-timeframe   { flex: 0 0 13%; }
+.meta-summary     { flex: 0 0 50%; }
+.meta-affiliation { flex: 0 0 13%; }
+.meta-status      { flex: 0 0 24%; }
 
 @media (max-width: 900px) {
   .project-meta {
@@ -632,32 +647,52 @@ p {
 
 /* ===== video carousel (Splide) ===== */
 
-.video-carousel-wrapper {
-  width: 1020px;
-  max-width: 95vw;
-  margin: 2.5rem auto 1.5rem auto;
+.splide {
+  margin-bottom: 1rem !important;
+  max-width: 54vw;
+  margin: auto;
+  padding: 0 6rem 40px 6rem !important;
+
 }
 
-/* narrow padding to show prev/next slides peeking in */
-#arm-splide {
-  padding-left: 10%;
-  padding-right: 10%;
+.splide__slide {
+  padding-left: 9px;
+  padding-right: 9px;
+} 
+
+em {
+  font-style: normal;
+  opacity: 0.6;
+  margin: 0 0.27rem 0 0.25rem;
 }
 
-/* frame with fixed aspect ratio (16:9) */
-.carousel-frame {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%; /* 16:9 aspect ratio */
-  overflow: visible;
-  border-radius: 0;
-  background-color: var(--dark-secondary);
+.splide__list {
+   overflow-x: visible !important;
+}
+.splide__arrow {
+    background: transparent !important; 
+    opacity: 1.0 !important;
+    border: none !important; /* Ensure no border is left */
+    width: 4rem !important; 
+    height: 4rem !important;
+    transform: translateY(-70%) !important; 
 }
 
-.carousel-frame video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+/* 2. Style the SVG icon inside the button, forcing the fill color */
+.splide__arrow  svg {
+    fill: var(--dark-secondary) !important; /* <-- CRITICAL FIX: Forces the color to white */
+    opacity: 1.0 !important;
+    width: 4rem !important;
+    height: 4rem !important;
+    transition: fill 0.2s ease-in-out !important;
+}
+
+/* Optional: Add a hover effect for user feedback */
+.splide__arrow:hover svg {
+    fill: #f0f0f0bf !important; /* <-- CRITICAL FIX: Forces the color to white */
+    transition: fill 0.2s ease-in-out !important;
+}
+
+.splide__pagination {
+    opacity: 0.5 !important;
 }
