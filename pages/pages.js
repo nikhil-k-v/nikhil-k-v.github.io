@@ -142,7 +142,18 @@ window.addEventListener('load', function () {
     if (document.getElementById('splide4')) {
       new Splide( '#splide4', {
         type   : 'loop',
-        padding: '20rem',
+        height: '30rem',
+        autoWidth: true,
+        focus : 'center',
+      } ).mount();
+    }
+
+    if (document.getElementById('splide5')) {
+      new Splide( '#splide5', {
+        type   : 'loop',
+        height: '30rem',
+        autoWidth: true,
+        focus : 'center',
       } ).mount();
     }
 
