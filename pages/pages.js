@@ -116,7 +116,7 @@ window.addEventListener('load', function () {
     if (document.getElementById('splide1')) {
       new Splide( '#splide1', {
         type   : 'loop',
-        padding: '8rem',
+        padding: '2rem',
       } ).mount();
     }
 

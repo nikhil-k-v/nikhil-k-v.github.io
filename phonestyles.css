@@ -1,7 +1,7 @@
 @media screen and (max-width: 1380px) {
     .box {
-      height: 60vh !important;
-      margin-top: 10vh !important;
+      height: 50vh !important;
+      margin-top: 0vh !important;
     }
   
     .container {
@@ -19,20 +19,18 @@
     } */
 
     .navigation {
-        top: 11vh !important; /* adjust as per requirement */
+        top: 10vh !important; /* adjust as per requirement */
         left: 5vw !important;
         width: 90vw !important;
         height: 4vh !important;
-        font-size: 1.7vw  !important;
+        font-size: 3vw  !important;
     }
   
     #title {
         width: 100vw !important;
         text-align: center !important;
-        margin: 0 0 0 0px !important;
-        left: 0 !important;
-        top: 3vh !important;
-        position: fixed !important;
+        margin: 0 auto 0 auto !important;
+        top: 5vh !important;
     }
 
     .s-title {
@@ -86,4 +84,9 @@
       width: 85vw !important;
       padding-left: 0 !important;
     }
+
+    .index-label {
+      font-size: 0.8rem !important;
+    }
   }
+

@@ -23,59 +23,6 @@
     overflow-x: hidden;
 }
 
-@media (max-width: 1370px) {
-    .p-container {
-        width: 90vw !important;
-        padding: 2.5% 2.5% 2.5% 2.5%!important;
-    }
-
-    p {
-        font-size: 1.1rem !important;
-        width: 95% !important;
-        margin: 2.5% 0% 0% 0% !important;
-    }
-
-    .img-container {
-        width: 90vw !important;
-        height: 30vh !important;
-    }
-
-    figcaption {
-        font-size: 0.6em !important;
-        width: 90% !important;
-        white-space: wrap !important;
-    }
-
-    .page-title {
-        font-size: 2.4rem !important;
-    }
-
-    .desmos-embed {
-        width: 95vw !important;
-        height: 60vh !important;
-    }
-
-    .container {
-        width: 100vw !important;
-        left: 0 !important;
-        align-items: center !important;
-    }
-
-    .gallery {
-      width: 90vw !important;
-      margin-left: 0 !important;
-      margin-top: 1vh;
-      column-count: 3 !important;
-      column-gap: 8px !important;
-      align-items: center !important;
-    }
-
-    .gallery-img {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 6px !important;
-    }
-}
 
 .desmos-embed {
   width: 1020px;
@@ -148,7 +95,7 @@ header {
 }
 
 .p-container p {
-  max-width: 60vw;
+  max-width: 100%;
   margin: 1.5rem 1.3rem 1.1rem 1.3rem;
 }
 
@@ -572,78 +519,6 @@ p {
 .meta-affiliation { flex: 0 0 13%; }
 .meta-status      { flex: 0 0 24%; }
 
-@media (max-width: 900px) {
-  .project-meta {
-    flex-direction: column;
-    width: 90vw;
-  }
-
-  .meta-timeframe,
-  .meta-summary,
-  .meta-affiliation,
-  .meta-status {
-    flex: 0 0 auto;
-    width: 100%;
-  }
-}
-
-/* ===== media grid (Macy.js layout) ===== */
-
-.media-grid-wrapper {
-  width: 1020px;
-  max-width: 95vw;
-  margin: 2rem auto;
-}
-
-.media-grid {
-  width: 100%;
-}
-
-/* each item is a block Macy will position */
-.media-grid-item {
-  display: block;
-  margin-bottom: 10px;
-  background-color: var(--dark-secondary);
-  border-radius: 0;
-  position: relative;
-  overflow: hidden;
-}
-
-/* aspect ratio helpers using pseudo-elements */
-
-/* base: square-ish (1:1) */
-.media-grid-item--square::before,
-.media-grid-item--landscape::before,
-.media-grid-item--portrait::before {
-  content: "";
-  display: block;
-}
-
-/* iPhone-like horizontal photo/video ~ 4:3 */
-.media-grid-item--landscape::before {
-  padding-bottom: 75%;   /* height = 0.75 * width */
-}
-
-/* iPhone-like vertical photo/video ~ 3:4 */
-.media-grid-item--portrait::before {
-  padding-bottom: 133.33%; /* height = 4/3 * width */
-}
-
-/* simple square */
-.media-grid-item--square::before {
-  padding-bottom: 100%;
-}
-
-/* actual media fills the box */
-.media-grid-item img,
-.media-grid-item video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
 
 /* ===== video carousel (Splide) ===== */
 
@@ -652,7 +527,6 @@ p {
   max-width: 54vw;
   margin: auto;
   padding: 0 6rem 40px 6rem !important;
-
 }
 
 .splide__slide {
@@ -696,3 +570,145 @@ em {
 .splide__pagination {
     opacity: 0.5 !important;
 }
+
+  #dynamicsVid {
+    width: 54.5vw; 
+    margin: auto;
+  }
+
+
+@media (max-width: 1000px) { 
+
+
+    .p-container {
+        width: 95vw !important;
+    }
+
+    .p-container p{
+        margin: 2.5% 2.5% 2.5% 2.5%!important;
+    }
+
+    p {
+        font-size: 0.8rem !important;
+        margin: 0 !important;
+        padding: 0;
+    }
+
+    figcaption {
+        font-size: 0.6em !important;
+        width: 90% !important;
+        white-space: wrap !important;
+    }
+
+    .page-title {
+        font-size: 2.4rem !important;
+    }
+
+    .desmos-embed {
+        width: 95vw !important;
+        height: 60vh !important;
+    }
+
+    .container {
+        width: 100vw !important;
+        left: 0 !important;
+        align-items: center !important;
+    }
+
+    .gallery {
+      width: 94vw !important;
+      margin-left: auto !important;
+      margin-top: 1vh;
+      column-count: 3 !important;
+      column-gap: 8px !important;
+      align-items: center !important;
+    }
+
+    #content-gallery {
+      max-width: 94vw !important;
+      margin-top: 1vh;
+      column-count: 2 !important;
+      column-gap: 8px !important;
+      align-items: center !important;
+    }
+
+    .gallery-img {
+      width: 100%;
+      border-radius: 5px;
+      margin-bottom: 6px !important;
+    }
+
+    #back-to-home {
+      position: fixed !important;
+        font-size: 1.2rem !important;
+        padding: 0.4rem 0.8rem !important;
+        border: 1px solid var(--light-primary) !important;
+        z-index: 2 !important;
+    }
+
+    .project-meta {
+      max-width: 97vw !important;
+      margin: auto;
+      margin-top: -100px !important;
+      margin-bottom: 1rem !important;
+      flex-direction: row !important;
+    }
+
+    .meta-timeframe   { flex: 0 0 14%; }
+    .meta-summary     { flex: 0 0 54%; }
+    .meta-affiliation { flex: 0 0 14%; }
+    .meta-status      { flex: 0 0 18%; }
+
+    .meta-box {
+      padding: 0.5rem 0.2rem 0.5rem 0.2rem !important;      
+      box-sizing: border-box !important;
+      border: 2px solid var(--dark-primary);
+    }
+
+    .meta-label {
+      font-size: 0.35rem !important;
+    }
+
+    .meta-value {
+      font-size: 0.48rem !important;
+    }
+
+    .anim {
+      max-width: 400px !important;
+    }
+
+    .img-container {
+      max-height: 270px !important;
+      min-height: 200px !important;
+      max-width: 93vw !important;
+      top: -70px !important;
+    }
+
+    .arm-anim-container {
+      height: 200px !important;
+      max-width: 93vw !important;
+    }
+
+    .page-title {
+      font-size: 2rem !important;
+    }
+
+    .splide {
+      max-width: 95vw !important;
+      padding: 0 0 1.75rem 0 !important;
+      margin: 0 auto 1rem auto !important;
+    }
+
+    .splide__slide {
+      width: 100% !important;
+      max-height: 30vh !important;
+      /* width: auto !important; */
+    }
+
+    #dynamicsVid {
+      width: 93vw; 
+      margin: auto;
+    }
+
+
+  }

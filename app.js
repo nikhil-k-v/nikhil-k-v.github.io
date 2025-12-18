@@ -25,10 +25,10 @@ function animateMe(el) {
   // Animate boxes and text size
   boxes.forEach((box) => {
     const boxIsActive = box.classList.contains("active");
-    const boxWidth = (boxIsActive ? (pageWidth < 1380 ? "60vw" : "40vw") : (pageWidth < 1380 ? "18vw" : "23vw"));
-    const titleFontSize = boxIsActive ? (pageWidth < 1380 ? "4vw" : "3vw") : (pageWidth < 1380 ? "2vw" : "1.5vw");
+    const boxWidth = (boxIsActive ? (pageWidth < 1380 ? "70vw" : "40vw") : (pageWidth < 1380 ? "25vw" : "23vw"));
+    const titleFontSize = boxIsActive ? (pageWidth < 1380 ? "7vw" : "3vw") : (pageWidth < 1380 ? "3vw" : "1.5vw");
     const seeMoreFontSize = boxIsActive ? (pageWidth < 1380 ? "3vw" : "1.8vw") : (pageWidth < 1380 ? "2.5vw" : "1.8vw");
-    const titleBottom = boxIsActive ?  (pageWidth < 1380 ? "9vh" : "9.7vh") : (pageWidth < 1380 ? "4vh" : "4.7vh");
+    const titleBottom = boxIsActive ?  (pageWidth < 1380 ? "7vh" : "9.7vh") : (pageWidth < 1380 ? "2vh" : "4.7vh");
     const divBottom = boxIsActive ?  (pageWidth < 1380 ? "12.5vh" : "17.75vh") : (pageWidth < 1380 ? "17.75vh" : "17.75vh");
     const durationToggle = boxIsActive ? 1 : 0.5;
     const divToggle = pageWidth > 1380 ?"block" : "none";
