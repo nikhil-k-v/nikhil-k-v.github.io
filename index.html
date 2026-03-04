@@ -4,177 +4,185 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-ZPCC960TZ2');
 </script>
 
 <head>
-<meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi">  
+  <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi">
   <link rel="icon" type="image/x-icon" href="/assets/favicon2.png">
   <title>Nikhil Vijay</title>
 </head>
 
-<body>
-
-  
+<body class="projects-page">
   <div id="loader">
     <div id="loaderText"></div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.3/draggable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.3/draggable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+  <script src="app.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="nav.css">
+  <link rel="stylesheet" href="phonestyles.css">
+  <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
 
-    <script src="app.js"></script>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="nav.css">
-    <link rel="stylesheet" href="phonestyles.css">
+  <div style="position: fixed; z-index: 3;">
+    <h1 id="title">NIKHIL VIJAY</h1>
 
-    <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
+    <ul class='navigation'>
+      <li class="active first"><a href="/index.html">PROJECTS</a></li>
+      <li><a href="/updates.html">GALLERY</a> <li class="vertical-row"><a>|</a></li></li>
+      <li class="last"><a href="/about.html">ABOUT ME</a></li>
+    </ul>
+  </div>
 
-   
-    <div style="position: fixed; z-index: 3;">
-      <h1 id="title">NIKHIL VIJAY</h1>
+  <div id="blocker" style="top: 0; width: 100vw; position: fixed; background-color: var(--dark-primary); z-index: 0;"></div>
 
-      <!-- add navigation to all pages -->
-      <ul class='navigation'>
-        <li class="active first"><a href="/index.html">PROJECTS</a></li>
-        <li><a href="/updates.html">GALLERY</a> <li class="vertical-row"><a>|</a></li></li>
-        <li class="last"><a href="/about.html">ABOUT ME</a></li>
-      </ul>
-  
+  <!-- Set initial active box with data-initial-active -->
+  <div class="container" id="containers" data-initial-active="motion-platform">
+
+    <!-- COMING SOON (disabled) - slanted geometry -->
+    <div class="box coming-soon cs-left" id="steering-robot" data-cs-title="STEERING ROBOT">
+      <span class="s-title cs-title" style="position: absolute; top: 40px;">STEERING ROBOT</span>
+
+      <img class="anims cs-anim-up"
+           style="left: 44%; top: 52%; max-width: 300%; filter: brightness(1.65);"
+           src="assets/steeringAnim.gif" draggable="false" alt="Your GIF" loop>
+
+      <p class="index-label" style="text-align:left; margin-left: 20px; position: absolute; bottom: 77px;"><i class="material-icons">lock</i></p>
+      <p class="index-label" style="position: absolute; font-weight: 500; transform: translateY(-50%); bottom: 12px; opacity: 60%; text-align:left; margin-left: 20px;">[MECHATRONICS <br> @ GEN AUTO AI]</p>
+
+      <div class="divider"></div>
     </div>
 
+    <!-- COMING SOON (disabled) - slanted geometry -->
+    <div class="box coming-soon cs-right" id="cuff-link" data-cs-title="CUFF-LINK">
+      <span class="s-title cs-title" >CUFF-LINK</span>
 
-    <div id="blocker" style="top: 0; width: 100vw; position: fixed; background-color: var(--dark-primary); z-index: 0;"> </div>
+      <img class="anims cs-anim-down"
+           style="left: 58%; top: 53%; max-width: 300%; filter: brightness(1.35);"
+           src="assets/cufflinkanim.gif" draggable="false" alt="Your GIF" loop>
 
+      <p class="index-label" style="text-align: end; margin-right: 20px; margin-top: 30px; "><i class="material-icons">lock</i></p>
+      <p class="index-label" style="text-align: end; font-weight: 500; transform: translateY(-50%); opacity: 60%; margin-right: 20px; margin-top: 25px;">[PRODUCT <br> DEVELOPMENT]</p>
 
-    <div class="container" id="containers">
-
-      <div onclick="animateMe(this)" class="box active">
-        <span class="s-title">MOTION PLATFORM</span>
-        <img style="left: 53%; top: 50%; max-width: 170%; filter: contrast(1.3) brightness(1);" class= "anims" src="assets/platform.gif" draggable="false" alt="Your GIF" loop> 
-        <p class="index-label">I</p>
-        <p class="index-label" style="font-weight: 500; transform: translateY(-50%); opacity: 60%;">[ACADEMIC RESEARCH]</p>
-        <button class="see-more" onclick="window.location.href='pages/platform.html'; event.stopPropagation();">PROJECT DETAILS</button>
-        <div class="divider"></div>
-      </div>
-
-      <div onclick="animateMe(this)" class="box active">
-        <span class="s-title">STEERING ROBOT</span>
-        <img style="left: 44%; top: 52%; max-width: 300%; filter: brightness(1.75);" class= "anims" src="assets/steeringAnim.gif" draggable="false" alt="Your GIF" loop> 
-        <p class="index-label">II</p>
-        <p class="index-label" style="font-weight: 500; transform: translateY(-50%); opacity: 60%;">[MECHATRONICS @ GEN AUTO AI]</p>
-        <button class="see-more" onclick="window.location.href='pages/genauto.html'; event.stopPropagation();">PROJECT DETAILS</button>
-        <div class="divider"></div>
-      </div>
-      
-      <div onclick="animateMe(this)" class="box active">
-        <span class="s-title">6DOF DESKTOP ARM</span>
-        <img style="left: 50%; top: 50%; max-width: 190%; filter: brightness(1.25);" class= "anims" src="assets/armanim-compressed.gif" draggable="false" alt="Your GIF" loop> 
-        <p class="index-label">III</p>
-        <p class="index-label" style="font-weight: 500; transform: translateY(-50%); opacity: 60%;">[OPEN SOURCE]</p>
-        <button class="see-more" onclick="window.location.href='pages/6dof.html'; event.stopPropagation();">PROJECT DETAILS</button>
-        <div class="divider"></div>
-      </div>
-      
-
-        <div onclick="animateMe(this)" class="box active">
-        <span class="s-title">CUFF-LINK</span>
-        <img style="left: 58%; top: 53%; max-width: 300%; filter: brightness(1.45);" class= "anims" src="assets/cufflinkanim.gif" draggable="false" alt="Your GIF" loop> 
-        <p class="index-label">IV</p>
-        <p class="index-label" style="font-weight: 500; transform: translateY(-50%); opacity: 60%;">[PRODUCT DEVELOPMENT]</p>
-        <button class="see-more"; event.stopPropagation();">COMING SOON</button>
-        <div class="divider"></div>
-      </div>
-
-      <div onclick="animateMe(this)" class="box active"  style="max-width: 2px;">
-        <div class="divider"></div>
-      </div>
-
-      <div onclick="animateMe(this)" class="box skew">
-        <span class="s-title">PROPELLER RESEARCH</span>
-        <p class="index-label">V</p>
-        <video style="right: 0%; top: 50%;  max-width: 115%; opacity: 95%; mix-blend-mode: lighten;" class="anims" autoplay muted loop playsinline>
-              <source src="https://tubaa.dev/assets/figures/root/tormore.mp4" type="video/mp4">
-        </video>     
-        <button class="see-more" onclick="window.open('https://tubaa.dev', '_blank')" >PROJECT DETAILS</button>
-        <div class="divider"></div>
-      </div>
-
-      <div onclick="animateMe(this)" class="box skew">
-        <span class="s-title">CYCLOID GENERATOR</span>
-        <img style="left: 56%; top: 49%; max-height: 140%;" class= "anims" src="assets/desmosAnim1.gif" draggable="false" alt="Your GIF" loop>
-        <p class="index-label">VI</p>
-        <button class="see-more" onclick="window.location.href='pages/desmos.html'; event.stopPropagation();">PROJECT DETAILS</button>
-        <div class="divider"></div>
-      </div>
-
-      <div onclick="animateMe(this)" class="box skew">
-        <span class="s-title">BRAILLE DISPLAY</span>
-        <img style="left: 56%; max-width: 180%;" class= "anims" src="assets/BraileAnim.gif" draggable="false" alt="Your GIF" loop>
-        <p class="index-label">VII</p>
-        <button class="see-more" onclick="window.location.href='pages/braille.html'; event.stopPropagation();">PROJECT DETAILS</button>
-        <div class="divider"></div>
-      </div>
-
-      <div onclick="animateMe(this)" class="box skew">
-        <span class="s-title">CYCLOIDAL ACTUATOR</span>
-        <img class= "anims" src="assets/CycloidAnim.gif" draggable="false" alt="Your GIF" loop> 
-        <p class="index-label">VIII</p>
-        <button class="see-more" onclick="window.location.href='pages/cycloid.html'; event.stopPropagation();">PROJECT DETAILS</button>
-        <div class="divider"></div>
-      </div>
-
-      <div onclick="animateMe(this)" class="box skew">
-        <span class="s-title">6DOF ARM CONTROLLER</span>
-        <img style="left: 56%; top: 50%; max-height: 130%;" class= "anims" src="assets/armcont-compressed.gif" draggable="false" alt="Your GIF" loop> 
-        <p class="index-label">IX</p>
-        <button class="see-more" onclick="window.location.href='pages/controller.html'; event.stopPropagation();">PROJECT DETAILS</button>
-        <div class="divider"></div>
-      </div>
-      
-
-      <div onclick="animateMe(this)" class="box skew">
-        <span class="s-title">LIQUID PISTON</span>
-        <img style="left: 54%;"  class= "anims" id="anim" src="assets/liq-compressed.gif" draggable="false" alt="Your GIF" loop>
-        <p class="index-label">X</p>
-        <button class="see-more" onclick="window.location.href='pages/liq.html'; event.stopPropagation();">PROJECT DETAILS</button>
-        <div class="divider"></div>
-      </div>
-
-
-      <div onclick="animateMe(this)" class="box skew">
-        <span class="s-title">SUMO CONTROLLER</span>
-        <img style="left: 56%; top: 50%; max-height: 110%;" class= "anims" src="assets/sumo-anim.gif" draggable="false" alt="Your GIF" loop> 
-        <p class="index-label">XI</p>
-        <button class="see-more" onclick="window.location.href='pages/sumo.html'; event.stopPropagation();">PROJECT DETAILS</button>
-        <div class="divider"></div>
-      </div>
-
-
-      <div onclick="animateMe(this)" class="box skew">
-        <span class="s-title">METAL ANODIZER</span>
-        <img style="left: 54%; top: 49%; max-width: 130%; max-height: 100%;" class= "anims" src="assets/anodanim.gif" draggable="false" alt="Your GIF" loop> 
-        <p class="index-label">XII</p>
-        <button class="see-more"; event.stopPropagation();">COMING SOON</button>
-        <div class="divider"></div>
-      </div>
-
-      <div onclick="animateMe(this)" class="box skew">
-        <span class="s-title">MECH KEYBOARD</span>
-        <p class="index-label">XIII</p>
-        <button class="see-more"; event.stopPropagation();">COMING SOON</button>
-        <div class="divider"></div>
-      </div>
+      <div class="divider"></div>
     </div>
 
-    <div class="scrollbar">
-      <div class="handle">
-        <div class="mousearea"></div>
-      </div>
+    <!-- ACTIVE START -->
+    <div class="box skew" id="motion-platform">
+      <span class="s-title">MOTION PLATFORM</span>
+      <img style="left: 53%; top: 50%; max-width: 170%; filter: contrast(1.3) brightness(1);" class="anims" src="assets/platform.gif" draggable="false" alt="Your GIF" loop>
+      <p class="index-label">I</p>
+      <p class="index-label" style="font-weight: 500; transform: translateY(-50%); opacity: 60%;">[ACADEMIC RESEARCH]</p>
+      <button class="see-more" onclick="window.location.href='pages/platform.html'; event.stopPropagation();">PROJECT DETAILS</button>
+      <div class="divider"></div>
     </div>
-  </body>
+
+    <div class="box skew" id="desktop-arm">
+      <span class="s-title">6DOF DESKTOP ARM</span>
+      <img style="left: 50%; top: 50%; max-width: 190%; filter: brightness(1.25);" class="anims" src="assets/armanim-compressed.gif" draggable="false" alt="Your GIF" loop>
+      <p class="index-label">II</p>
+      <p class="index-label" style="font-weight: 500; transform: translateY(-50%); opacity: 60%;">[OPEN SOURCE]</p>
+      <button class="see-more" onclick="window.location.href='pages/6dof.html'; event.stopPropagation();">PROJECT DETAILS</button>
+      <div class="divider"></div>
+    </div>
+
+    <div class="box skew" id="propeller-research">
+      <span class="s-title">PROPELLER RESEARCH</span>
+      <p class="index-label">III</p>
+      <video style="right: 0%; top: 50%; max-width: 115%; opacity: 95%; mix-blend-mode: lighten;" class="anims" autoplay muted loop playsinline>
+        <source src="https://tubaa.dev/assets/figures/root/tormore.mp4" type="video/mp4">
+      </video>
+      <p class="index-label" style="font-weight: 500; transform: translateY(-50%); opacity: 60%;">[ACADEMIC RESEARCH]</p>
+      <button class="see-more" onclick="window.open('https://tubaa.dev', '_blank'); event.stopPropagation();">PROJECT DETAILS</button>
+      <div class="divider"></div>
+    </div>
+
+    <div class="box active spacer" aria-hidden="true" style="max-width: 2px;">
+      <div class="divider"></div>
+    </div>
+
+    <div class="box skew" id="cycloid-generator">
+      <span class="s-title">CYCLOID GENERATOR</span>
+      <img style="left: 56%; top: 49%; max-height: 140%;" class="anims" src="assets/desmosAnim1.gif" draggable="false" alt="Your GIF" loop>
+      <p class="index-label">IV</p>
+      <button class="see-more" onclick="window.location.href='pages/desmos.html'; event.stopPropagation();">PROJECT DETAILS</button>
+      <div class="divider"></div>
+    </div>
+
+    <div class="box skew" id="braille-display">
+      <span class="s-title">BRAILLE DISPLAY</span>
+      <img style="left: 56%; max-width: 180%;" class="anims" src="assets/BraileAnim.gif" draggable="false" alt="Your GIF" loop>
+      <p class="index-label">V</p>
+      <button class="see-more" onclick="window.location.href='pages/braille.html'; event.stopPropagation();">PROJECT DETAILS</button>
+      <div class="divider"></div>
+    </div>
+
+    <div class="box skew" id="cycloidal-actuator">
+      <span class="s-title">CYCLOIDAL ACTUATOR</span>
+      <img class="anims" src="assets/CycloidAnim.gif" draggable="false" alt="Your GIF" loop>
+      <p class="index-label">VI</p>
+      <button class="see-more" onclick="window.location.href='pages/cycloid.html'; event.stopPropagation();">PROJECT DETAILS</button>
+      <div class="divider"></div>
+    </div>
+
+    <div class="box skew" id="arm-controller">
+      <span class="s-title">6DOF ARM CONTROLLER</span>
+      <img style="left: 56%; top: 50%; max-height: 130%;" class="anims" src="assets/armcont-compressed.gif" draggable="false" alt="Your GIF" loop>
+      <p class="index-label">IX</p>
+      <button class="see-more" onclick="window.location.href='pages/controller.html'; event.stopPropagation();">PROJECT DETAILS</button>
+      <div class="divider"></div>
+    </div>
+
+    <div class="box skew" id="liquid-piston">
+      <span class="s-title">LIQUID PISTON</span>
+      <img style="left: 54%;" class="anims" id="anim" src="assets/liq-compressed.gif" draggable="false" alt="Your GIF" loop>
+      <p class="index-label">X</p>
+      <button class="see-more" onclick="window.location.href='pages/liq.html'; event.stopPropagation();">PROJECT DETAILS</button>
+      <div class="divider"></div>
+    </div>
+
+    <div class="box skew" id="sumo-controller">
+      <span class="s-title">SUMO CONTROLLER</span>
+      <img style="left: 56%; top: 50%; max-height: 110%;" class="anims" src="assets/sumo-anim.gif" draggable="false" alt="Your GIF" loop>
+      <p class="index-label">XI</p>
+      <button class="see-more" onclick="window.location.href='pages/sumo.html'; event.stopPropagation();">PROJECT DETAILS</button>
+      <div class="divider"></div>
+    </div>
+
+    <div class="box skew" id="metal-anodizer">
+      <span class="s-title">METAL ANODIZER</span>
+      <img style="left: 54%; top: 49%; max-width: 130%; max-height: 100%;" class="anims" src="assets/anodanim.gif" draggable="false" alt="Your GIF" loop>
+      <p class="index-label">XII</p>
+      <button class="see-more" onclick="event.stopPropagation();">COMING SOON</button>
+      <div class="divider"></div>
+    </div>
+
+  </div>
+
+  <div class="scrollbar">
+    <div class="handle">
+      <div class="mousearea"></div>
+    </div>
+  </div>
+
+  <!-- SVG noise filter used to dither/soften the hover spotlight -->
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="csDither" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="matrix"
+        values="
+          1 0 0 0 0
+          0 1 0 0 0
+          0 0 1 0 0
+          0 0 0 0.45 0" result="noiseAlpha"/>
+      <feComposite in="SourceGraphic" in2="noiseAlpha" operator="arithmetic" k1="1" k2="0.35" k3="0" k4="0"/>
+    </filter>
+  </svg>
+</body>
 </html>

@@ -9,46 +9,50 @@
   --light-accent: #ff6b81;
 }
 
-
 /* body, text, scrolling */
-
 body {
   min-height: 100vh;
   margin: 0;
-  overflow-y: hidden;
   background-color: var(--dark-primary);
   color: var(--dark-primary);
 }
 
-* {
-    font-family: "montserrat", sans-serif;
-    font-style: normal;
+body.projects-page {
+  /* projects page is a horizontal scroller; we intentionally suppress vertical scrolling */
+  overflow-y: hidden;
+  overflow-x: auto;
 }
-    
+
+* {
+  font-family: "montserrat", sans-serif;
+  font-style: normal;
+}
+
 h1 {
-    text-align: left;
-    position: absolute;
-    left: 0vw;
-    top: 4.5vh;
-    font-size: 5vh !important;
-    font-weight: 600 !important;
-    color: var(--light-primary);
+  text-align: left;
+  position: absolute;
+  left: 0vw;
+  top: 4.5vh;
+  font-size: 5vh !important;
+  font-weight: 600 !important;
+  color: var(--light-primary);
 }
 
 .container {
   display: flex;
-  align-items:center;
-  flex-wrap: nowrap;    
+  align-items: center;
+  flex-wrap: nowrap;
   justify-content: center;
   width: fit-content;
   margin-left: 6px;
   height: 100vh;
   margin-top: 2%;
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .scrollbar {
@@ -78,11 +82,10 @@ h1 {
 }
 
 /* boxes on home page */
-
 .box {
   display: inline-block;
-  height: 75vh;
-  width: 30vw;
+  height: 72vh;
+  width: 22vw;
   margin: 5px;
   text-align: center;
   color: #eceff4;
@@ -96,7 +99,8 @@ h1 {
   overflow: hidden;
 }
 
-
+/* If your existing CSS defines .skew transforms elsewhere, leave it as-is.
+   We do not apply skew to coming-soon boxes anymore. */
 
 .anims {
   position: absolute;
@@ -120,16 +124,15 @@ h1 {
   padding: 0;
   z-index: 2;
   white-space: nowrap;
-  /* add some drop shadow to this text */
   text-shadow: 0 0 4px #000000;
 }
 
 .see-more {
   position: absolute;
-  bottom: 2.35vh; /* Adjust this according to your needs */
+  bottom: 2.35vh;
   left: 50%;
   transform: translateX(-50%);
-  display: none; /* Hide the button by default */
+  display: none;
   background-color: var(--dark-accent);
   border: 2px solid var(--light-primary);
   border-radius: 5px;
@@ -142,19 +145,124 @@ h1 {
 }
 
 .divider {
-    position: absolute;
-    bottom: 17.75vh;
-    border: 1px solid var(--light-secondary);
-    width: 50%;
-    margin: 0 25%;
-    z-index: 2;
-    display: none;
-    /* add some drop shadow to this divider */
-    box-shadow: 0 0 3px #000000;
+  position: absolute;
+  bottom: 17.75vh;
+  border: 1px solid var(--light-secondary);
+  width: 50%;
+  margin: 0 25%;
+  z-index: 2;
+  display: none;
+  box-shadow: 0 0 3px #000000;
+}
+/* --- Coming soon (slanted // with thin parallel gap) --- */
+.box.coming-soon {
+  opacity: 0.32;
+  cursor: default;
+
+  /* slightly wider than original narrow version */
+  width: 16.1vw;
+
+  transform: none !important;
+
+  /* no overlap */
+  margin-right: 6px;
+
+  border: none;
+  box-shadow: inset 0 0 0 2px var(--dark-accent);
+  position: relative;
 }
 
-/* image gallery in updates page */
+/* Remove any previous separator implementations */
+.box.coming-soon::before { content: none !important; }
 
+/*
+  Goal: both diagonals should face like // and be parallel.
+  We do the "gap" by:
+  - clipping each card so its diagonal edge exists
+  - drawing a thin diagonal strip on TOP of the right card (not skewed), so no extra diagonal artifacts
+*/
+
+.box.coming-soon.cs-left {
+  z-index: 4;
+  /* right edge like "/" (//) */
+  clip-path: polygon(0 0, 100% 0, 76% 100%, 0 100%);
+  margin-right: -75px;
+
+}
+
+.box.coming-soon.cs-right {
+  z-index: 3;
+  /* left edge like "/" (//) */
+  clip-path: polygon(24% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+/* Thin parallel diagonal gap strip (drawn on the right card only) */
+.box.coming-soon.cs-right::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+
+  /* place it right near the diagonal edge */
+  left: 10.8%;
+
+  /* gap thickness: truly thin */
+  width: 6px;
+
+  background: var(--dark-primary);
+
+  /* rotate to match the diagonal slope (//) */
+  /* transform: rotate(-18deg); */
+
+  pointer-events: none;
+  opacity: 1;
+}
+
+/* slightly higher on hover (global) */
+.box.coming-soon:hover {
+  opacity: 0.62;
+}
+
+/* stronger vertical offsets to prevent overlap in the middle */
+.cs-anim-up {
+  transform: translate(-53%, -68%) !important;
+}
+.cs-anim-down {
+  transform: translate(-49.5%, -42%) !important;
+}
+
+/* Bigger, softer, dithered spotlight (SVG filter #csDither) */
+.box.coming-soon::after {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 140ms ease;
+
+  background: radial-gradient(
+    circle 340px at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.12) 28%,
+    rgba(255, 255, 255, 0.00) 70%
+  );
+
+  filter: url(#csDither);
+}
+
+.box.coming-soon:hover::after { opacity: 1; }
+
+@media (max-width: 1380px) {
+  .box.coming-soon {
+    width: 22vw;
+    margin-right: 5px;
+    clip-path: none !important;
+  }
+  .box.coming-soon.cs-right::before { display: none; }
+}
+
+
+/* image gallery in updates page */
 .gallery {
   width: 90vw;
   margin-left: 5vw;
@@ -192,8 +300,6 @@ h1 {
 .modal-content {
   margin: auto;
   display: block;
-  /* width: 80%;
-  max-width: 700px; */
   margin-top: 20vh;
   height: 50vh;
 }
@@ -216,7 +322,6 @@ h1 {
 }
 
 /* paragraphs & blocks for about page */
-
 .p-container {
   display: block;
   width:1050px;
@@ -233,7 +338,6 @@ h1 {
   border-radius: 12px;
   position: relative;
   overflow: hidden;
-  /* add padding, more on the top and bottom and less on the right and left */
   padding: 0.2rem 3rem 0.4rem 3rem;
 }
 
@@ -254,15 +358,14 @@ h1 {
   flex-grow: 1;
   flex-basis: 0;
   margin: 10px;
-  background-color: lightblue; /* Just to distinguish the divs */
-  text-align: center; /* To center text inside the div */
+  background-color: lightblue;
+  text-align: center;
   display: flex;
-  align-items: center; /* To center content vertically */
-  justify-content: center; /* To center content horizontally */
+  align-items: center;
+  justify-content: center;
 }
 
 /* loading screen */
-
 #loader {
   position: fixed;
   left: 0;
@@ -270,17 +373,17 @@ h1 {
   width: 100%;
   height: 100%;
   z-index: 9999;
-  background-color: var(--dark-primary); 
+  background-color: var(--dark-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;  /* Stack text and gif vertically */
+  flex-direction: column;
 }
 
 #loaderText {
-  font-size: 2em; /* Adjust this as needed */
+  font-size: 2em;
   font-weight: 600;
-  margin-bottom: 1em; /* Space between text and gif */
+  margin-bottom: 1em;
 }
 
 #loader::before {
@@ -297,9 +400,6 @@ h1 {
   height: 12vh;
 }
 
-
-/* Add this to your styles.css */
-/* Add this to your styles.css */
 .content {
   margin-top: 12vh;
   width: 100%;
@@ -311,26 +411,26 @@ h1 {
 
 .blog-post {
   display: flex;
-  flex-direction: row; /* Ensures thumbnail and text are side by side */
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 
-  max-width: 70%; /* Set this to the maximum width you want for the blog post */
+  max-width: 70%;
   margin: auto;
   margin-bottom: 2rem;
-  box-sizing: border-box; /* Ensures padding and borders are included in the width */
+  box-sizing: border-box;
 }
 
 .blog-thumbnail {
   margin-right: 1rem;
   object-fit: cover;
-  border-radius: 10px; /* Optional: if you want rounded corners */
+  border-radius: 10px;
   width: 667px;
   height: 300px;
 }
 
 .blog-info {
-  flex: 1; /* Takes up the remaining space after the thumbnail */
+  flex: 1;
 }
 
 .blog-subtitle {
@@ -354,9 +454,15 @@ h1 {
   text-align: center;
   margin: 20px auto;
   font-weight: bold;
-  color: var(--light-primary); /* Uses the color variable defined for the primary text */
-  font-family: "montserrat", sans-serif; /* Uses the same font-family as the rest of the site */
+  color: var(--light-primary);
+  font-family: "montserrat", sans-serif;
   font-size: 1.2rem;
   font-weight: 600;
+}
+
+/* Drag-to-scroll (no grab cursor unless actively dragging) */
+#containers.dragging {
+  cursor: grabbing;
+  user-select: none !important;
 }
 
