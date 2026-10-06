@@ -224,8 +224,8 @@ a.role:hover { border-color: var(--light-secondary); }
   body.about .site-header .navigation {
     width: 100% !important;
     max-width: 560px;
-    height: clamp(32px, 4.4vh, 42px) !important;
-    font-size: clamp(10px, 3vw, 14px) !important;
+    height: clamp(26px, 3.8vh, 36px) !important;
+    font-size: clamp(9px, 2.7vw, 12.5px) !important;
   }
 
   .about-main { margin-top: 16px; gap: 8px; }

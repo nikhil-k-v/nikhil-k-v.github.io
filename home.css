@@ -389,8 +389,8 @@ body.home {
   body.home .site-header .navigation {
     width: 100% !important;
     max-width: 560px;
-    height: clamp(30px, 4.4vh, 42px) !important;
-    font-size: clamp(10px, 3vw, 14px) !important;
+    height: clamp(26px, 3.8vh, 36px) !important;
+    font-size: clamp(9px, 2.7vw, 12.5px) !important;
   }
 
   .home-main {
@@ -425,21 +425,6 @@ body.home {
     bottom: calc(var(--card-h) * 0.07);
   }
 
-  /* once the selected card's page is showing below, the card keeps only
-     its animation; the title and label live on the preview instead */
-  .box .s-title,
-  .box .index-label {
-    transition:
-      font-size var(--dur) var(--ease-out-2),
-      bottom var(--dur) var(--ease-out-2),
-      opacity 0.5s ease;
-  }
-  .box.previewing .s-title,
-  .box.previewing .index-label {
-    opacity: 0;
-    transition-duration: var(--dur), var(--dur), 0.9s;
-  }
-
   /* the preview pane is the "open" action in this layout */
   .see-more,
   .divider { display: none; }
@@ -469,7 +454,6 @@ body.home {
     overflow: hidden;
     isolation: isolate;
     background-color: var(--dark-primary);
-    border: 2px solid var(--dark-secondary);
     border-radius: 12px;
   }
 
@@ -500,57 +484,14 @@ body.home {
     pointer-events: none;
   }
 
-  .preview-chip {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    z-index: 2;
-    max-width: calc(100% - 24px);
-    padding: 4px 8px;
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--light-primary);
-    background-color: rgba(5, 18, 32, 0.7);
-    border-radius: 4px;
-    pointer-events: none;
-    opacity: 0;
-    transform: translateY(-3px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-  .preview-chip.is-in {
-    opacity: 1;
-    transform: none;
-    transition-duration: 0.8s;
-  }
-  .preview-chip:empty { display: none; }
-
-  .preview-shade {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 30%;
-    z-index: 2;
-    pointer-events: none;
-    background: linear-gradient(
-      to bottom,
-      rgba(5, 18, 32, 0) 0%,
-      rgba(5, 18, 32, 0.7) 70%,
-      rgba(5, 18, 32, 0.9) 100%
-    );
-  }
 
   .preview-loading {
     position: absolute;
-    top: 50%;
+    top: calc(50% + 34px);
     left: 50%;
     z-index: 2;
-    transform: translate(-50%, -50%);
-    font-size: 10px;
+    transform: translateX(-50%);
+    font-size: 9px;
     font-weight: 500;
     letter-spacing: 0.2em;
     opacity: 0;
@@ -567,40 +508,48 @@ body.home {
     inset: 0;
     z-index: 3;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
-    padding: 14px;
     text-decoration: none;
     color: var(--light-primary);
     -webkit-tap-highlight-color: transparent;
-    border-radius: 10px;
+    border-radius: 12px;
   }
   .preview-open:focus-visible {
-    outline: 2px solid var(--light-primary);
+    outline: 2px solid rgba(240, 240, 240, 0.6);
     outline-offset: -4px;
   }
-  .preview-open:active .preview-cta {
-    background-color: rgba(150, 180, 210, 0.3);
-  }
 
+  /* frosted patch behind the label that feathers out to nothing:
+     the blur and tint live on a pseudo-element masked with a soft ellipse */
   .preview-cta {
-    padding: 0.55em 1.4em;
+    position: relative;
+    isolation: isolate;
+    padding: 1.6em 2.8em;
     font-size: clamp(10px, 3vw, 13px);
     font-weight: 600;
+    letter-spacing: 0.08em;
     white-space: nowrap;
-    color: rgba(240, 240, 240, 0.9);
-    background-color: rgba(150, 180, 210, 0.16);
-    border: 1.5px solid rgba(240, 240, 240, 0.45);
-    border-radius: 5px;
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
-    transition: background-color 0.2s ease;
+    color: rgba(240, 240, 240, 0.92);
+    text-shadow: 0 0 6px rgba(5, 18, 32, 0.8);
+  }
+  .preview-cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(closest-side, rgba(110, 145, 180, 0.22), rgba(110, 145, 180, 0.1) 60%, rgba(110, 145, 180, 0));
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    -webkit-mask-image: radial-gradient(closest-side, #000 35%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 35%, transparent 100%);
+    transition: background 0.2s ease;
+  }
+  .preview-open:active .preview-cta::before {
+    background: radial-gradient(closest-side, rgba(110, 145, 180, 0.38), rgba(110, 145, 180, 0.16) 60%, rgba(110, 145, 180, 0));
   }
   .preview-open[aria-disabled="true"] { cursor: default; }
-  .preview-open[aria-disabled="true"] .preview-cta {
-    border-style: dashed;
-    opacity: 0.7;
-  }
+  .preview-open[aria-disabled="true"] .preview-cta { opacity: 0.6; }
 
   .preview-open.nudge .preview-cta {
     animation: preview-nudge 0.5s var(--ease-out-2);
@@ -611,7 +560,7 @@ body.home {
   50% { opacity: 0.25; }
 }
 @keyframes preview-nudge {
-  30% { transform: scale(1.08); background-color: var(--dark-secondary); }
+  30% { transform: scale(1.08); }
 }
 
 

@@ -252,9 +252,10 @@
      level:  0 = normal, -1 = fully dissolved (used to swap sources)
      ------------------------------------------------------------------ */
   function createRenderer(canvas, stage) {
-    var C = 6;              // cell size, css px
-    var K = 6;              // sub-pixels per cell edge (1 css px each)
-    var TH = 0.6;           // field value above which a cell becomes a block
+    var C = 7;              // cell size, css px
+    var K = 7;              // sub-pixels per cell edge (1 css px each) → dot sizes 1..6
+    var TH = 0.8;           // field value above which a cell becomes a block (kept rare)
+    var SPEED = 1.8;        // overall animation speed
     var FPS_GAP = 31;       // ~30 fps is plenty for this and kind to batteries
     var BG = [5, 18, 32];   // --dark-primary: the page colour, so empty page blends in
     var EMPTY_RGB = [52, 92, 132], EMPTY_L = 0.34;
@@ -340,7 +341,7 @@
     function draw(now) {
       if (!dImg || !cols) return;
 
-      if (!REDUCED_MQ.matches) clock += Math.min(now - prevNow, 100) / 1000;
+      if (!REDUCED_MQ.matches) clock += SPEED * Math.min(now - prevNow, 100) / 1000;
       prevNow = now;
       var t = clock;
 
@@ -358,8 +359,12 @@
       d.fill(0);
       m.fill(0);
 
-      var breathe = 0.5 + 0.5 * Math.sin(t * 0.31);        // whole pane: mostly blocks ↔ mostly dots
+      // whole pane drifts between "a few solid clumps" and "all dots"
+      var breathe = 0.5 + 0.5 * Math.sin(t * 0.31);
+      var gain = 0.8 + 0.2 * breathe;
       var FALL = Math.min(52, Math.min(W, H) * 0.16);      // width of the edge drop-off
+      var hx = W / 2, hy = H / 2;
+      var spin = t * 0.22, twist = 1.6 + 0.9 * Math.sin(t * 0.17);
 
       for (var cy = 0; cy < rows; cy++) {
         var py = (cy + 0.5) * C;
@@ -370,13 +375,25 @@
           var e = Math.min(ey, smoothstep(0, FALL, Math.min(px, W - px)));
           var ci = cy * cols + cx;
 
-          var w1 = Math.sin(px * 0.041 + py * 0.017 - t * 0.75 + 1.4 * Math.sin(py * 0.022 + t * 0.4));
-          var w2 = Math.sin(-px * 0.023 + py * 0.046 + t * 0.55 + 1.1 * Math.sin(px * 0.029 - t * 0.33));
-          var field = 0.5 + 0.3 * w1 + 0.2 * w2;
-          var f = (field * 0.62 + breathe * 0.42 + 0.02) * e + level;
+          // centred coords, 0 at the middle, ~1 at the sides
+          var u = (px - hx) / hx, v = (py - hy) / hy;
+          var r = Math.sqrt(u * u + v * v);
+          var inner = r < 1 ? 1 - r : 0;
+          // swirl: rotate the pattern more the closer it is to the centre
+          var ang = spin + twist * inner * inner;
+          var ca = Math.cos(ang), sa = Math.sin(ang);
+          var su = u * ca - v * sa, sv = u * sa + v * ca;
+          var w1 = Math.sin(su * 4.1 + t * 0.9 + 1.3 * Math.sin(sv * 3.2 - t * 0.7));
+          var w2 = Math.sin(sv * 5.2 - t * 0.8 + 1.1 * Math.sin(su * 2.6 + t * 0.6));
+          var field = 0.5 + 0.28 * w1 + 0.22 * w2;
+          field = (field - 0.5) * 1.7 + 0.5;                    // more contrast: fuller clumps, emptier gaps
+          field = field < 0 ? 0 : field > 1 ? 1 : field;
+          // blobs gather toward the middle; the outer ring stays dotted
+          var centre = 1 - smoothstep(0.1, 1.05, r);
+          var f = (field * 0.6 + centre * 0.34 + 0.08) * gain * e + level;
 
           var x0 = cx * K, y0 = cy * K;
-          var block = f >= TH && e > 0.55;
+          var block = f >= TH && e > 0.55 && r < 0.75;
           var q = f / TH; q = q < 0 ? 0 : q > 1 ? 1 : q;
           var bayer = BAYER4[by | (cx & 3)];
 
@@ -407,7 +424,8 @@
             if (block) q = 1;
           }
 
-          var size = L * (0.85 + 0.6 * q) + 0.25 * q - 0.03;
+          // size follows the field first (clumps → empty), brightness second
+          var size = Math.pow(q, 1.3) * (0.82 + 0.45 * L) + 0.18 * L - 0.06;
           var s = Math.floor(size * (K - 1) + bayer);
           if (s <= 0) continue;
           if (s > K - 1) s = K - 1;
@@ -524,7 +542,6 @@
     var frame = pane.querySelector('.preview-frame');
     var link = pane.querySelector('.preview-open');
     var ctaEl = pane.querySelector('.preview-cta');
-    var chipEl = pane.querySelector('.preview-chip');
     var R = createRenderer(pane.querySelector('.preview-dither'), stage);
 
     var H2C_SRC = '/vendor/html2canvas.min.js';
@@ -687,13 +704,6 @@
       return c;
     }
 
-    function chipIn(on) { chipEl.classList.toggle('is-in', !!on); }
-
-    function markBox(box, on) {
-      boxes.forEach(function (b) { b.classList.remove('previewing'); });
-      if (box && on) box.classList.add('previewing');
-    }
-
     /* page is ready: swap it in under the dissolve and bring it back */
     function present(box, source, m, my) {
       R.cover(function () {
@@ -701,8 +711,6 @@
         R.setSource(source, m);
         setState(m === 'empty' ? 'static' : 'frame');
         R.reveal(0);
-        markBox(box, m !== 'empty');
-        chipIn(true);
       });
     }
 
@@ -712,9 +720,6 @@
       current = box;
       setLink(p);
       link.classList.remove('nudge');
-      markBox(null);
-      chipIn(false);
-      chipEl.textContent = p.category ? [p.index, p.category].join('  /  ') : '';
       R.start();
 
       R.cover(function () {
@@ -741,7 +746,6 @@
             done = true;
             setState('frame');
             R.reveal(0);
-            chipIn(true);
           };
           frame.addEventListener('load', function onLoad() {
             var blank = false;
@@ -781,8 +785,6 @@
             setLive(true);
             setState('frame');
             R.reveal(0);
-            markBox(box, true);
-            chipIn(true);
           });
         });
       });
@@ -797,8 +799,6 @@
     function unload() {
       token++;
       current = null;
-      markBox(null);
-      chipIn(false);
       setLive(false);
       R.stop();
       R.hold();
