@@ -1,156 +1,96 @@
 <!DOCTYPE html>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-ZPCC960TZ2');
-</script>
-
+<html lang="en">
 <head>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>About — Nikhil Vijay</title>
   <link rel="icon" type="image/x-icon" href="/assets/favicon2.png">
-  <title>Nikhil Vijay</title>
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ZPCC960TZ2');
+  </script>
+
+  <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/brands.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="nav.css">
+  <link rel="stylesheet" href="phonestyles.css">
+  <link rel="stylesheet" href="about-page.css">
 </head>
-<body style="overflow-y: auto;">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
-  
-   
+
+<body class="about">
+
   <div id="loader">
     <div id="loaderText"></div>
   </div>
 
-  
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.3/draggable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+  <header class="site-header">
+    <h1 id="title"><a href="/index.html">NIKHIL VIJAY</a></h1>
+    <ul class="navigation">
+      <li class="first"><a href="/index.html">PROJECTS</a></li>
+      <li class="vertical-row"><a>|</a></li>
+      <li><a href="/updates.html">GALLERY</a></li>
+      <li class="active last"><a href="/about.html" aria-current="page">ABOUT ME</a></li>
+    </ul>
+  </header>
 
-    <script src="app.js"></script>
-    <link rel="stylesheet" href="phonestyles.css">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="nav.css">
-    <link rel="stylesheet" href="about.css">
+  <main class="about-main">
 
+    <section class="about-card" aria-labelledby="about-heading">
+      <h2 id="about-heading" class="about-heading">About me</h2>
 
+      <p>
+        I am an engineering student at Rutgers University (Honors College / Engineering Honors Academy).
+        I work for <a href="/pages/genauto.html">Gen Auto AI</a> as a founding robotics engineer.
+        I also work as a researcher at the
+        <a href="/pages/platform.html">RAM (Robotics, Automation and Mechatronics) lab</a>
+        at Rutgers, where I am advised by Professor Jingang Yi.
+      </p>
+      <p>
+        Currently, I am interning at <a href="https://www.neuralink.com" target="_blank" rel="noopener">Neuralink</a>,
+        where I work on the implant design / manufacturing team.
+      </p>
+    </section>
 
-    <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
-
-    <div class="about-cont" style="position: fixed; z-index: 3;">
-      <h1 id="title">NIKHIL VIJAY</h1>
-      <!-- add navigation to all pages -->
-      <ul class='navigation'>
-
-        <li class="first"><a href="/index.html">PROJECTS</a> <li class="vertical-row"><a>|</a></li></li>
-        <li><a href="/updates.html">GALLERY</a> <li class="vertical-row"><a>|</a></li></li>
-        <li  class="active"><a href="/about.html">ABOUT ME</a></li>
-      </ul>
-    </div>
-
-
-    
-    <div id="blocker" style="top: 0; width: 100vw; position: fixed; background-color: var(--dark-primary); z-index: 2;"> </div>
-
-
-
-    <div class="p-container page-top" style="margin-top: 15vh; background-color: var(--dark-accent);">
-      <div class="contact-container">
-        <a href="https://github.com/nikhil-k-v" class="icon fa-2x" target="_blank"><i class="fab fa-github-square"></i></a>
-        <a href="https://www.youtube.com/@nikhilvijay.engineering" class="icon fa-2x" target="_blank"><i class="fab fa-youtube-square"></i></a>
-        <a href="https://www.instagram.com/nikhilkv.engineering/" class="icon fa-2x" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.linkedin.com/in/nikhil-vijay-42a98b277/" class="icon fa-2x" target="_blank"><i class="fab fa-linkedin"></i></a>
-        <a> nikhilvijay.engineering@gmail.com</a>
+    <section class="about-roles" aria-label="Current roles">
+      <a class="role" href="/pages/genauto.html">
+        <span class="role-label">Founding engineer</span>
+        <span class="role-value">Gen Auto AI</span>
+      </a>
+      <a class="role" href="/pages/platform.html">
+        <span class="role-label">Researcher</span>
+        <span class="role-value">RAM Lab, Rutgers</span>
+      </a>
+      <a class="role" href="https://www.neuralink.com" target="_blank" rel="noopener">
+        <span class="role-label">Intern</span>
+        <span class="role-value">Neuralink</span>
+      </a>
+      <div class="role">
+        <span class="role-label">Student</span>
+        <span class="role-value">Rutgers Honors College</span>
       </div>
-    </div>
+    </section>
 
-    <div class="p-container" style="margin-top: 2vh;" >
-      <h2 id="about-me">About Me:</h2>
-        <p style="font-weight: 300;">I am an engineering student at Rutgers University (Honors College/Engineering Honors Academy). 
-          I work for <strong><a href="https://nkve.dev/pages/genauto.html" target="_blank">Gen Auto AI</a></strong> as a founding robotics engineer. I also work as a researcher at the <strong><a href="https://nkve.dev/pages/platform.html" target="_blank">RAM (Robotics, Automation and Mechatronics)</a></strong> lab at Rutgers, where I am advised by Professor Jingang Yi. 
-          <br><br> Currently, I am interning at <strong><a href="https://www.neuralink.com" target="_blank">Neuralink</a></strong> where I work on the implant design / manufacturing team. 
+    <section class="about-contact" aria-labelledby="contact-heading">
+      <h2 id="contact-heading" class="about-heading small">Contact</h2>
 
-    </div>
+      <a class="email" href="mailto:nikhilvijay.engineering@gmail.com">nikhilvijay.engineering@gmail.com</a>
 
-    <!-- <div class="p-container" style="margin-top: 2vh; width: 1050px;" >
-      <h2 id="about-me">Work I'm Currently Involved In:</h2>
-
-      <div id="iframe-content">
-        <div class="iframe-post">
-          <div class="iframe-info">
-            <p class="blog-date">RESEARCH</p>
-            <h2 class="blog-title"><a href="https://tubaa.dev/" target="_blank">TUBAA AEROACOUSTICS</a></h2>
-            <h3 class="blog-subtitle" >Investigating the aeroacoustics of unconventional propeller designs! My involvement in this project: creator, lead-author.</h3>
-          </div>
-          <iframe class="iframe-thumbnail" src="https://tubaa.dev/"></iframe>
-    
-        </div>
-      </div>
-    
-      <div id="iframe-content">
-        <div class="iframe-post">
-          <div class="iframe-info">
-            <p class="blog-date">OPEN-SOURCE HARDWARE</p>
-            <h2 class="blog-title"><a href="https://versorobotics.com/" target="_blank">VERSO ROBOTICS</a></h2>
-            <h3 class="blog-subtitle" >Creating an open-source 6DOF robotic arm platform! My involvement in this project: co-founder.</h3>
-          </div>
-          <iframe class="iframe-thumbnail" src="https://versorobotics.com/"></iframe>
-    
-        </div>
-      </div>
-    </div>
-
-  
-
-
-    <div class="p-container" style="margin-top: 2vh; line-height: 160%;" >
-      <p style="font-weight: 300;">While I have enough experience with web design to create this website, my <strong>main skills</strong> include:</p>
-      <ul>
-        <li>Engineering + Robotics:<ul>
-          <li style="font-weight: 300;">Electronics (working with arduino + other microntrollers)</li>
-          <li style="font-weight: 300;">FIRST Robotics (FTC)</li>
-          <li style="font-weight: 300;">Actuators + motor controllers (see my projects page)</li>
+      <ul class="socials">
+        <li><a href="https://github.com/nikhil-k-v" target="_blank" rel="noopener"><i class="fa-brands fa-github" aria-hidden="true"></i><span>GitHub</span></a></li>
+        <li><a href="https://www.linkedin.com/in/nikhil-vijay-42a98b277/" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin" aria-hidden="true"></i><span>LinkedIn</span></a></li>
+        <li><a href="https://www.youtube.com/@nikhilvijay.engineering" target="_blank" rel="noopener"><i class="fa-brands fa-youtube" aria-hidden="true"></i><span>YouTube</span></a></li>
+        <li><a href="https://www.instagram.com/nikhilkv.engineering/" target="_blank" rel="noopener"><i class="fa-brands fa-instagram" aria-hidden="true"></i><span>Instagram</span></a></li>
       </ul>
-      <li>Programming:<ul>
-        <li style="font-weight: 300;">Java</li>
-        <li style="font-weight: 300;">C# (& Unity)</li>
-        <li style="font-weight: 300;">Web Design (JS, etc.)</li>
-        <li style="font-weight: 300;">Learning: Python, C++, more! - generally for the purposes of engineering but I am really interested in algorithms and problem solving in general!</li>
-      </ul>
-      </li>
-      <li>CAD/CAM:<ul>
-        <li style="font-weight: 300;">Fusion 360</li>
-        <li style="font-weight: 300;">Onshape</li>
-        <li style="font-weight: 300;">Illustrator, AutoCAD, etc.</li>
-      </ul>
-      </li>
-      <li style="font-weight: 300;"><strong style="font-weight: 500;">Design</strong> (I am really passionate about filmaking!):<ul>
-      <li style="font-weight: 300;">Adobe Suite<ul>
-      <li style="font-weight: 300;">Premiere Pro</li>
-      <li style="font-weight: 300;">Photoshop</li>
-      <li style="font-weight: 300;">Illustrator</li>
-      </ul>
-      </li>
-      <li style="font-weight: 300;">DaVinci Resolve (limited - for color)</li>
-      </ul>
-      </li>
-      <li>Learning:<ul>
-      <li style="font-weight: 300;">Kinematics/Inverse Kinematics</li>
-      <li style="font-weight: 300;">ROS, VIAM</li>
-      <li style="font-weight: 300;">Embedded Systems & creating development boards</li>
-      <li style="font-weight: 300;">MATLAB - eventually...</li>
-      </ul>
-      </li>
-      </ul>
-      </li>
-      </ul>
-    </div>
+    </section>
 
-  <div class="p-container">
-  <p style="font-weight: 400;">
-    Contact me at <strong style="font-weight: 700;">nikhilvijay.engineering@gmail.com</strong> if you have any questions, criticism, or suggestions. 
-  </p>  
-</div>
- -->
+  </main>
 
-  </body>
-  </html>
+  <script src="app.js"></script>
+</body>
+</html>

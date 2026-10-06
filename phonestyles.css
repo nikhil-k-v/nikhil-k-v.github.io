@@ -1,17 +1,6 @@
 @media screen and (max-width: 1380px) {
-    .box {
-      height: 50vh !important;
-      margin-top: 0vh !important;
-    }
   
-    .container {
-      width: fit-content !important;
-    }
   
-    .scrollbar {
-      width: 50% !important;
-      left: 25% !important;
-    }
   
     /* body, .container {
       max-height: 100% !important;
@@ -33,15 +22,7 @@
         top: 5vh !important;
     }
 
-    .s-title {
-      white-space: normal !important;
-      width: 75% !important;
-      text-align: center !important;
-    }
 
-    .divider {
-      display: none !important;
-    }
 
     .gallery {
       margin-top: 17vh !important;
@@ -85,8 +66,5 @@
       padding-left: 0 !important;
     }
 
-    .index-label {
-      font-size: 0.8rem !important;
-    }
   }
 

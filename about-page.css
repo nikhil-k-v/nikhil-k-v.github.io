@@ -1,0 +1,241 @@
+/* =====================================================================
+   ABOUT PAGE
+   One centred column that scrolls normally. The header is sticky with a
+   solid background, so content never shows through gaps in the nav.
+   (about.css is left alone: the project pages still use it.)
+   ===================================================================== */
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+body.about {
+  height: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  background-color: var(--dark-primary);
+  --gutter: max(20px, env(safe-area-inset-left));
+}
+
+/* ---------- header: title left, nav right ---------- */
+
+body.about .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-sizing: border-box;
+  width: 100%;
+  padding:
+    max(14px, env(safe-area-inset-top))
+    max(28px, env(safe-area-inset-right))
+    12px
+    max(28px, env(safe-area-inset-left));
+  background-color: var(--dark-primary);
+}
+
+body.about .site-header #title {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  width: auto !important;
+  margin: 0 !important;
+  text-align: left !important;
+  white-space: nowrap;
+  font-size: clamp(22px, 4.6vh, 42px) !important;
+}
+body.about #title a { text-decoration: none; color: inherit; font-weight: inherit; }
+
+body.about .site-header .navigation {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  flex: 0 1 auto;
+  margin: 0;
+  width: min(56vw, 780px) !important;
+  height: clamp(32px, 5.6vh, 52px) !important;
+  font-size: clamp(10px, 1.1vw, 16px) !important;
+}
+
+/* ---------- column ---------- */
+
+.about-main {
+  box-sizing: border-box;
+  width: min(780px, 100% - 2 * var(--gutter));
+  margin: clamp(20px, 5vh, 56px) auto max(48px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.about-card,
+.about-contact {
+  box-sizing: border-box;
+  padding: clamp(22px, 4vw, 40px);
+  background-color: var(--dark-accent);
+  border-radius: 12px;
+}
+
+.about-heading {
+  margin: 0 0 0.75em;
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--light-primary);
+}
+.about-heading.small {
+  font-size: clamp(11px, 1.2vw, 13px);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  opacity: 0.7;
+  margin-bottom: 1em;
+}
+
+.about-card p {
+  max-width: 62ch;
+  margin: 0 0 1em;
+  font-size: clamp(15px, 1.25vw + 8px, 18px);
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--light-secondary);
+}
+.about-card p:last-child { margin-bottom: 0; }
+
+.about-card a {
+  font-weight: 500;
+  color: var(--light-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+.about-card a:hover { text-decoration-thickness: 2px; }
+
+/* ---------- roles strip (same look as the project meta strip) ---------- */
+
+.about-roles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.role {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.35em;
+  min-width: 0;
+  padding: 1rem 0.8rem;
+  text-align: center;
+  text-decoration: none;
+  background-color: var(--dark-secondary);
+  border: 2px solid var(--dark-secondary);
+  border-radius: 8px;
+  transition: border-color 0.2s ease;
+}
+a.role:hover { border-color: var(--light-secondary); }
+
+.role-label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+.role-value {
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1.3;
+}
+
+/* ---------- contact ---------- */
+
+.about-contact .email {
+  display: inline-block;
+  margin-bottom: 1.1rem;
+  font-size: clamp(15px, 1.4vw + 8px, 20px);
+  font-weight: 500;
+  color: var(--light-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  overflow-wrap: anywhere;
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.socials a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.6em 1.1em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  color: var(--light-primary);
+  background-color: var(--dark-primary);
+  border: 2px solid var(--light-primary);
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+.socials a:hover { background-color: var(--dark-secondary); }
+.socials i { font-size: 1.15em; }
+
+.about-main a:focus-visible,
+.site-header a:focus-visible {
+  outline: 2px solid var(--light-primary);
+  outline-offset: 3px;
+}
+
+/* ---------- phones & portrait tablets ---------- */
+
+@media (max-width: 760px), (orientation: portrait) and (max-width: 1100px) {
+
+  body.about .site-header {
+    flex-direction: column;
+    gap: 10px;
+    padding:
+      max(14px, env(safe-area-inset-top))
+      4vw
+      10px;
+  }
+
+  body.about .site-header #title {
+    text-align: center !important;
+    font-size: clamp(20px, 6.2vw, 32px) !important;
+  }
+
+  body.about .site-header .navigation {
+    width: 100% !important;
+    max-width: 560px;
+    height: clamp(32px, 4.4vh, 42px) !important;
+    font-size: clamp(10px, 3vw, 14px) !important;
+  }
+
+  .about-main { margin-top: 16px; gap: 8px; }
+
+  .about-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .role { padding: 0.8rem 0.5rem; }
+
+  .socials {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .socials a { justify-content: center; width: 100%; box-sizing: border-box; }
+}

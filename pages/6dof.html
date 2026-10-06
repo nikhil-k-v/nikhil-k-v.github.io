@@ -19,7 +19,7 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-ZPCC960TZ2');
+  if (window.self === window.top) gtag('config', 'G-ZPCC960TZ2');
 </script>
 
 <body>

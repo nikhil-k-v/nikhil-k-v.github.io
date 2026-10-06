@@ -29,6 +29,11 @@
   height: 700px;
 }
 
+html {
+    -webkit-text-size-adjust: 100%;   /* stop iOS from inflating small text */
+    text-size-adjust: 100%;
+}
+
 body {
     background-color: var(--dark-primary);
     color: var(--light-primary);
@@ -38,6 +43,7 @@ body {
   
 header {
   position: absolute;
+  box-sizing: border-box;
   width: 100%;
   height: 10vh;
   text-align: center;
@@ -646,31 +652,41 @@ em {
         z-index: 2 !important;
     }
 
+    /* meta strip: same single row as desktop, just scaled way down */
     .project-meta {
-      max-width: 97vw !important;
+      max-width: 96vw !important;
+      width: 96vw;
       margin: auto;
       margin-top: -100px !important;
       margin-bottom: 1rem !important;
       flex-direction: row !important;
+      flex-wrap: nowrap !important;
     }
 
-    .meta-timeframe   { flex: 0 0 14%; }
-    .meta-summary     { flex: 0 0 54%; }
-    .meta-affiliation { flex: 0 0 14%; }
-    .meta-status      { flex: 0 0 18%; }
+    .meta-timeframe   { flex: 0 0 15%; }
+    .meta-summary     { flex: 0 0 47%; }
+    .meta-affiliation { flex: 0 0 15%; }
+    .meta-status      { flex: 0 0 23%; }
 
     .meta-box {
-      padding: 0.5rem 0.2rem 0.5rem 0.2rem !important;      
+      min-width: 0;
+      padding: 0.35rem 0.2rem !important;
       box-sizing: border-box !important;
       border: 2px solid var(--dark-primary);
+      overflow: hidden;
     }
 
     .meta-label {
-      font-size: 0.35rem !important;
+      font-size: clamp(5px, 1.4vw, 7px) !important;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.1rem;
     }
 
     .meta-value {
-      font-size: 0.48rem !important;
+      font-size: clamp(6px, 1.85vw, 9px) !important;
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+      overflow-wrap: anywhere;
     }
 
     .anim {
@@ -712,3 +728,15 @@ em {
 
 
   }
+
+/* =====================================================================
+   PREVIEW MODE
+   The home page snapshots each project inside a small hidden iframe on
+   phones and adds .is-preview to <html>. Only the page's own controls are
+   hidden; the hero stays, since it's the most recognisable part.
+   ===================================================================== */
+
+html.is-preview #back-to-home,
+html.is-preview .ga-nav {
+  display: none !important;
+}
