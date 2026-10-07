@@ -122,6 +122,10 @@ body.home {
   border-radius: 12px;
 }
 
+/* card animations are looping videos encoded on black; "lighten" drops the
+   black out over the card, the same as the transparent GIFs they replace */
+.box video.anims { mix-blend-mode: lighten; }
+
 .anims {
   position: absolute;
   top: 50%;
@@ -398,7 +402,10 @@ body.home {
     grid-template-rows: minmax(0, 40fr) minmax(0, 60fr);
   }
 
-  .carousel { justify-content: flex-end; }
+  .carousel {
+    justify-content: flex-end;
+    padding-top: 18px;            /* breathing room under the nav */
+  }
 
   .track {
     --card-h: 26vh;
@@ -457,9 +464,11 @@ body.home {
     border-radius: 12px;
   }
 
-  /* The frame is only a loader for snapshots, so it stays invisible but
-     rendered (opacity, not visibility, so the browser doesn't throttle it).
-     It's shown live only for cross-origin pages, under the dot mask. */
+  /* The frame holds the live project page. It stays fully opaque so the
+     browser keeps painting it (GIFs only animate and videos only play when
+     painted), and a navy layer on top hides it; the canvas reads its media
+     and draws the dither above both. For other sites the cover is removed
+     and the canvas becomes a navy sheet with dot-shaped holes. */
   .preview-frame {
     position: absolute;
     top: 0;
@@ -471,9 +480,17 @@ body.home {
     transform-origin: 0 0;
     background-color: var(--dark-primary);
     pointer-events: none;
-    opacity: 0;
   }
-  .preview-frame.is-live { opacity: 1; }
+  .preview-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--dark-primary);
+    pointer-events: none;
+  }
+  .preview-stage.is-live::after { display: none; }
+  /* light pages from other sites (tubaa.dev): flip to dark, keep the hues */
+  .preview-frame.is-inverted { filter: invert(1) hue-rotate(180deg) brightness(0.92); }
 
   .preview-dither {
     position: absolute;

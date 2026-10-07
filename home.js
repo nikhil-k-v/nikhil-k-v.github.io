@@ -299,32 +299,30 @@
       mask.width = cols; mask.height = rows;
       dImg = dctx.createImageData(dots.width, dots.height);
       mImg = mctx.createImageData(cols, rows);
+      if (live) compose();
       sample();
       if (!running) draw(prevNow || performance.now());
     }
 
-    /* average colour + brightness of every cell, once per source */
     /* Per-cell colour and "ink" amount. Each cell is sampled 3x3 so thin
        things (text strokes, wireframe lines) still register; detail inside
        the cell drives the dot size and flat fills (a big white sheet, a soft
        glow) are toned down, so the page's features carry the picture. */
+    var sampCv = document.createElement('canvas'), sampCtx = sampCv.getContext('2d', { willReadFrequently: true });
     function sample() {
-      rgb = lum = null;
-      if (!src || !cols) return;
+      if (!src || !cols) { rgb = lum = null; return; }
       var S = 3, sw = cols * S, sh = rows * S;
-      var tmp = document.createElement('canvas');
-      tmp.width = sw; tmp.height = sh;
-      var t = tmp.getContext('2d');
+      if (sampCv.width !== sw || sampCv.height !== sh) { sampCv.width = sw; sampCv.height = sh; }
+      var t = sampCtx;
       t.imageSmoothingEnabled = true;
       t.imageSmoothingQuality = 'high';
       t.fillStyle = 'rgb(' + BG + ')';
       t.fillRect(0, 0, sw, sh);
       t.drawImage(src, 0, 0, W * S / C, H * S / C);
       var d;
-      try { d = t.getImageData(0, 0, sw, sh).data; } catch (_) { return; }
+      try { d = t.getImageData(0, 0, sw, sh).data; } catch (_) { rgb = lum = null; return; }
       var n = cols * rows;
-      rgb = new Uint8ClampedArray(n * 3);
-      lum = new Float32Array(n);
+      if (!rgb || rgb.length !== n * 3) { rgb = new Uint8ClampedArray(n * 3); lum = new Float32Array(n); }
 
       function bright(r, g, b) {
         var y = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
@@ -363,11 +361,42 @@
       }
     }
 
-    function setSource(canvasOrNull, m) {
-      src = canvasOrNull;
+    /* base: a still picture of the page (or null for plain navy)
+       live: optional fn(ctx, w, h) that paints moving media (videos, GIFs)
+             over the base each refresh, so the preview isn't frozen */
+    var base = null, live = null, liveAt = 0;
+    var work = document.createElement('canvas'), workCtx = work.getContext('2d');
+    var LIVE_GAP = 66;      // refresh moving media ~15 times a second
+
+    function compose() {
+      var w = Math.round(W * dpr), h = Math.round(H * dpr);
+      if (work.width !== w || work.height !== h) { work.width = w; work.height = h; }
+      workCtx.globalCompositeOperation = 'source-over';
+      workCtx.globalAlpha = 1;
+      workCtx.filter = 'none';
+      workCtx.fillStyle = 'rgb(' + BG + ')';
+      workCtx.fillRect(0, 0, w, h);
+      if (base) workCtx.drawImage(base, 0, 0, w, h);
+      try { live(workCtx, w, h); } catch (_) {}
+      workCtx.filter = 'none';
+      workCtx.globalAlpha = 1;
+      src = work;
+    }
+
+    function setSource(canvasOrNull, m, liveFn) {
+      base = canvasOrNull;
+      live = liveFn || null;
       mode = m;
+      if (live && W) compose(); else src = base;
       sample();
       if (mode === 'content' && !rgb) mode = 'empty';   // tainted or empty source
+    }
+
+    function setLive(liveFn) {
+      live = liveFn || null;
+      if (mode !== 'content') return;
+      if (live && W) compose(); else src = base;
+      sample();
     }
 
     function write(d, DW, x0, y0, s, r, g, bl, a) {
@@ -393,6 +422,13 @@
           tween = null;
           if (level <= -0.999) { var w = waiters; waiters = []; w.forEach(function (f) { f(); }); }
         }
+      }
+
+      if (live && mode === 'content' && !busy && now - liveAt >= LIVE_GAP) {
+        liveAt = now;
+        compose();
+        sample();
+        if (!rgb) { mode = 'empty'; live = null; }
       }
 
       var vis = level < -1 ? 0 : level > 0 ? 1 : 1 + level;
@@ -570,6 +606,7 @@
 
     return {
       setBusy: function (b) { busy = !!b; },
+      setLive: setLive,
       setSource: setSource, cover: cover, reveal: reveal, hold: hold,
       start: start, stop: stop, resize: resize,
       size: function () { return { w: W, h: H, dpr: dpr }; }
@@ -671,7 +708,7 @@
     }
 
     function setState(s) { pane.setAttribute('data-state', s); }
-    function setLive(on) { frame.classList.toggle('is-live', !!on); }
+    function setLive(on) { stage.classList.toggle('is-live', !!on); }
 
     function setLink(p) {
       link.removeAttribute('target');
@@ -697,23 +734,28 @@
 
     /* wait until the page in the frame is parsed and styled, then a little
        longer for the hero image, but never more than ~3s in total */
-    /* The preview only needs the first screen, but a project page starts
-       downloading every video (tens of MB each) and every photo as soon as it
-       parses. That traffic is what made snapshots slow, so cancel it: stop all
-       videos, and drop images that sit below the first screen. */
+    /* A project page starts downloading every video (tens of MB each) and
+       every photo as soon as it parses, and that traffic is what made
+       snapshots slow. So while the page loads in the hidden frame:
+         - every video's source is parked (download aborted) until the
+           snapshot is done; then only the videos in the first screen get
+           theirs back (see wakeMedia)
+         - images below the first screen are dropped for good */
     function starve(doc) {
       var vids = doc.getElementsByTagName('video');
       for (var i = 0; i < vids.length; i++) {
         var v = vids[i];
         if (v.__pv) continue;
-        v.__pv = true;
+        v.__pv = { src: v.getAttribute('src'), sources: [] };
         try {
           v.pause();
           v.removeAttribute('autoplay');
-          v.preload = 'none';
-          v.removeAttribute('src');
+          if (v.__pv.src) v.removeAttribute('src');
           var srcs = v.getElementsByTagName('source');
-          for (var j = srcs.length - 1; j >= 0; j--) srcs[j].removeAttribute('src');
+          for (var j = 0; j < srcs.length; j++) {
+            v.__pv.sources.push(srcs[j].getAttribute('src'));
+            srcs[j].removeAttribute('src');
+          }
           v.load();                     // aborts any download in flight
         } catch (_) {}
       }
@@ -729,6 +771,125 @@
           im.removeAttribute('src');
         }
       }
+    }
+
+    /* give the first-screen videos their sources back and start them */
+    function wakeMedia(doc) {
+      var vh = doc.documentElement.clientHeight;
+      var vids = doc.getElementsByTagName('video');
+      for (var i = 0; i < vids.length; i++) {
+        var v = vids[i], pv = v.__pv;
+        var r = v.getBoundingClientRect();
+        if (r.bottom <= 0 || r.top >= vh) continue;
+        try {
+          if (pv && !pv.woken) {
+            pv.woken = true;
+            if (pv.src) v.setAttribute('src', pv.src);
+            var srcs = v.getElementsByTagName('source');
+            for (var j = 0; j < srcs.length; j++) if (pv.sources[j]) srcs[j].setAttribute('src', pv.sources[j]);
+            v.preload = 'auto';
+            v.load();
+          }
+          v.muted = true;
+          v.loop = true;
+          v.playsInline = true;
+          if (v.paused) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
+        } catch (_) {}
+      }
+    }
+
+    /* Paints the page's first-screen images, GIFs and videos into the
+       preview each refresh, at their place on the page, so they load in
+       and move. Positions are re-read twice a second in case the page's
+       own scripts resize things. */
+    var BLENDS = { lighten: 1, screen: 1, multiply: 1, darken: 1, overlay: 1, 'color-dodge': 1, difference: 1 };
+    function mediaLayer(doc, my) {
+      var items = [], scanned = 0;
+
+      function clipBox(el, win) {
+        for (var p = el.parentElement; p && p !== doc.body && p !== doc.documentElement; p = p.parentElement) {
+          var cs = win.getComputedStyle(p);
+          if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') return p.getBoundingClientRect();
+        }
+        return null;
+      }
+
+      function scan() {
+        var win = doc.defaultView;
+        if (!win) return;
+        var vw = doc.documentElement.clientWidth, vh = doc.documentElement.clientHeight;
+        items = [];
+        var els = doc.querySelectorAll('img, video');
+        for (var i = 0; i < els.length; i++) {
+          var el = els[i], r = el.getBoundingClientRect();
+          if (r.width < 2 || r.height < 2 || r.bottom <= 0 || r.top >= vh || r.right <= 0 || r.left >= vw) continue;
+          var cs = win.getComputedStyle(el);
+          if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+          var op = 1;
+          for (var a = el; a && a.nodeType === 1; a = a.parentElement) op *= parseFloat(win.getComputedStyle(a).opacity) || 0;
+          if (op <= 0.01) continue;
+          var c = clipBox(el, win);
+          var x0 = Math.max(0, c ? c.left : 0), y0 = Math.max(0, c ? c.top : 0);
+          var x1 = Math.min(vw, c ? c.right : vw), y1 = Math.min(vh, c ? c.bottom : vh);
+          if (x1 <= x0 || y1 <= y0) continue;
+          items.push({
+            el: el, r: r, clip: [x0, y0, x1 - x0, y1 - y0],
+            fit: cs.objectFit, filter: cs.filter && cs.filter !== 'none' ? cs.filter : 'none', op: op,
+            blend: BLENDS[cs.mixBlendMode] ? cs.mixBlendMode : 'source-over'
+          });
+        }
+        scanned = performance.now();
+      }
+
+      return function paint(ctx, w) {
+        if (my !== token || !doc.defaultView) return;
+        if (performance.now() - scanned > 500) scan();
+        var k = w / (doc.documentElement.clientWidth || 1);
+        for (var i = 0; i < items.length; i++) {
+          var it = items[i], el = it.el, nw, nh;
+          if (el.tagName === 'VIDEO') {
+            if (el.readyState < 2) continue;
+            nw = el.videoWidth; nh = el.videoHeight;
+          } else {
+            if (!el.complete || !el.naturalWidth) continue;
+            nw = el.naturalWidth; nh = el.naturalHeight;
+          }
+          var r = it.r, dx = r.left, dy = r.top, dw = r.width, dh = r.height;
+          var sx = 0, sy = 0, sw = nw, sh = nh, sc;
+          if (it.fit === 'cover') {
+            sc = Math.max(dw / nw, dh / nh); sw = dw / sc; sh = dh / sc; sx = (nw - sw) / 2; sy = (nh - sh) / 2;
+          } else if (it.fit === 'contain' || it.fit === 'scale-down') {
+            sc = Math.min(dw / nw, dh / nh); dx += (dw - nw * sc) / 2; dy += (dh - nh * sc) / 2; dw = nw * sc; dh = nh * sc;
+          }
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(it.clip[0] * k, it.clip[1] * k, it.clip[2] * k, it.clip[3] * k);
+          ctx.clip();
+          ctx.globalAlpha = Math.min(1, it.op);
+          ctx.filter = it.filter;
+          ctx.globalCompositeOperation = it.blend;
+          try { ctx.drawImage(el, sx, sy, sw, sh, dx * k, dy * k, dw * k, dh * k); } catch (_) {}
+          ctx.restore();
+        }
+      };
+    }
+
+    /* the card's own animation, live, for the moment before the page arrives */
+    function cardLayer(box) {
+      var el = box.querySelector('.anims');
+      if (!el) return null;
+      var isVideo = el.tagName === 'VIDEO';
+      return function paint(ctx, w, h) {
+        var nw = isVideo ? el.videoWidth : el.naturalWidth, nh = isVideo ? el.videoHeight : el.naturalHeight;
+        if (isVideo ? el.readyState < 2 : !el.complete) return;
+        if (!nw || !nh) return;
+        // the card animations have wide empty margins, so scale up past 'contain'
+        var k = Math.min(w / nw, h / nh) * 2.3;
+        var dw = nw * k, dh = nh * k;
+        ctx.globalCompositeOperation = 'lighten';     // black background drops out
+        try { ctx.drawImage(el, (w - dw) / 2, (h - dh) / 2, dw, dh); } catch (_) {}
+        ctx.globalCompositeOperation = 'source-over';
+      };
     }
 
     /* wait until the page is parsed and styled and the images in its first
@@ -786,6 +947,12 @@
             logging: false,
             // only copy what's in the first screen; the rest of a long page
             // (dozens of videos and photos) is what made this slow
+            // media is painted live on top, so leave it out of the still picture
+            // (hidden, not removed, so nothing reflows)
+            onclone: function (cdoc) {
+              var m = cdoc.querySelectorAll('img, video');
+              for (var i = 0; i < m.length; i++) m[i].style.visibility = 'hidden';
+            },
             ignoreElements: function (el) {
               var tag = el.tagName;
               if (tag === 'SCRIPT') return true;
@@ -808,27 +975,9 @@
     }
 
     /* for projects without a page: the card's own animation on navy */
-    function cardSource(box) {
-      var img = box.querySelector('img.anims');
-      var size = R.size();
-      if (!img || !img.complete || !img.naturalWidth || !size.w) return null;
-      var c = document.createElement('canvas');
-      c.width = Math.round(size.w * size.dpr);
-      c.height = Math.round(size.h * size.dpr);
-      var x = c.getContext('2d');
-      x.fillStyle = '#051220';
-      x.fillRect(0, 0, c.width, c.height);
-      // the card GIFs have wide empty margins, so scale up past 'contain'
-      var k = Math.min(c.width / img.naturalWidth, c.height / img.naturalHeight) * 2.3;
-      var w = img.naturalWidth * k, h = img.naturalHeight * k;
-      x.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h);
-      return c;
-    }
-
-    /* page is ready: swap it in under the dissolve and bring it back */
     /* snapshots survive reloads of the home page for the rest of the
        browser session (coming back from a project page is instant) */
-    var STORE_VER = 'pv2';
+    var STORE_VER = 'pv3';   // bump when the snapshot format changes
     function storeKey(url) {
       var z = R.size();
       return STORE_VER + ':' + url + ':' + Math.round(z.w * z.dpr) + 'x' + Math.round(z.h * z.dpr);
@@ -853,13 +1002,26 @@
       });
     }
 
-    function present(box, source, m, my) {
+    /* Hand the renderer a still picture plus a live-media painter, swapped
+       in under the dissolve. pageLive can arrive later (once the page's
+       media is ready), so it's held here and attached whenever it shows up. */
+    var pageLive = null, shown = 0;
+
+    function present(box, source, m, my, liveFn) {
       R.cover(function () {
         if (my !== token) return;
-        R.setSource(source, m);
+        R.setSource(source, m, liveFn !== undefined ? liveFn : pageLive);
         setState(m === 'empty' ? 'static' : 'frame');
         R.reveal(0);
+        shown = my;
       });
+    }
+
+    function attachLive(doc, my) {
+      if (my !== token) return;
+      wakeMedia(doc);
+      pageLive = mediaLayer(doc, my);
+      if (shown === my) R.setLive(pageLive);
     }
 
     function show(box) {
@@ -867,27 +1029,33 @@
       var p = projectOf(box);
       var my = ++token;
       current = box;
+      pageLive = null;
+      shown = 0;
       setLink(p);
       link.classList.remove('nudge');
       R.start();
 
       R.cover(function () {
         if (my !== token) return;
+        frame.classList.remove('is-inverted');
 
-        // nothing to load
+        // nothing to load: the card's own animation, live
         if (!p.href && !p.external) {
           setLive(false);
           navigate('about:blank');
-          var c = cardSource(box);
-          present(box, c, c ? 'content' : 'empty', my);
+          var card = cardLayer(box);
+          present(box, null, card ? 'content' : 'empty', my, card);
           return;
         }
 
-        // external site: keep it live underneath, dots are holes in a cover
+        // another site: its pixels can't be read, so it stays live under a
+        // navy cover with dot-shaped holes. tubaa.dev is a light page, so
+        // invert it (hue kept) to sit in the dark style
         if (!p.href) {
           R.setSource(null, 'mask');
           setState('loading');
           setLive(true);
+          frame.classList.add('is-inverted');
           navigate(p.external);
           var done = false;
           var finish = function () {
@@ -907,28 +1075,37 @@
           return;
         }
 
-        // project page: snapshot (memory cache, then session cache, then capture)
+        // project page: the frame always loads it (its media is painted live);
+        // the still picture comes from memory, the session cache, or a capture
         var url = absUrl(p.href);
         setLive(false);
-        if (cache[url]) {
-          present(box, cache[url], 'content', my);
+
+        var cached = cache[url];
+        if (cached) {
+          present(box, cached, 'content', my);
+          navigate(url);
+          waitForPage(url, my).then(function (doc) { attachLive(doc, my); }, function () {});
           return;
         }
 
-        // straight away: the card's own animation, dithered, as a placeholder
-        var ph = cardSource(box);
-        R.setSource(ph, ph ? 'content' : 'empty');
-        R.reveal(ph ? -0.15 : -0.3);
+        // straight away: the card's own animation, live, as a placeholder
+        var card = cardLayer(box);
+        R.setSource(null, card ? 'content' : 'empty', card);
+        R.reveal(card ? -0.15 : -0.3);
         setState('loading');
 
         storeLoad(url).then(function (stored) {
           if (my !== token) return null;
-          if (stored) return stored;
+          if (stored) {
+            navigate(url);
+            waitForPage(url, my).then(function (doc) { attachLive(doc, my); }, function () {});
+            return stored;
+          }
           R.setBusy(true);
-          var done = function (x) { R.setBusy(false); return x; };
-          return capture(url, my).then(done, function (err) { done(); throw err; }).then(function (snap) {
+          var idle = function (x) { R.setBusy(false); return x; };
+          return capture(url, my).then(idle, function (err) { idle(); throw err; }).then(function (snap) {
             storeSave(url, snap);
-            navigate('about:blank');            // free the page, keep the picture
+            try { attachLive(frame.contentDocument, my); } catch (_) {}
             return snap;
           });
         }).then(function (snap) {
@@ -958,6 +1135,7 @@
 
     function unload() {
       token++;
+      pageLive = null;
       current = null;
       setLive(false);
       R.stop();
