@@ -252,8 +252,8 @@
      level:  0 = normal, -1 = fully dissolved (used to swap sources)
      ------------------------------------------------------------------ */
   function createRenderer(canvas, stage) {
-    var C = 7;              // cell size, css px
-    var K = 7;              // sub-pixels per cell edge (1 css px each) → dot sizes 1..6
+    var C = 5;              // cell size, css px
+    var K = 5;              // sub-pixels per cell edge (1 css px each) → dot sizes 1..4
     var TH = 0.8;           // field value above which a cell becomes a block (kept rare)
     var SPEED = 1.8;        // overall animation speed
     // blobs: [x speed, phase, phase2, y speed, phase3, size]
@@ -265,6 +265,8 @@
       [0.31, 5.5, 3.8, 0.27, 5.6, 0.6]
     ];
     var FPS_GAP = 31;       // ~30 fps is plenty for this and kind to batteries
+    var BUSY_GAP = 125;     // ~8 fps while a snapshot is being taken, to leave it the CPU
+    var busy = false;
     var BG = [5, 18, 32];   // --dark-primary: the page colour, so empty page blends in
     var EMPTY_RGB = [52, 92, 132], EMPTY_L = 0.34;
     var BAYER4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
@@ -302,31 +304,62 @@
     }
 
     /* average colour + brightness of every cell, once per source */
+    /* Per-cell colour and "ink" amount. Each cell is sampled 3x3 so thin
+       things (text strokes, wireframe lines) still register; detail inside
+       the cell drives the dot size and flat fills (a big white sheet, a soft
+       glow) are toned down, so the page's features carry the picture. */
     function sample() {
       rgb = lum = null;
       if (!src || !cols) return;
+      var S = 3, sw = cols * S, sh = rows * S;
       var tmp = document.createElement('canvas');
-      tmp.width = cols; tmp.height = rows;
+      tmp.width = sw; tmp.height = sh;
       var t = tmp.getContext('2d');
       t.imageSmoothingEnabled = true;
       t.imageSmoothingQuality = 'high';
       t.fillStyle = 'rgb(' + BG + ')';
-      t.fillRect(0, 0, cols, rows);
-      t.drawImage(src, 0, 0, W / C, H / C);
+      t.fillRect(0, 0, sw, sh);
+      t.drawImage(src, 0, 0, W * S / C, H * S / C);
       var d;
-      try { d = t.getImageData(0, 0, cols, rows).data; } catch (_) { return; }
+      try { d = t.getImageData(0, 0, sw, sh).data; } catch (_) { return; }
       var n = cols * rows;
       rgb = new Uint8ClampedArray(n * 3);
       lum = new Float32Array(n);
-      for (var i = 0; i < n; i++) {
-        var r = d[i * 4], g = d[i * 4 + 1], bl = d[i * 4 + 2];
-        // lift dark-but-present colour so dots stay visible on the navy
-        rgb[i * 3]     = Math.min(255, r * 1.15 + 22);
-        rgb[i * 3 + 1] = Math.min(255, g * 1.15 + 22);
-        rgb[i * 3 + 2] = Math.min(255, bl * 1.15 + 22);
-        var y = (0.2126 * r + 0.7152 * g + 0.0722 * bl) / 255;
-        var mx = Math.max(r, g, bl) / 255;
-        lum[i] = Math.pow(Math.max(0, Math.max((y - 0.08) / 0.92, (mx - 0.14) * 0.8)), 0.7);
+
+      function bright(r, g, b) {
+        var y = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+        var mx = Math.max(r, g, b) / 255;
+        return Math.max(0, Math.max((y - 0.08) / 0.92, (mx - 0.14) * 0.8));
+      }
+
+      for (var cy = 0; cy < rows; cy++) {
+        for (var cx = 0; cx < cols; cx++) {
+          var sum = 0, mx = 0, mn = 1, wr = 0, wg = 0, wb = 0, wsum = 0;
+          for (var yy = 0; yy < S; yy++) {
+            var row = ((cy * S + yy) * sw + cx * S) * 4;
+            for (var xx = 0; xx < S; xx++) {
+              var o = row + xx * 4;
+              var r = d[o], g = d[o + 1], b = d[o + 2];
+              var l = bright(r, g, b);
+              sum += l;
+              if (l > mx) mx = l;
+              if (l < mn) mn = l;
+              var w = 0.05 + l;                     // colour leans to the bright part
+              wr += r * w; wg += g * w; wb += b * w; wsum += w;
+            }
+          }
+          var avg = sum / (S * S);
+          var detail = Math.min(1, (mx - mn) * 2.5);
+          // ink: brightness, pulled up toward the peak where there's detail,
+          // pushed down where the cell is one flat colour
+          var ink = mx * 0.9 * detail + avg * 0.12;
+          ink = Math.pow(Math.min(1, ink), 0.75);
+          var ci = cy * cols + cx;
+          lum[ci] = ink;
+          rgb[ci * 3]     = Math.min(255, (wr / wsum) * 1.12 + 20);
+          rgb[ci * 3 + 1] = Math.min(255, (wg / wsum) * 1.12 + 20);
+          rgb[ci * 3 + 2] = Math.min(255, (wb / wsum) * 1.12 + 20);
+        }
       }
     }
 
@@ -443,12 +476,14 @@
           }
 
           // size follows the field first (clumps → empty), brightness second
-          var size = Math.pow(q, 1.3) * (0.82 + 0.45 * L) + 0.18 * L - 0.06;
+          // the page's brightness sets the dot size everywhere, so it stays
+          // readable; blobs swell the dots (and add faint texture in the dark)
+          var size = L * (0.62 + 0.5 * q) + 0.1 * q - 0.03;
           var s = Math.floor(size * (K - 1) + bayer);
           if (s <= 0) continue;
           if (s > K - 1) s = K - 1;
 
-          var a = (0.45 + 0.55 * q) * Math.min(1, e * 1.3) * vis;
+          var a = (0.55 + 0.45 * q) * Math.min(1, e * 1.3) * vis;
           a = Math.ceil(a * 4) / 4;                   // stepped, like the paper edges
           if (a <= 0) continue;
 
@@ -480,7 +515,7 @@
     function loop(now) {
       raf = 0;
       if (!running) return;
-      if (now - last >= FPS_GAP || tween) { last = now; draw(now); }
+      if (now - last >= (busy ? BUSY_GAP : FPS_GAP) || (tween && !busy)) { last = now; draw(now); }
       if (REDUCED_MQ.matches && !tween) { draw(now); return; }   // one still frame
       raf = requestAnimationFrame(loop);
     }
@@ -534,6 +569,7 @@
     resize();
 
     return {
+      setBusy: function (b) { busy = !!b; },
       setSource: setSource, cover: cover, reveal: reveal, hold: hold,
       start: start, stop: stop, resize: resize,
       size: function () { return { w: W, h: H, dpr: dpr }; }
@@ -569,6 +605,7 @@
       '#back-to-home,.ga-nav{display:none!important}';
 
     var cache = {};        // url → snapshot canvas
+    if (/[?&]previewdebug\b/.test(location.search)) window.__previewCache = cache;
     var token = 0;         // invalidates stale work when the user taps quickly
     var current = null;    // box being previewed
 
@@ -579,19 +616,33 @@
         return A.origin === B.origin && A.pathname === B.pathname;
       } catch (_) { return false; }
     }
-    function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
     /* html2canvas has to run inside the project page's own window: its
        document clone resolves relative URLs (stylesheets, images) against
        whichever page called it */
+    var h2cSource = null;
+    function fetchH2C() {
+      if (!h2cSource) {
+        h2cSource = fetch(absUrl(H2C_SRC)).then(function (r) {
+          if (!r.ok) throw new Error('h2c ' + r.status);
+          return r.text();
+        });
+        h2cSource.catch(function () { h2cSource = null; });
+      }
+      return h2cSource;
+    }
+
+    /* The library is fetched once by this page, then its source is run as an
+       inline script inside each project page. Loading it as a separate file
+       from inside the frame queued it behind all of that page's videos. */
     function loadH2C(win, doc) {
       if (win.html2canvas) return Promise.resolve(win.html2canvas);
-      return new Promise(function (resolve, reject) {
+      return fetchH2C().then(function (src) {
         var s = doc.createElement('script');
-        s.src = absUrl(H2C_SRC);
-        s.onload = function () { win.html2canvas ? resolve(win.html2canvas) : reject(new Error('h2c')); };
-        s.onerror = reject;
+        s.textContent = src;
         (doc.head || doc.documentElement).appendChild(s);
+        if (!win.html2canvas) throw new Error('h2c');
+        return win.html2canvas;
       });
     }
 
@@ -646,6 +697,42 @@
 
     /* wait until the page in the frame is parsed and styled, then a little
        longer for the hero image, but never more than ~3s in total */
+    /* The preview only needs the first screen, but a project page starts
+       downloading every video (tens of MB each) and every photo as soon as it
+       parses. That traffic is what made snapshots slow, so cancel it: stop all
+       videos, and drop images that sit below the first screen. */
+    function starve(doc) {
+      var vids = doc.getElementsByTagName('video');
+      for (var i = 0; i < vids.length; i++) {
+        var v = vids[i];
+        if (v.__pv) continue;
+        v.__pv = true;
+        try {
+          v.pause();
+          v.removeAttribute('autoplay');
+          v.preload = 'none';
+          v.removeAttribute('src');
+          var srcs = v.getElementsByTagName('source');
+          for (var j = srcs.length - 1; j >= 0; j--) srcs[j].removeAttribute('src');
+          v.load();                     // aborts any download in flight
+        } catch (_) {}
+      }
+      if (doc.readyState === 'loading') return;   // no reliable layout yet
+      var vh = doc.documentElement.clientHeight;
+      var imgs = doc.images;
+      for (var k = 0; k < imgs.length; k++) {
+        var im = imgs[k];
+        if (im.__pv || im.complete) continue;
+        if (im.getBoundingClientRect().top > vh * 1.1) {
+          im.__pv = true;
+          im.removeAttribute('srcset');
+          im.removeAttribute('src');
+        }
+      }
+    }
+
+    /* wait until the page is parsed and styled and the images in its first
+       screen have loaded (capped), not for every video further down */
     function waitForPage(url, my) {
       return new Promise(function (resolve, reject) {
         var start = performance.now();
@@ -654,16 +741,22 @@
           if (my !== token) { reject(new Error('stale')); return; }
           var doc = null;
           try { doc = frame.contentDocument; } catch (_) { reject(new Error('cross-origin')); return; }
-          var ok = doc && samePage(doc.location.href, url) && doc.readyState !== 'loading';
+          var here = doc && samePage(doc.location.href, url);
+          if (here) starve(doc);
+          var ok = here && doc.readyState !== 'loading';
           if (ok) {
             decorate(doc);
             if (!interactiveAt) interactiveAt = performance.now();
             var since = performance.now() - interactiveAt;
-            if (doc.readyState === 'complete' && since > 150) { resolve(doc); return; }
-            if (since > 2500) { resolve(doc); return; }
+            var vh = doc.documentElement.clientHeight;
+            var imgsReady = Array.prototype.every.call(doc.images, function (im) {
+              return im.complete || im.getBoundingClientRect().top > vh;
+            });
+            var fontsReady = !doc.fonts || doc.fonts.status === 'loaded';
+            if ((imgsReady && fontsReady && since > 100) || since > 1200) { resolve(doc); return; }
           }
           if (performance.now() - start > 12000) { reject(new Error('timeout')); return; }
-          setTimeout(poll, 80);
+          setTimeout(poll, here && doc.readyState === 'loading' ? 15 : 60);
         })();
       });
     }
@@ -676,8 +769,7 @@
         return loadH2C(frame.contentWindow, doc);
       }).then(function () {
         if (my !== token) throw new Error('stale');
-        var fontsReady = doc.fonts && doc.fonts.ready ? doc.fonts.ready : Promise.resolve();
-        return Promise.race([fontsReady, wait(800)]).then(function () {
+        return Promise.resolve().then(function () {
           if (my !== token) throw new Error('stale');
           var size = R.size();
           var vw = doc.documentElement.clientWidth || frame.clientWidth;
@@ -690,8 +782,19 @@
             windowWidth: vw, windowHeight: vh,
             scale: (size.w * size.dpr) / vw,
             useCORS: true,
-            imageTimeout: 3000,
-            logging: false
+            imageTimeout: 1500,
+            logging: false,
+            // only copy what's in the first screen; the rest of a long page
+            // (dozens of videos and photos) is what made this slow
+            ignoreElements: function (el) {
+              var tag = el.tagName;
+              if (tag === 'SCRIPT') return true;
+              // don't stall on media that hasn't arrived yet
+              if (tag === 'IMG' && !(el.complete && el.naturalWidth)) return true;
+              if (tag === 'VIDEO' && el.readyState < 2) return true;
+              var r = el.getBoundingClientRect();
+              return r.top > vh + 10 || (r.bottom < -10 && r.height > 0);
+            }
           };
           // started from a script element inside the frame, so the page is
           // the "entry" document and its relative URLs resolve correctly
@@ -723,6 +826,33 @@
     }
 
     /* page is ready: swap it in under the dissolve and bring it back */
+    /* snapshots survive reloads of the home page for the rest of the
+       browser session (coming back from a project page is instant) */
+    var STORE_VER = 'pv2';
+    function storeKey(url) {
+      var z = R.size();
+      return STORE_VER + ':' + url + ':' + Math.round(z.w * z.dpr) + 'x' + Math.round(z.h * z.dpr);
+    }
+    function storeSave(url, c) {
+      try { sessionStorage.setItem(storeKey(url), c.toDataURL('image/jpeg', 0.82)); } catch (_) {}
+    }
+    function storeLoad(url) {
+      var data = null;
+      try { data = sessionStorage.getItem(storeKey(url)); } catch (_) {}
+      if (!data) return Promise.resolve(null);
+      return new Promise(function (resolve) {
+        var img = new Image();
+        img.onload = function () {
+          var c = document.createElement('canvas');
+          c.width = img.naturalWidth; c.height = img.naturalHeight;
+          c.getContext('2d').drawImage(img, 0, 0);
+          resolve(c);
+        };
+        img.onerror = function () { resolve(null); };
+        img.src = data;
+      });
+    }
+
     function present(box, source, m, my) {
       R.cover(function () {
         if (my !== token) return;
@@ -733,6 +863,7 @@
     }
 
     function show(box) {
+      fetchH2C();
       var p = projectOf(box);
       var my = ++token;
       current = box;
@@ -776,23 +907,34 @@
           return;
         }
 
-        // project page: snapshot (or use the cached one)
+        // project page: snapshot (memory cache, then session cache, then capture)
         var url = absUrl(p.href);
+        setLive(false);
         if (cache[url]) {
-          setLive(false);
           present(box, cache[url], 'content', my);
           return;
         }
 
-        setLive(false);
-        R.setSource(null, 'empty');
+        // straight away: the card's own animation, dithered, as a placeholder
+        var ph = cardSource(box);
+        R.setSource(ph, ph ? 'content' : 'empty');
+        R.reveal(ph ? -0.15 : -0.3);
         setState('loading');
-        R.reveal(-0.3);                       // faint idle dots while it loads
 
-        capture(url, my).then(function (snap) {
+        storeLoad(url).then(function (stored) {
+          if (my !== token) return null;
+          if (stored) return stored;
+          R.setBusy(true);
+          var done = function (x) { R.setBusy(false); return x; };
+          return capture(url, my).then(done, function (err) { done(); throw err; }).then(function (snap) {
+            storeSave(url, snap);
+            navigate('about:blank');            // free the page, keep the picture
+            return snap;
+          });
+        }).then(function (snap) {
+          if (!snap) return;
           cache[url] = snap;
           if (my !== token) return;
-          navigate('about:blank');            // free the page, keep the picture
           present(box, snap, 'content', my);
         }).catch(function (err) {
           if (my !== token || (err && err.message === 'stale')) return;
