@@ -256,6 +256,14 @@
     var K = 7;              // sub-pixels per cell edge (1 css px each) → dot sizes 1..6
     var TH = 0.8;           // field value above which a cell becomes a block (kept rare)
     var SPEED = 1.8;        // overall animation speed
+    // blobs: [x speed, phase, phase2, y speed, phase3, size]
+    var BLOBS = [
+      [0.23, 0.0, 1.7, 0.19, 2.1, 1.0],
+      [0.17, 2.4, 0.3, 0.26, 4.0, 0.85],
+      [0.29, 4.1, 2.9, 0.15, 0.7, 0.7],
+      [0.13, 1.2, 5.2, 0.21, 3.3, 0.9],
+      [0.31, 5.5, 3.8, 0.27, 5.6, 0.6]
+    ];
     var FPS_GAP = 31;       // ~30 fps is plenty for this and kind to batteries
     var BG = [5, 18, 32];   // --dark-primary: the page colour, so empty page blends in
     var EMPTY_RGB = [52, 92, 132], EMPTY_L = 0.34;
@@ -364,7 +372,19 @@
       var gain = 0.8 + 0.2 * breathe;
       var FALL = Math.min(52, Math.min(W, H) * 0.16);      // width of the edge drop-off
       var hx = W / 2, hy = H / 2;
-      var spin = t * 0.22, twist = 1.6 + 0.9 * Math.sin(t * 0.17);
+
+      // floating blobs: each wanders on two mixed sine paths (reads as noise,
+      // never repeats quickly) and breathes its radius in and out
+      var R0 = Math.min(W, H) * 0.19;
+      var blobs = [];
+      for (var bi = 0; bi < BLOBS.length; bi++) {
+        var B = BLOBS[bi];
+        blobs.push({
+          x: hx + hx * (0.5 * Math.sin(t * B[0] + B[1]) + 0.16 * Math.sin(t * B[0] * 2.3 + B[2])),
+          y: hy + hy * (0.5 * Math.sin(t * B[3] + B[4]) + 0.16 * Math.sin(t * B[3] * 1.9 + B[1])),
+          r2: Math.pow(R0 * B[5] * (0.75 + 0.25 * Math.sin(t * 0.5 + B[2])), 2)
+        });
+      }
 
       for (var cy = 0; cy < rows; cy++) {
         var py = (cy + 0.5) * C;
@@ -375,22 +395,20 @@
           var e = Math.min(ey, smoothstep(0, FALL, Math.min(px, W - px)));
           var ci = cy * cols + cx;
 
-          // centred coords, 0 at the middle, ~1 at the sides
+          // metaball sum: 1 at a blob's centre, 0.5 at its radius, tails merge
+          var sum = 0;
+          for (var k = 0; k < blobs.length; k++) {
+            var dx = px - blobs[k].x, dy = py - blobs[k].y;
+            sum += blobs[k].r2 / (dx * dx + dy * dy + blobs[k].r2);
+          }
+          var ripple = 0.08 * Math.sin(px * 0.07 + t * 1.1) * Math.sin(py * 0.06 - t * 0.9);
+          var field = sum * 0.62 + ripple - 0.08;   // block only where blobs overlap
+          field = field < 0 ? 0 : field > 1 ? 1 : field;
+
           var u = (px - hx) / hx, v = (py - hy) / hy;
           var r = Math.sqrt(u * u + v * v);
-          var inner = r < 1 ? 1 - r : 0;
-          // swirl: rotate the pattern more the closer it is to the centre
-          var ang = spin + twist * inner * inner;
-          var ca = Math.cos(ang), sa = Math.sin(ang);
-          var su = u * ca - v * sa, sv = u * sa + v * ca;
-          var w1 = Math.sin(su * 4.1 + t * 0.9 + 1.3 * Math.sin(sv * 3.2 - t * 0.7));
-          var w2 = Math.sin(sv * 5.2 - t * 0.8 + 1.1 * Math.sin(su * 2.6 + t * 0.6));
-          var field = 0.5 + 0.28 * w1 + 0.22 * w2;
-          field = (field - 0.5) * 1.7 + 0.5;                    // more contrast: fuller clumps, emptier gaps
-          field = field < 0 ? 0 : field > 1 ? 1 : field;
-          // blobs gather toward the middle; the outer ring stays dotted
-          var centre = 1 - smoothstep(0.1, 1.05, r);
-          var f = (field * 0.6 + centre * 0.34 + 0.08) * gain * e + level;
+          var centre = 1 - smoothstep(0.1, 1.05, r);     // outer ring stays less blocky
+          var f = (field * 0.78 + centre * 0.18 + 0.06) * gain * e + level;
 
           var x0 = cx * K, y0 = cy * K;
           var block = f >= TH && e > 0.55 && r < 0.75;
