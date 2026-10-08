@@ -1,0 +1,4 @@
+# Files kept in the repo but not published to nkve.dev
+exclude:
+  - CLAUDE.md
+  - tools
