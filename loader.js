@@ -27,17 +27,18 @@
 
   var NAVY = '#051220', INK = '#f0f0f0';
   var B4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-  // the dither: 4 px cells, each a centred square 0..4 px across (a halftone
-  // dot, like the home previews), sized by how much of the screen is left
-  // there plus grain and a slow drifting noise. Two fronts sweep the screen:
-  // the first breaks the solid screen down to a sparse dot pattern (PLATEAU),
-  // the second, which starts once the first is most of the way across, takes
-  // the dots away and shows the page.
-  var CELL = 4, K = 4;
-  var PLATEAU = 0.5;                  // share of the screen still covered between the two fronts
-  var F1 = 0.6, F2 = 0.4;             // front 1 runs over [0, F1], front 2 over [F2, 1]
-  var B1 = 0.16, B2 = 0.26;           // how soft each front is (fraction of the screen)
-  var RAG = 0.045;                    // how ragged the fronts are
+  // the dither: fine 3 px cells, each a centred square 0..3 px across (a
+  // halftone dot), sized by how much of the screen is left there. The screen
+  // thins out along one wide gradient that spreads across it (to about half
+  // covered), then the whole pattern fades away, the start side a little
+  // first. A slow drifting noise keeps the dots moving, like the previews.
+  var CELL = 3, K = 3;
+  var PLATEAU = 0.5;                  // share still covered once the gradient has passed
+  var SPREAD = 0.55;                  // the gradient has crossed the screen by this point
+  var GRAD = 0.5;                     // its width, as a fraction of the screen
+  var FADE0 = 0.33, FADE = 0.42, LEAD = 0.25;   // fade: starts, lasts, lead of the start side
+  var NOISE = 0.16;                   // how much the drifting noise moves the dots
+  var NODE = 14;                      // css px between noise lattice points
   var WORD = 'LOADING', GLYPHS = '!@#$%^&*()_+?><:{}[]';
   var TICK = 70;                      // ms between scrambled-letter changes
   var LEAVE = 560;                    // ms to cover the page before navigating
@@ -136,7 +137,10 @@
       mImg = mx.createImageData(mcv.width, mcv.height);
       m32 = new Uint32Array(mImg.data.buffer);
       grain = new Float32Array(cols * rows);
-      for (var g = 0; g < grain.length; g++) { var h = Math.sin(g * 12.9898 + 78.233) * 43758.5453; grain[g] = h - Math.floor(h) - 0.5; }
+      for (var g = 0; g < grain.length; g++) {               // integer hash: no streaks
+        var h = Math.imul(g ^ 0x9e3779b9, 0x85ebca6b); h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16;
+        grain[g] = (h >>> 0) / 4294967296 - 0.5;
+      }
     }
     root.appendChild(cv);
     size();
@@ -172,36 +176,59 @@
     }
 
     function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
-    /* the dot pattern for progress p. dir: which way the fronts travel.
-       rise: false = the screen thins out to nothing, true = it builds up */
+    function smooth(v) { v = clamp01(v); return v * v * (3 - 2 * v); }
+    function hash2(ix, iy) { var h = Math.sin(ix * 127.1 + iy * 311.7) * 43758.5453; return h - Math.floor(h); }
+    // smooth value noise on a coarse lattice, drifting with time, -1..1
+    var nz = null, nzW = 0, nzH = 0;
+    function noiseGrid(t) {
+      var gw = Math.ceil(W / NODE) + 2, gh = Math.ceil(H / NODE) + 2;
+      if (!nz || nzW !== gw || nzH !== gh) { nz = new Float32Array(gw * gh); nzW = gw; nzH = gh; }
+      var ox = t * 0.35, oy = -t * 0.22, sc = NODE / 70;     // features ~70 px across
+      for (var j = 0; j < gh; j++) for (var i = 0; i < gw; i++) {
+        var X = i * sc + ox, Y = j * sc + oy, x0 = Math.floor(X), y0 = Math.floor(Y);
+        var fx = X - x0, fy = Y - y0;
+        fx = fx * fx * (3 - 2 * fx); fy = fy * fy * (3 - 2 * fy);
+        var a = hash2(x0, y0), b = hash2(x0 + 1, y0), c = hash2(x0, y0 + 1), e = hash2(x0 + 1, y0 + 1);
+        nz[j * gw + i] = 2 * (a + (b - a) * fx + (c - a) * fy + (a - b - c + e) * fx * fy) - 1;
+      }
+    }
+    // how much of the screen is still covered at q (0..1 through a thin-out)
+    // and position yn (0 = the side it starts from)
+    function density(q, yn) {
+      var f = -GRAD + (q / SPREAD) * (1 + GRAD);
+      var thin = smooth((f - yn) / GRAD);
+      var fade = smooth((q - FADE0 - LEAD * yn) / FADE);
+      return (1 - (1 - PLATEAU) * thin) * (1 - fade);
+    }
+    /* the dot pattern at progress p. dir: which way it travels.
+       rise: false = the screen thins out to nothing, true = it builds up
+       (the same thing played backwards, from the far side) */
     function mask(p, dir, rise, ms) {
-      var u1 = clamp01(p / F1), u2 = clamp01((p - F2) / (1 - F2));
-      var f1 = -RAG + u1 * (1 + 2 * RAG + B1), f2 = -RAG + u2 * (1 + 2 * RAG + B2);
-      var t = ms / 1000, DW = cols * K, ON = 0xff000000;
-      var sx = cp / dpr;                                    // css px per cell
+      var q = rise ? 1 - p : p;
+      var down = rise ? dir !== 'down' : dir === 'down';
+      noiseGrid(ms / 1000);
+      var DW = cols * K, ON = 0xff000000, sx = cp / dpr;      // css px per cell
+      var flat = (FADE0 + FADE + LEAD + 0.01);
       m32.fill(0);
+      if (q >= flat) return;
       for (var r = 0; r < rows; r++) {
         var py = (r + 0.5) * sx;
-        var yn = (r + 0.5) / rows; if (dir !== 'down') yn = 1 - yn;
+        var yn = (r + 0.5) / rows; if (!down) yn = 1 - yn;
+        var base0 = density(q, yn);
+        if (base0 <= 0) continue;
         var by = (r & 3) << 2, row = r * K * DW;
+        var gy = py / NODE, j0 = Math.floor(gy), fy = gy - j0, nrow0 = j0 * nzW, nrow1 = nrow0 + nzW;
         for (var c = 0; c < cols; c++) {
-          var px = (c + 0.5) * sx;
-          // slow noise: a few drifting waves, roughly -1..1
-          var fld = 0.55 * Math.sin(px * 0.021 + t * 1.3 + Math.sin(py * 0.017 - t * 0.6) * 1.6) *
-                    Math.sin(py * 0.026 - t * 1.1) + 0.45 * Math.sin((px + py) * 0.043 + t * 0.8);
-          var y = yn + RAG * fld;
-          var l1 = clamp01((f1 - y) / B1), l2 = clamp01((f2 - y) / B2);
-          var dd = rise ? l1 * PLATEAU + l2 * (1 - PLATEAU) : 1 - l1 * (1 - PLATEAU) - l2 * PLATEAU;
-          if (dd <= 0) continue;
+          var dd = base0;
           var ci = r * cols + c;
-          // mid-pattern, dots vary a lot: per-cell grain, clumps from a finer
-          // drifting wave, and the slow field; solid stays solid, empty stays empty
           if (dd < 1) {
-            var clump = Math.sin(px * 0.11 + t * 1.7 + fld) * Math.sin(py * 0.09 - t * 1.3);
-            dd = clamp01(dd + (1.1 * grain[ci] + 0.35 * clump + 0.25 * fld) * 4 * dd * (1 - dd));
+            var gx = (c + 0.5) * sx / NODE, i0 = Math.floor(gx), fx = gx - i0;
+            var n0 = nz[nrow0 + i0] + (nz[nrow0 + i0 + 1] - nz[nrow0 + i0]) * fx;
+            var n1 = nz[nrow1 + i0] + (nz[nrow1 + i0 + 1] - nz[nrow1 + i0]) * fx;
+            dd = clamp01(dd + NOISE * (n0 + (n1 - n0) * fy) * 4 * dd * (1 - dd));
           }
-          var thr = 0.45 * (B4[by | (c & 3)] + 0.5) / 16 + 0.55 * (grain[(ci * 7 + 3) % grain.length] + 0.5);
-          var sz = Math.floor(Math.sqrt(dd) * K + thr);   // dot area follows the density
+          var thr = 0.4 * (B4[by | (c & 3)] + 0.5) / 16 + 0.6 * (grain[ci] + 0.5);
+          var sz = Math.floor(Math.sqrt(dd) * K + thr);       // dot area follows the density
           if (sz <= 0) continue;
           if (sz > K) sz = K;
           var off = (K - sz) >> 1, base = row + c * K + off * DW + off;
