@@ -38,6 +38,11 @@ html, body { overflow: hidden !important; scrollbar-width: none !important; }
 ::-webkit-scrollbar { display: none !important; }
 #back-to-home, .ga-nav, .project-meta, .page-title { display: none !important; }
 video { visibility: hidden !important; }
+iframe { visibility: hidden !important; }
+.pj-video { position: relative; background: #0b2135 !important; }
+.pj-video::after { content: ""; position: absolute; left: 50%; top: 50%; width: 64px; height: 44px; margin: -22px 0 0 -32px;
+  border-radius: 12px; background: rgba(240, 240, 240, 0.9)
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 44'%3E%3Cpath d='M26 13l17 9-17 9z' fill='%23051220'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
 '''
 
 def pages():

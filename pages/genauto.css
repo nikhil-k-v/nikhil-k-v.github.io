@@ -403,7 +403,7 @@
   overflow: visible;
 }
 .ga-nav.is-visible,
-.ga-nav:hover,
+.ga-nav.is-open,
 .ga-nav:focus-within {
   opacity: 1;
   visibility: visible;
@@ -435,11 +435,15 @@
 }
 .ga-nav a:hover,
 .ga-nav a:focus-visible { color: #ffffff; }
-.ga-nav a:hover .tick { width: 20px; background: #ffffff; }
 .ga-nav a[aria-current="true"] { color: #ffffff; font-weight: 500; }
 .ga-nav a[aria-current="true"] .tick { width: 26px; background: var(--light-accent); }
 .ga-nav a:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.6); outline-offset: 3px; }
 .ga-nav .label { overflow: visible; }
+
+@media (hover: hover) {
+  .ga-nav a:hover .tick { width: 20px; background: #ffffff; }
+  .ga-nav:hover { opacity: 1; visibility: visible; transform: translate(0, -50%); transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .ga-nav, .ga-nav .tick { transition: none; }
@@ -487,7 +491,6 @@
   .ga-question { font-size: 1rem !important; margin: 0.9rem auto !important; }
   .ga-mine { font-size: 0.9rem !important; }
 
-  .ga-nav { display: none; }
 }
 
 
@@ -587,32 +590,10 @@
 .ga-media > .ga-ph:first-child { grid-row: span 2; }
 .ga-media > .ga-ph:not(:first-child) { aspect-ratio: auto; height: 100%; }
 
-/* ---------- goals: a plain numbered list, one sentence each ---------- */
-.ga-goals {
-  list-style: none;
-  margin: 0.4rem 0 0 0;
-  padding: 0 !important;
-  counter-reset: goal;
-  max-width: 62ch;
-}
-.ga-goals li {
-  counter-increment: goal;
-  display: flex;
-  align-items: baseline;
-  gap: 0.9rem;
-  margin: 0;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--ga-rule);
-  font-size: 1.02rem !important;
-}
-.ga-goals li:last-child { border-bottom: none; }
-.ga-goals li::before {
-  content: counter(goal);
-  flex: none;
-  width: 1.4rem;
-  font-weight: 700;
-  color: #d63a55;
-}
+/* ---------- goals: a plain bullet list under the drifting section ---------- */
+.ga-goals { margin: 0.2rem 0 0 0; padding-left: 1.15rem !important; }
+.ga-goals li { margin: 0 0 0.12rem 0; }
+#requirements { margin-top: 1.4rem; }
 
 /* ---------- research cards: link icon in the corner ---------- */
 .ga-paperref { position: relative; padding-right: 2.4rem; }
@@ -735,10 +716,184 @@
 
 /* phones: final tightening for the goals list, arrows and grids */
 @media (max-width: 1000px) {
-  .ga-goals li { font-size: 0.84rem !important; padding: 0.4rem 0; gap: 0.6rem; }
   .ga-arrow { width: 30px; height: 18px; }
   .ga-grid { row-gap: 0.4rem; }
   .ga-industry .ga-fig.photo img { max-height: 200px; }
   .ga-sec.is-collapsible .ga-h2 { margin-bottom: 0.2rem; }
   .ga-sec.is-collapsed + .ga-sec, .ga-sec.is-collapsed { margin-top: 0.9rem; }
 }
+
+
+/* =====================================================================
+   Revision: problem statements, actuator layout, clamp and shape
+   figures, frame-based and self-contained sections, phone section menu
+   ===================================================================== */
+
+/* the one-line problem statement after the PROBLEM label */
+.ga-label .ga-prob {
+  margin-left: 0.15rem;
+  font-size: 1rem;
+  font-weight: 600 !important;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.3;
+  color: var(--ga-ink) !important;
+}
+.ga-label:has(.ga-prob) { flex-wrap: wrap; row-gap: 0.2rem; }
+
+/* actuator: bullets, sketch, table in one row (phones: sketch + table, bullets below) */
+.ga-act {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas: "list fig table";
+  gap: 2rem;
+  align-items: center;
+  margin-top: 0.6rem;
+}
+.ga-act-list { grid-area: list; }
+.ga-act-fig { grid-area: fig; }
+.ga-act-table { grid-area: table; }
+
+/* toggle clamp: text with the animated sketch beside it */
+.ga-clamp-sol {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(130px, 0.75fr);
+  gap: 1rem;
+  align-items: center;
+}
+.ga-toggle-fig { width: 100%; }
+.ga-toggle-fig svg { display: block; width: 100%; height: auto; }
+
+/* captions set inside a photo */
+.ga-incap-fig { position: relative; }
+.ga-incap {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  white-space: nowrap;
+  background: rgba(15, 31, 48, 0.8);
+  color: #ffffff !important;
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+/* the arms meeting different wheel shapes */
+.ga-shape-fig { width: 100%; }
+.ga-shape-fig svg { display: block; width: 100%; max-width: 400px; height: auto; margin: 0 auto; }
+
+/* frame-based actuation: two videos and the final assembly in a row */
+.ga-frame-media {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+  margin: 1.8rem 0 1.2rem 0;
+}
+.ga-frame-media .ga-vertical { width: 100%; margin: 0; }
+.ga-frame-media video, .ga-frame-media img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 686 / 960;
+  object-fit: cover;
+  max-width: none;
+}
+.ga-frame-media figcaption { max-width: none; }
+
+/* self-contained actuation */
+.ga-claim {
+  max-width: 62ch !important;
+  margin: 1.4rem auto !important;
+  text-align: center !important;
+  font-size: 1.08rem !important;
+  line-height: 1.55 !important;
+}
+.ga-vs { margin-top: 1.8rem; }
+.ga-paper .ga-subhead {
+  margin: 0 0 0.6rem 0;
+  font-size: 1.2rem;
+  font-weight: 600 !important;
+  text-align: center;
+}
+.ga-vs > p { max-width: 74ch !important; margin-left: auto !important; margin-right: auto !important; }
+.ga-vs-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.8rem;
+  margin: 1rem 0;
+}
+.ga-vs-row .ga-fig img { height: 210px; }
+
+@media (max-width: 1000px) {
+  .ga-label .ga-prob { font-size: 0.82rem; }
+
+  /* drifting diagram stays a row: papers become icons */
+  .ga-drift { grid-template-columns: auto auto minmax(0, 1fr) auto minmax(0, 1fr); gap: 0.4rem; margin-top: 0.7rem; }
+  .ga-drift > .ga-arrow { transform: none; width: 14px; height: 10px; }
+  .ga-drift .col { gap: 0.35rem; }
+  .ga-drift .col-title { font-size: 0.62rem !important; margin-bottom: 0; }
+  .ga-drift .col:first-child { align-items: center; }
+  .ga-drift .col:first-child .ga-sub { display: none; }
+  .ga-paperref {
+    width: 26px;
+    height: 33px;
+    padding: 0 !important;
+    box-sizing: border-box;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 33'%3E%3Cpath d='M1.5 1.5h15l8 8v22h-23z' fill='%23f0f3f6' stroke='%230f1f30' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M16.5 1.5v8h8' fill='none' stroke='%230f1f30' stroke-width='1.5' stroke-linejoin='round'/%3E%3Cpath d='M6 15h14M6 19.5h14M6 24h9' stroke='%230f1f30' stroke-width='1.2' stroke-opacity='0.5'/%3E%3C/svg%3E") center / contain no-repeat !important;
+  }
+  .ga-paperref b, .ga-paperref span { display: none !important; }
+  .ga-paperref .ga-link { inset: 0; width: auto; height: auto; }
+  .ga-paperref .ga-link svg { display: none; }
+  .ga-drift .ga-pill { font-size: 0.64rem; padding: 0.3rem 0.4rem; }
+  .ga-drift .ga-sub { font-size: 0.56rem !important; line-height: 1.35 !important; }
+  .ga-drift .ga-highlight { padding: 0.45rem 0.4rem; gap: 0.3rem; }
+  .ga-drift .ga-highlight .tag { font-size: 0.52rem; top: -0.55rem; right: 0.3rem; }
+  .ga-drift .ga-goal { padding: 0.35rem 0.4rem; }
+  .ga-drift .ga-goal b { font-size: 0.62rem; }
+  .ga-drift .ga-goal span { font-size: 0.56rem; }
+  #goal .ga-lead { font-size: 0.82rem !important; }
+  #goal .ga-goals li { font-size: 0.8rem !important; line-height: 1.45 !important; }
+
+  /* arrows between stacked columns point down */
+  .ga-cols > .ga-arrow { transform: rotate(90deg); justify-self: center; }
+
+  .ga-act { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "fig table" "list list"; gap: 0.7rem 0.6rem; }
+  .ga-act-fig img { height: 64px !important; }
+  .ga-act-table { justify-self: end; padding: 0.45rem 0.55rem !important; }
+  .ga-act .ga-spec { font-size: 0.6rem; }
+  .ga-act .ga-spec th, .ga-act .ga-spec td { padding: 0.22rem 0.4rem 0.22rem 0; }
+  .ga-fit > .ga-fig.fit img, .ga-fit > .ga-fig.fit video { width: auto; max-width: 100%; max-height: 32svh; margin: 0 auto; }
+
+  .ga-clamp-sol { grid-template-columns: minmax(0, 1fr) 118px; gap: 0.6rem; }
+  .ga-incap { font-size: 0.56rem !important; left: 4px; bottom: 4px; padding: 0.1rem 0.35rem; }
+  .ga-shape-fig svg { max-width: 330px; }
+
+  .ga-frame-media { gap: 0.35rem; margin: 1rem 0 0.8rem 0; }
+  .ga-frame-media figcaption { font-size: 0.56rem !important; }
+
+  .ga-claim { font-size: 0.9rem !important; margin: 1rem auto !important; }
+  .ga-vs { margin-top: 1.2rem; }
+  .ga-paper .ga-subhead { font-size: 0.98rem; margin-bottom: 0.4rem; }
+  .ga-vs-row { flex-direction: column; gap: 0.6rem; margin: 0.7rem 0; }
+  .ga-vs-row .ga-fig img { height: 150px; }
+
+  /* section menu on phones: just the ticks at the edge until tapped */
+  .ga-nav {
+    right: 0;
+    padding: 0.45rem 0.5rem 0.45rem 0.55rem;
+    background: rgba(11, 33, 53, 0.62);
+    border-radius: 6px 0 0 6px;
+  }
+  .ga-nav .label { display: none; }
+  .ga-nav a { padding: 0.3rem 0; gap: 0.5rem; font-size: 0.78rem; }
+  .ga-nav .tick { width: 9px; height: 4px; }
+  .ga-nav a[aria-current="true"] .tick { width: 18px; }
+  .ga-nav.is-open { padding: 0.6rem 0.65rem 0.6rem 0.9rem; background: rgba(11, 33, 53, 0.9); }
+  .ga-nav.is-open .label { display: inline; }
+}
+.ga-vs + .ga-question { margin-top: 1.6rem !important; margin-bottom: 0.4rem !important; }

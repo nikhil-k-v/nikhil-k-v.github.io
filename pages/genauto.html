@@ -114,7 +114,8 @@
         <li><a href="#simplification"><span class="tick"></span><span class="label">Principle</span></a></li>
         <li><a href="#actuator"><span class="tick"></span><span class="label">Actuator</span></a></li>
         <li><a href="#coupling"><span class="tick"></span><span class="label">Attachment</span></a></li>
-        <li><a href="#reaction"><span class="tick"></span><span class="label">Mechanism</span></a></li>
+        <li><a href="#frame"><span class="tick"></span><span class="label">Frame-based</span></a></li>
+        <li><a href="#self"><span class="tick"></span><span class="label">Self-contained</span></a></li>
         <li><a href="#outcome"><span class="tick"></span><span class="label">Outcome</span></a></li>
         <li><a href="#perception"><span class="tick"></span><span class="label">LiDAR</span></a></li>
       </ol>
@@ -129,11 +130,11 @@
            The script at the bottom sizes them so the whole block is one clean rectangle. -->
       <div class="ga-hero">
         <div class="ga-hero-c1">
-          <video autoplay muted loop playsinline preload="metadata" aria-label="The robot steering a car slowly with a driver aboard"><source src="../assets/GenAutoVids/slowerSteeringDriver.mp4" type="video/mp4"></video>
-          <video autoplay muted loop playsinline preload="metadata" aria-label="The robot steering a car quickly with a driver aboard"><source src="../assets/GenAutoVids/fasterSteeringDriver.mp4" type="video/mp4"></video>
+          <video autoplay muted loop playsinline preload="metadata" aria-label="The robot steering a car slowly with a driver aboard"><source src="../assets/web/slowerSteeringDriver.mp4" type="video/mp4"></video>
+          <video autoplay muted loop playsinline preload="metadata" aria-label="The robot steering a car quickly with a driver aboard"><source src="../assets/web/fasterSteeringDriver.mp4" type="video/mp4"></video>
         </div>
         <div class="ga-hero-c2">
-          <video autoplay muted loop playsinline preload="metadata" aria-label="The robot replaying a recorded U-turn with nobody touching the steering wheel"><source src="../assets/GenAutoVids/uTurnPlayback.mp4" type="video/mp4"></video>
+          <video autoplay muted loop playsinline preload="metadata" aria-label="The robot replaying a recorded U-turn with nobody touching the steering wheel"><source src="../assets/web/uTurnPlayback.mp4" type="video/mp4"></video>
         </div>
         <div class="ga-hero-c3">
           <img class="top" src="../assets/GenAutoVids/unattachedFullAssembly2.webp" alt="The full assembly, off the car">
@@ -181,23 +182,16 @@
           <p class="ga-sub">perception → compute → steering</p>
         </div>
       </div>
-    </section>
 
-
-    <!-- ================= GOALS & REQUIREMENTS ================= -->
-
-    <section class="ga-sec" id="requirements">
-      <h2 class="ga-h2"><span>Goals &amp; requirements</span></h2>
-
-
-      <ol class="ga-goals">
+      <h3 class="ga-h3" id="requirements">Goals &amp; requirements</h3>
+      <ul class="ga-goals">
         <li>Fit any car and any steering wheel with the same parts.</li>
         <li>Never modify, damage, or permanently fasten to the car or its steering wheel.</li>
         <li>Attach and come off by hand in about a minute.</li>
         <li>Work without steering wheel dimensions, since manufacturers don't publish them.</li>
         <li>Let the safety driver steer and take back control at any time.</li>
         <li>Cost a fraction of existing steering robots, which run $20–100k.</li>
-      </ol>
+      </ul>
     </section>
 
 
@@ -223,8 +217,9 @@
 
     <section class="ga-sec" id="actuator">
       <h2 class="ga-h2"><span>Actuator selection</span></h2>
-      <div class="ga-cols" style="--c: minmax(0,1fr) auto auto; --g:2rem;">
-        <div>
+      <p class="ga-lead">Unconventionally, I chose a brushless QDD (quasi-direct drive) actuator, the kind usually found in legged robots.</p>
+      <div class="ga-act">
+        <div class="ga-act-list">
           <p style="margin-bottom:0.25rem;"><strong>Cheetah-style motor</strong></p>
           <ul>
             <li>High torque density BLDC (<strong>small</strong>)</li>
@@ -233,8 +228,8 @@
             <li>1 Mbit/s CAN control</li>
           </ul>
         </div>
-        <figure class="ga-fig" style="--h:130px"><img src="../assets/GenAutoVids/slides/motor-sketch.jpg" alt="Sketch of a Cheetah-style pancake motor"></figure>
-        <div class="ga-box">
+        <figure class="ga-fig ga-act-fig" style="--h:130px"><img src="../assets/GenAutoVids/slides/motor-sketch.jpg" alt="Sketch of a Cheetah-style pancake motor"></figure>
+        <div class="ga-box ga-act-table">
           <table class="ga-spec">
             <thead><tr><th></th><th>Motor</th><th>Steering</th><th>Headroom</th></tr></thead>
             <tbody>
@@ -247,11 +242,13 @@
         </div>
       </div>
 
+      <p class="ga-under">This means none of the torque or force sensing hardware that every other solution needs. The gearing is low enough that the motor is backdrivable, so it senses the load on the steering wheel proprioceptively, through its own back-EMF and current. It also has a zero-torque mode that cancels the actuator's back-driving friction: the driver can use the steering wheel as though the robot weren't there, and the robot can record a maneuver as it's driven and play it back autonomously.</p>
+
       <div class="ga-fit fig-left" data-min="0.42" style="margin-top:1.4rem;">
         <figure class="ga-fig fit"><img src="../assets/GenAutoVids/slides/torque-loop.jpg" alt="Torques between the wheel coupling, the actuator and the vehicle: external torque, actuator torque and reaction torque"><figcaption>The actuator in the system.</figcaption></figure>
         <div>
           <p>The actuator applies torque <i>T</i><sub>act</sub> to the wheel coupling. The same torque acts on the actuator housing in the opposite direction (−<i>T</i><sub>act</sub>), and the vehicle has to hold it as the reaction torque <i>T</i><sub>react</sub>.</p>
-          <p><i>T</i><sub>ext</sub> is the external torque on the steering wheel from the tires and the driver. Because the motor runs in torque control mode, it measures this torque directly, with no separate sensor.</p>
+          <p><i>T</i><sub>ext</sub> is the external torque on the steering wheel from the tires and the driver, which the motor measures itself.</p>
         </div>
       </div>
     </section>
@@ -260,7 +257,7 @@
     <!-- ================= WHEEL COUPLING ================= -->
 
     <section class="ga-sec" id="coupling">
-      <h2 class="ga-h2"><span>Wheel coupling</span></h2>
+      <h2 class="ga-h2"><span>Attaching to <u>any</u> steering wheel</span></h2>
       <div class="ga-cols" style="--c: minmax(0,1fr) auto; --g:2rem;">
         <div>
           <p class="ga-lead">The wheel coupling holds the actuator on the steering wheel. It has to fit any steering wheel, put the motor on the wheel's axis of rotation, and lock rigidly, using only clamps operated by hand. No tools, no permanent fasteners, and no damage to the steering wheel.</p>
@@ -269,9 +266,9 @@
         <figure class="ga-fig"><div class="ga-strip" style="--g:0.5rem;flex-wrap:nowrap;"><img src="../assets/GenAutoVids/slides/offset-plus.jpg" alt="A steering wheel plus a motor" style="height:140px;width:auto;"><span class="ga-op" aria-hidden="true">=</span><img src="../assets/GenAutoVids/slides/offset-equals.jpg" alt="The motor mounted on the steering wheel" style="height:140px;width:auto;"></div></figure>
       </div>
 
-      <h3 class="ga-h3" id="clamps">1. Clamps</h3>
+      <h3 class="ga-h3" id="clamps">1. Clamping to any wheel</h3>
       <div class="ga-grid" style="--h:230px;">
-        <span class="ga-label problem" style="grid-area:1 / 1">Problem</span>
+        <span class="ga-label problem" style="grid-area:1 / 1">Problem<b class="ga-prob">Wheel geometry is unpredictable (and weird).</b></span>
         <figure class="ga-fig" style="grid-area:2 / 1;width:100%;justify-self:stretch;"><svg class="ga-sketch" style="width:100%;height:auto;max-height:var(--h)" viewBox="0 0 530 190" role="img" aria-label="A steering wheel with uneven thickness, thumb grips and a flat bottom, cut at three points A, B and C, and the three hatched cross-sections: thin and round, thick with finger grooves, and flat">
 <defs><pattern id="ga-hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#1e1e1e" stroke-width="1.1" stroke-opacity="0.75"/></pattern></defs>
 <path d="M111.0 110.5 L148.0 110.5 L148.0 97.5 L111.0 97.5 Z" fill="#7b7c7e" stroke="#1e1e1e" stroke-width="2.4" stroke-linejoin="round"/>
@@ -355,23 +352,27 @@
         <p style="grid-area:3 / 1">The size and shape of the steering wheel's cross-section change along the wheel, and suppliers don't release wheel geometry, so clamps can't be designed to match it. The clamps still need a robust fastened and unfastened state on every wheel.</p>
         <span class="ga-arrow" aria-hidden="true" style="grid-area:2 / 2"><svg viewBox="0 0 40 24"><path d="M4 12h18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M22 5l14 7-14 7z" fill="currentColor" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg></span>
         <span class="ga-label solution" style="grid-area:1 / 3">Solution</span>
-        <div class="ga-strip" style="grid-area:2 / 3;--g:0.8rem;flex-wrap:nowrap;"><figure class="ga-fig" style="--h:200px"><img src="../assets/GenAutoVids/slides/clamp-render.jpg" alt="CAD render of the toggle clamp"></figure><figure class="ga-fig photo" style="--h:200px;--w:260px"><img src="../assets/GenAutoVids/slides/clamp-parts.jpg" alt="Printed toggle clamp parts"></figure></div>
-        <div style="grid-area:3 / 3">
-          <p style="margin-bottom:0.3rem;"><strong>Over-center mechanism (toggle clamp)</strong></p>
-          <ul>
-            <li>Works across a range of sizes and shapes.</li>
-            <li>Easy and fast to use by hand.</li>
-            <li>The four-bar linkage can be adjusted to tune clamping force and deformation.</li>
-          </ul>
+        <div class="ga-strip" style="grid-area:2 / 3;--g:0.8rem;flex-wrap:nowrap;"><figure class="ga-fig photo ga-incap-fig" style="--h:200px;--w:260px"><img src="../assets/GenAutoVids/slides/clamp-parts.jpg" alt="Printed parts of an early toggle clamp prototype"><span class="ga-incap">Early prototype</span></figure><figure class="ga-fig ga-incap-fig" style="--h:200px"><img src="../assets/GenAutoVids/slides/clamp-render.jpg" alt="CAD render of the final toggle clamp"><span class="ga-incap">Final iteration</span></figure></div>
+        <div class="ga-clamp-sol" style="grid-area:3 / 3">
+          <div>
+            <p style="margin-bottom:0.3rem;"><strong>Toggle clamp (using a four-bar / over center mechanism).</strong></p>
+            <ul>
+              <li>Works across a range of sizes and shapes.</li>
+              <li>Easy and fast to use by hand.</li>
+              <li>The four-bar linkage can be adjusted to tune clamping force and deformation.</li>
+              <li>Printed in carbon fiber nylon.</li>
+            </ul>
+          </div>
+          <figure class="ga-fig ga-toggle-fig"><svg class="ga-toggle-anim ga-sketch" role="img" aria-label="Animated side view of the toggle clamp: the handle swings down, the linkage passes just over center, and the arm locks onto the rim"></svg></figure>
         </div>
       </div>
       <div class="ga-strip" style="margin-top:1rem;">
-        <figure class="ga-fig photo fill" style="--ar:16 / 9;width:min(100%, 880px);"><video autoplay muted loop playsinline preload="metadata"><source src="../assets/GenAutoVids/toggleClamp.mp4" type="video/mp4"></video><figcaption>Closing the toggle clamp on a steering wheel.</figcaption></figure>
+        <figure class="ga-fig photo fill" style="--ar:16 / 9;width:min(100%, 880px);"><video autoplay muted loop playsinline preload="metadata"><source src="../assets/web/toggleClamp.mp4" type="video/mp4"></video><figcaption>Closing the toggle clamp on a steering wheel.</figcaption></figure>
       </div>
 
-      <h3 class="ga-h3" id="diameter">2. Diameter</h3>
+      <h3 class="ga-h3" id="diameter">2. Handling all wheel diameters</h3>
       <div class="ga-grid" style="--h:160px;">
-        <span class="ga-label problem" style="grid-area:1 / 1">Problem</span>
+        <span class="ga-label problem" style="grid-area:1 / 1">Problem<b class="ga-prob">“Normal” sizes include a large range.</b></span>
         <figure class="ga-fig" style="grid-area:2 / 1"><img src="../assets/GenAutoVids/slides/diam-range.jpg" alt="A small and a large steering wheel"></figure>
         <p style="grid-area:3 / 1">Steering wheel diameters range from 14″ to 19″ on average, and many common wheels are smaller or larger.</p>
         <span class="ga-arrow" aria-hidden="true" style="grid-area:2 / 2"><svg viewBox="0 0 40 24"><path d="M4 12h18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M22 5l14 7-14 7z" fill="currentColor" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg></span>
@@ -380,10 +381,10 @@
         <p style="grid-area:3 / 3">A revolute joint before each clamping point. The bar spans any diameter without moving the center point.</p>
       </div>
 
-      <h3 class="ga-h3" id="shape">3. Shape</h3>
+      <h3 class="ga-h3" id="shape">3. Most wheels aren't circle-shaped</h3>
       <div class="ga-cols top" style="--c: minmax(0,1fr) auto minmax(0,1fr); --g:1.6rem; align-items:start !important;">
         <div class="ga-stack" style="--g:1rem;">
-          <span class="ga-label problem">Problem</span>
+          <span class="ga-label problem">Problem<b class="ga-prob">Adapting to unpredictable shapes (like unique curvature, flat edges).</b></span>
           <div class="ga-strip ga-row3" style="--g:0.7rem;"><figure class="ga-fig" style="--h:95px"><img src="../assets/GenAutoVids/slides/diam-irregular.jpg" alt="Two steering wheels with the same width but different heights"></figure><figure class="ga-fig" style="--h:95px"><img src="../assets/GenAutoVids/slides/diam-irregular-bars.jpg" alt="A bar with a revolute joint at each end clamped across both wheels"></figure><figure class="ga-fig" style="--h:95px"><img src="../assets/GenAutoVids/slides/diam-irregular-fit.jpg" alt="The bar tilted out of parallel on the taller wheel"></figure></div>
           <p>With one bar and a revolute joint at each end, the bar only stays parallel to the wheel face if the wheel is round. Steering wheels aren't circles: if the top-to-bottom length differs from the width, the joint angles differ and the bar tilts.</p>
           <figure class="ga-fig" style="--h:200px"><img src="../assets/GenAutoVids/slides/shape-spokes.jpg" alt="Four steering wheels with different spoke layouts"></figure>
@@ -392,16 +393,63 @@
         <span class="ga-arrow" aria-hidden="true" style="align-self:center;"><svg viewBox="0 0 40 24"><path d="M4 12h18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M22 5l14 7-14 7z" fill="currentColor" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg></span>
         <div class="ga-stack" style="--g:1rem;">
           <span class="ga-label solution">Solution</span>
-          <figure class="ga-fig" style="--h:260px"><img src="../assets/GenAutoVids/slides/shape-arms.jpg" alt="One fixed top arm and two lower arms whose tips sweep arcs across the steering wheel"></figure>
-          <p>Use two arms at the bottom instead of one, and let them sweep out to the sides. Each arm's clamp moves along an arc that crosses the wheel (red), so it meets the wheel somewhere along that arc, whatever the diameter or shape.</p>
+          <figure class="ga-fig ga-shape-fig"><svg class="ga-sketch ga-shape-svg" viewBox="0 0 340 210" role="img" aria-label="Left: the top arm and two geared lower arms on a round wheel; the lower arms' tips sweep red arcs that cross the wheel. Right: the same arms meeting an oval wheel, a squarish wheel and a flat-bottomed wheel.">
+<path d="M191.9 104.0 L191.8 106.4 L191.7 108.8 L191.5 111.2 L191.2 113.6 L190.9 116.0 L190.5 118.3 L190.1 120.7 L189.5 123.0 L189.0 125.4 L188.3 127.7 L187.6 130.0 L186.9 132.2 L186.1 134.5 L185.2 136.7 L184.3 138.9 L183.3 141.1 L182.3 143.2 L181.2 145.4 L180.1 147.5 L178.9 149.5 L177.6 151.6 L176.3 153.6 L175.0 155.5 L173.6 157.5 L172.2 159.4 L170.7 161.2 L169.1 163.1 L167.6 164.8 L166.0 166.6 L164.3 168.3 L162.6 170.0 L160.9 171.6 L159.1 173.2 L157.2 174.7 L155.4 176.2 L153.5 177.6 L151.6 179.0 L149.6 180.4 L147.6 181.7 L145.6 182.9 L143.5 184.1 L141.4 185.3 L139.3 186.4 L137.1 187.4 L135.0 188.4 L132.8 189.3 L130.5 190.2 L128.3 191.0 L126.0 191.8 L123.7 192.5 L121.4 193.1 L119.1 193.7 L116.7 194.2 L114.4 194.7 L112.0 195.1 L109.6 195.4 L107.2 195.7 L104.8 195.9 L102.4 196.1 L100.0 196.1 L97.6 196.2 L95.2 196.1 L92.8 196.0 L90.4 195.8 L87.9 195.6 L85.5 195.2 L83.2 194.9 L80.8 194.4 L78.4 193.9 L76.1 193.3 L73.7 192.7 L71.4 192.0 L69.1 191.2 L66.8 190.4 L64.6 189.5 L62.3 188.6 L60.1 187.6 L58.0 186.5 L55.8 185.4 L53.7 184.2 L51.6 182.9 L49.6 181.6 L47.6 180.3 L45.6 178.9 L43.7 177.4 L41.8 175.9 L39.9 174.3 L38.1 172.7 L36.4 171.1 L34.6 169.4 L33.0 167.6 L31.3 165.8 L29.8 164.0 L28.2 162.1 L26.7 160.2 L25.3 158.3 L23.9 156.3 L22.6 154.3 L21.3 152.2 L20.1 150.1 L18.9 148.0 L17.8 145.9 L16.8 143.7 L15.8 141.5 L14.8 139.3 L13.9 137.0 L13.1 134.8 L12.3 132.5 L11.6 130.2 L10.9 127.9 L10.3 125.5 L9.8 123.2 L9.3 120.8 L8.9 118.4 L8.5 116.0 L8.2 113.6 L8.0 111.2 L7.8 108.8 L7.7 106.4 L7.6 104.0 L7.6 101.6 L7.7 99.2 L7.8 96.7 L8.0 94.3 L8.3 91.9 L8.6 89.5 L9.0 87.1 L9.4 84.8 L9.9 82.4 L10.5 80.0 L11.2 77.7 L11.9 75.4 L12.6 73.1 L13.4 70.8 L14.3 68.5 L15.3 66.3 L16.3 64.1 L17.3 61.9 L18.5 59.7 L19.7 57.6 L20.9 55.5 L22.2 53.5 L23.5 51.5 L25.0 49.5 L26.4 47.5 L27.9 45.6 L29.5 43.8 L31.1 42.0 L32.8 40.2 L34.5 38.5 L36.2 36.8 L38.0 35.2 L39.9 33.6 L41.8 32.1 L43.7 30.6 L45.7 29.2 L47.7 27.9 L49.7 26.6 L51.8 25.3 L53.9 24.1 L56.0 23.0 L58.2 21.9 L60.4 20.9 L62.6 19.9 L64.8 19.1 L67.1 18.2 L69.3 17.4 L71.6 16.7 L74.0 16.1 L76.3 15.5 L78.6 14.9 L81.0 14.4 L83.3 14.0 L85.7 13.7 L88.1 13.4 L90.5 13.1 L92.8 13.0 L95.2 12.9 L97.6 12.8 L100.0 12.8 L102.4 12.9 L104.8 13.0 L107.1 13.2 L109.5 13.4 L111.9 13.7 L114.2 14.1 L116.6 14.5 L118.9 15.0 L121.2 15.5 L123.6 16.1 L125.8 16.7 L128.1 17.4 L130.4 18.2 L132.6 19.0 L134.8 19.9 L137.0 20.8 L139.2 21.8 L141.4 22.8 L143.5 23.9 L145.6 25.1 L147.6 26.2 L149.7 27.5 L151.7 28.8 L153.7 30.1 L155.6 31.6 L157.5 33.0 L159.4 34.5 L161.2 36.1 L163.0 37.7 L164.7 39.3 L166.4 41.0 L168.1 42.7 L169.7 44.5 L171.2 46.3 L172.7 48.2 L174.2 50.1 L175.6 52.0 L177.0 54.0 L178.3 56.0 L179.5 58.1 L180.7 60.2 L181.8 62.3 L182.9 64.4 L184.0 66.6 L184.9 68.8 L185.8 71.1 L186.7 73.3 L187.4 75.6 L188.2 77.9 L188.8 80.2 L189.4 82.5 L189.9 84.9 L190.4 87.2 L190.8 89.6 L191.1 92.0 L191.4 94.4 L191.6 96.8 L191.8 99.2 L191.9 101.6 L191.9 104.0" fill="none" stroke="#1e1e1e" stroke-width="1.6" stroke-dasharray="5 4" stroke-linecap="round"/>
+<path d="M99.9 93.0 L100.3 12.0" stroke="#2c2f33" stroke-width="6.9" stroke-linecap="round" fill="none"/>
+<path d="M73.1 191.7 L71.5 191.1 L70.0 190.4 L68.5 189.6 L67.1 188.9 L65.6 188.2 L64.0 187.6 L62.5 187.1 L61.0 186.5 L59.4 186.0 L57.9 185.3 L56.5 184.5 L55.1 183.6 L53.8 182.7 L52.4 181.8 L51.1 180.9 L49.6 180.1 L48.2 179.4 L46.6 178.8 L45.1 178.1 L43.6 177.4 L42.2 176.6 L40.8 175.6 L39.6 174.5 L38.4 173.3 L37.3 172.1 L36.2 170.9 L35.1 169.7 L33.9 168.5 L32.7 167.4 L31.6 166.2 L30.4 165.0 L29.4 163.7 L28.5 162.4 L27.7 160.9" fill="none" stroke="#df3130" stroke-width="2.0" stroke-linecap="round" opacity="0.9"/>
+<path d="M92.4 111.2 L47.8 179.8" stroke="#2c2f33" stroke-width="6.9" stroke-linecap="round" fill="none"/>
+<circle cx="92.6" cy="111.4" r="2.0" fill="#fff" stroke="#2c2f33" stroke-width="0.7"/>
+<circle cx="47.9" cy="179.8" r="5.5" fill="#df3130" stroke="#1e1e1e" stroke-width="1.1"/>
+<path d="M171.7 160.5 L170.7 161.8 L169.8 163.1 L169.0 164.6 L168.2 166.0 L167.3 167.4 L166.3 168.8 L165.3 170.0 L164.1 171.2 L162.8 172.2 L161.5 173.2 L160.1 174.2 L158.8 175.2 L157.5 176.2 L156.3 177.2 L155.0 178.3 L153.7 179.3 L152.3 180.2 L150.9 181.0 L149.4 181.6 L147.8 182.2 L146.2 182.7 L144.7 183.3 L143.2 183.9 L141.7 184.6 L140.3 185.4 L138.9 186.3 L137.5 187.2 L136.1 187.9 L134.6 188.6 L133.0 189.2 L131.5 189.6 L129.9 190.0 L128.3 190.4 L126.7 190.8" fill="none" stroke="#df3130" stroke-width="2.0" stroke-linecap="round" opacity="0.9"/>
+<path d="M107.6 111.2 L152.3 179.7" stroke="#2c2f33" stroke-width="6.9" stroke-linecap="round" fill="none"/>
+<circle cx="107.4" cy="111.4" r="2.0" fill="#fff" stroke="#2c2f33" stroke-width="0.7"/>
+<circle cx="152.1" cy="179.8" r="5.5" fill="#df3130" stroke="#1e1e1e" stroke-width="1.1"/>
+<circle cx="100.0" cy="12.0" r="5.5" fill="#df3130" stroke="#1e1e1e" stroke-width="1.1"/>
+<path d="M205.0 104.0 L212.0 103.5 L220.0 104.4 L228.0 104.0" fill="none" stroke="#1e1e1e" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M221 97.5 L229.5 104 L221 110.6" fill="none" stroke="#1e1e1e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M321.0 36.0 L321.0 36.7 L321.0 37.4 L321.0 38.0 L320.9 38.7 L320.8 39.4 L320.7 40.1 L320.6 40.7 L320.4 41.4 L320.3 42.1 L320.1 42.7 L319.8 43.4 L319.6 44.1 L319.3 44.7 L319.0 45.4 L318.7 46.0 L318.4 46.6 L318.0 47.3 L317.7 47.9 L317.3 48.5 L316.8 49.1 L316.4 49.7 L315.9 50.3 L315.5 50.8 L315.0 51.4 L314.4 52.0 L313.9 52.5 L313.3 53.0 L312.8 53.5 L312.2 54.0 L311.5 54.5 L310.9 55.0 L310.3 55.4 L309.6 55.9 L308.9 56.3 L308.3 56.7 L307.5 57.1 L306.8 57.5 L306.1 57.9 L305.4 58.2 L304.6 58.6 L303.8 58.9 L303.1 59.2 L302.3 59.5 L301.5 59.8 L300.7 60.0 L299.9 60.3 L299.1 60.5 L298.2 60.7 L297.4 60.9 L296.6 61.0 L295.7 61.2 L294.9 61.3 L294.0 61.4 L293.2 61.5 L292.3 61.6 L291.5 61.7 L290.6 61.7 L289.7 61.8 L288.9 61.8 L288.0 61.8 L287.1 61.8 L286.3 61.7 L285.4 61.7 L284.6 61.6 L283.7 61.5 L282.8 61.4 L282.0 61.3 L281.1 61.2 L280.3 61.0 L279.5 60.9 L278.6 60.7 L277.8 60.5 L277.0 60.3 L276.2 60.0 L275.4 59.8 L274.6 59.5 L273.8 59.2 L273.0 58.9 L272.3 58.6 L271.5 58.3 L270.8 58.0 L270.0 57.6 L269.3 57.2 L268.6 56.9 L267.9 56.5 L267.2 56.0 L266.6 55.6 L265.9 55.2 L265.3 54.7 L264.7 54.2 L264.1 53.8 L263.5 53.3 L262.9 52.8 L262.3 52.2 L261.8 51.7 L261.3 51.2 L260.8 50.6 L260.3 50.1 L259.9 49.5 L259.4 48.9 L259.0 48.3 L258.6 47.7 L258.2 47.1 L257.9 46.5 L257.5 45.9 L257.2 45.2 L256.9 44.6 L256.7 44.0 L256.4 43.3 L256.2 42.7 L256.0 42.0 L255.8 41.3 L255.7 40.7 L255.5 40.0 L255.4 39.3 L255.3 38.7 L255.3 38.0 L255.2 37.3 L255.2 36.7 L255.2 36.0 L255.2 35.3 L255.3 34.7 L255.3 34.0 L255.4 33.3 L255.5 32.7 L255.7 32.0 L255.8 31.4 L256.0 30.7 L256.2 30.1 L256.4 29.4 L256.6 28.8 L256.9 28.1 L257.2 27.5 L257.5 26.9 L257.8 26.3 L258.1 25.7 L258.5 25.1 L258.9 24.5 L259.3 23.9 L259.7 23.3 L260.1 22.7 L260.6 22.2 L261.0 21.6 L261.5 21.0 L262.0 20.5 L262.6 20.0 L263.1 19.5 L263.7 18.9 L264.2 18.4 L264.8 18.0 L265.4 17.5 L266.0 17.0 L266.7 16.6 L267.3 16.1 L268.0 15.7 L268.7 15.3 L269.4 14.9 L270.1 14.5 L270.8 14.1 L271.5 13.7 L272.3 13.4 L273.0 13.1 L273.8 12.7 L274.6 12.4 L275.4 12.2 L276.2 11.9 L277.0 11.6 L277.8 11.4 L278.6 11.2 L279.4 11.0 L280.3 10.8 L281.1 10.6 L282.0 10.5 L282.8 10.4 L283.7 10.3 L284.5 10.2 L285.4 10.1 L286.3 10.0 L287.1 10.0 L288.0 10.0 L288.9 10.0 L289.7 10.0 L290.6 10.1 L291.5 10.1 L292.3 10.2 L293.2 10.3 L294.0 10.4 L294.9 10.5 L295.7 10.7 L296.6 10.9 L297.4 11.0 L298.3 11.3 L299.1 11.5 L299.9 11.7 L300.7 12.0 L301.5 12.2 L302.3 12.5 L303.0 12.8 L303.8 13.2 L304.6 13.5 L305.3 13.9 L306.0 14.2 L306.8 14.6 L307.5 15.0 L308.2 15.4 L308.8 15.8 L309.5 16.3 L310.1 16.7 L310.8 17.2 L311.4 17.7 L312.0 18.2 L312.6 18.7 L313.1 19.2 L313.7 19.7 L314.2 20.2 L314.8 20.8 L315.3 21.3 L315.7 21.9 L316.2 22.5 L316.6 23.1 L317.1 23.6 L317.5 24.2 L317.9 24.9 L318.2 25.5 L318.6 26.1 L318.9 26.7 L319.2 27.3 L319.5 28.0 L319.7 28.6 L320.0 29.3 L320.2 29.9 L320.4 30.6 L320.6 31.3 L320.7 31.9 L320.9 32.6 L321.0 33.3 L321.1 34.0 L321.1 34.6 L321.2 35.3 L321.2 36.0" fill="none" stroke="#1e1e1e" stroke-width="1.3" stroke-dasharray="3 3" stroke-linecap="round"/>
+<path d="M288.0 32.4 L287.9 10.2" stroke="#2c2f33" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<path d="M269.6 59.8 L269.3 59.4 L268.9 59.0 L268.5 58.6 L268.1 58.3 L267.7 57.9 L267.3 57.6 L266.9 57.3 L266.5 56.9 L266.1 56.5 L265.8 56.1 L265.5 55.7 L265.1 55.3 L264.8 54.8 L264.4 54.5 L264.1 54.1 L263.7 53.7 L263.3 53.3 L262.9 52.9 L262.6 52.5 L262.3 52.0 L262.1 51.5 L261.9 51.0 L261.7 50.5 L261.6 50.0 L261.4 49.5 L261.2 49.0 L260.9 48.5 L260.7 48.0 L260.5 47.5 L260.4 47.0 L260.2 46.5 L260.1 46.0 L260.1 45.4 L260.0 44.9" fill="none" stroke="#df3130" stroke-width="2.0" stroke-linecap="round" opacity="0.9"/>
+<path d="M285.6 38.4 L263.5 53.3" stroke="#2c2f33" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<circle cx="285.6" cy="38.4" r="0.7" fill="#fff" stroke="#2c2f33" stroke-width="0.2"/>
+<circle cx="263.4" cy="53.2" r="3.2" fill="#df3130" stroke="#1e1e1e" stroke-width="0.9"/>
+<path d="M316.1 44.9 L316.1 45.5 L316.0 46.0 L315.9 46.5 L315.7 47.1 L315.6 47.6 L315.3 48.1 L315.1 48.5 L314.9 49.0 L314.7 49.5 L314.5 50.0 L314.3 50.5 L314.1 51.0 L313.9 51.5 L313.6 52.0 L313.3 52.4 L312.9 52.8 L312.5 53.2 L312.2 53.6 L311.8 54.0 L311.5 54.4 L311.1 54.8 L310.8 55.2 L310.5 55.7 L310.2 56.1 L309.9 56.5 L309.5 56.9 L309.1 57.3 L308.7 57.6 L308.3 58.0 L307.9 58.3 L307.6 58.7 L307.2 59.1 L306.9 59.5 L306.5 59.9" fill="none" stroke="#df3130" stroke-width="2.0" stroke-linecap="round" opacity="0.9"/>
+<path d="M290.4 38.4 L312.6 53.2" stroke="#2c2f33" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<circle cx="290.4" cy="38.4" r="0.7" fill="#fff" stroke="#2c2f33" stroke-width="0.2"/>
+<circle cx="312.6" cy="53.2" r="3.2" fill="#df3130" stroke="#1e1e1e" stroke-width="0.9"/>
+<circle cx="288.0" cy="10.2" r="3.2" fill="#df3130" stroke="#1e1e1e" stroke-width="0.9"/>
+<path d="M318.6 105.0 L318.6 109.2 L318.6 110.9 L318.6 112.1 L318.6 113.2 L318.5 114.1 L318.5 114.9 L318.5 115.7 L318.4 116.4 L318.3 117.0 L318.2 117.6 L318.1 118.2 L318.0 118.8 L317.9 119.3 L317.8 119.8 L317.6 120.2 L317.5 120.7 L317.3 121.1 L317.2 121.6 L317.0 122.0 L316.8 122.4 L316.5 122.7 L316.3 123.1 L316.1 123.4 L315.8 123.8 L315.6 124.1 L315.3 124.4 L315.0 124.7 L314.7 125.0 L314.4 125.2 L314.1 125.5 L313.7 125.7 L313.4 126.0 L313.0 126.2 L312.6 126.4 L312.2 126.6 L311.8 126.8 L311.4 127.0 L311.0 127.2 L310.5 127.4 L310.0 127.5 L309.5 127.7 L309.0 127.8 L308.5 128.0 L308.0 128.1 L307.4 128.2 L306.8 128.3 L306.2 128.4 L305.5 128.5 L304.8 128.6 L304.1 128.7 L303.3 128.8 L302.5 128.8 L301.6 128.9 L300.7 128.9 L299.6 129.0 L298.4 129.0 L297.1 129.0 L295.5 129.1 L293.4 129.1 L288.0 129.1 L282.6 129.1 L280.5 129.1 L278.9 129.1 L277.6 129.0 L276.4 129.0 L275.3 129.0 L274.4 128.9 L273.5 128.9 L272.7 128.8 L271.9 128.8 L271.2 128.7 L270.5 128.6 L269.8 128.5 L269.2 128.4 L268.6 128.3 L268.0 128.2 L267.5 128.1 L266.9 127.9 L266.4 127.8 L265.9 127.6 L265.5 127.5 L265.0 127.3 L264.6 127.1 L264.1 126.9 L263.7 126.7 L263.3 126.5 L263.0 126.3 L262.6 126.0 L262.3 125.8 L261.9 125.5 L261.6 125.3 L261.3 125.0 L261.0 124.7 L260.7 124.4 L260.5 124.1 L260.2 123.7 L260.0 123.4 L259.7 123.1 L259.5 122.7 L259.3 122.3 L259.1 121.9 L258.9 121.5 L258.8 121.1 L258.6 120.7 L258.5 120.2 L258.4 119.7 L258.2 119.2 L258.1 118.7 L258.0 118.2 L257.9 117.6 L257.9 117.0 L257.8 116.4 L257.7 115.7 L257.7 114.9 L257.7 114.1 L257.6 113.2 L257.6 112.1 L257.6 110.9 L257.6 109.2 L257.6 105.0 L257.6 100.8 L257.7 99.1 L257.7 97.9 L257.8 96.8 L257.8 95.9 L257.9 95.1 L257.9 94.4 L258.0 93.7 L258.1 93.0 L258.2 92.4 L258.3 91.9 L258.4 91.4 L258.6 90.9 L258.7 90.4 L258.8 89.9 L259.0 89.5 L259.2 89.1 L259.3 88.7 L259.5 88.3 L259.7 87.9 L259.9 87.5 L260.1 87.2 L260.3 86.9 L260.6 86.5 L260.8 86.2 L261.1 85.9 L261.3 85.6 L261.6 85.4 L261.9 85.1 L262.2 84.8 L262.5 84.6 L262.8 84.3 L263.2 84.1 L263.5 83.9 L263.9 83.6 L264.3 83.4 L264.7 83.2 L265.1 83.0 L265.6 82.9 L266.0 82.7 L266.5 82.5 L267.0 82.4 L267.5 82.2 L268.1 82.1 L268.6 81.9 L269.2 81.8 L269.9 81.7 L270.5 81.6 L271.2 81.5 L271.9 81.4 L272.7 81.3 L273.5 81.3 L274.4 81.2 L275.4 81.1 L276.4 81.1 L277.6 81.1 L278.9 81.0 L280.5 81.0 L282.6 81.0 L288.0 81.0 L293.4 81.0 L295.5 81.0 L297.1 81.0 L298.4 81.1 L299.6 81.1 L300.6 81.2 L301.6 81.2 L302.5 81.3 L303.3 81.4 L304.1 81.4 L304.8 81.5 L305.5 81.6 L306.1 81.7 L306.8 81.8 L307.4 81.9 L307.9 82.1 L308.5 82.2 L309.0 82.3 L309.5 82.5 L310.0 82.7 L310.4 82.8 L310.9 83.0 L311.3 83.2 L311.7 83.4 L312.1 83.6 L312.5 83.8 L312.9 84.0 L313.2 84.2 L313.6 84.4 L313.9 84.7 L314.2 84.9 L314.6 85.2 L314.9 85.5 L315.1 85.7 L315.4 86.0 L315.7 86.3 L315.9 86.7 L316.2 87.0 L316.4 87.3 L316.6 87.7 L316.9 88.1 L317.1 88.5 L317.3 88.9 L317.4 89.3 L317.6 89.8 L317.8 90.2 L317.9 90.7 L318.1 91.2 L318.2 91.8 L318.3 92.4 L318.4 93.0 L318.5 93.6 L318.6 94.3 L318.7 95.1 L318.8 95.9 L318.8 96.8 L318.9 97.8 L318.9 99.1 L318.9 100.8 L318.9 105.0" fill="none" stroke="#1e1e1e" stroke-width="1.3" stroke-dasharray="3 3" stroke-linecap="round"/>
+<path d="M288.0 101.4 L287.9 81.0" stroke="#2c2f33" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<path d="M276.8 132.4 L276.3 132.3 L275.7 132.2 L275.2 132.1 L274.7 131.9 L274.2 131.6 L273.8 131.4 L273.3 131.1 L272.8 130.9 L272.3 130.6 L271.9 130.4 L271.4 130.1 L270.9 129.9 L270.4 129.6 L270.0 129.3 L269.6 128.9 L269.2 128.5 L268.9 128.1 L268.5 127.7 L268.2 127.3 L267.8 126.9 L267.4 126.6 L267.0 126.2 L266.6 125.9 L266.2 125.6 L265.8 125.2 L265.4 124.8 L265.1 124.4 L264.8 123.9 L264.5 123.5 L264.2 123.1 L263.8 122.7 L263.5 122.3 L263.1 121.9 L262.7 121.5" fill="none" stroke="#df3130" stroke-width="2.0" stroke-linecap="round" opacity="0.9"/>
+<path d="M285.6 107.4 L268.9 128.2" stroke="#2c2f33" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<circle cx="285.6" cy="107.4" r="0.7" fill="#fff" stroke="#2c2f33" stroke-width="0.2"/>
+<circle cx="268.9" cy="128.2" r="3.2" fill="#df3130" stroke="#1e1e1e" stroke-width="0.9"/>
+<path d="M313.2 121.5 L312.9 121.9 L312.6 122.3 L312.3 122.8 L312.0 123.2 L311.6 123.6 L311.3 124.1 L311.0 124.5 L310.7 124.9 L310.4 125.4 L310.0 125.8 L309.6 126.1 L309.2 126.4 L308.7 126.7 L308.3 127.0 L307.8 127.3 L307.4 127.6 L307.0 128.0 L306.6 128.3 L306.2 128.7 L305.8 129.1 L305.4 129.4 L305.0 129.7 L304.5 130.0 L304.1 130.2 L303.6 130.5 L303.1 130.7 L302.7 131.0 L302.2 131.3 L301.8 131.6 L301.3 131.9 L300.9 132.2 L300.4 132.5 L299.9 132.6 L299.3 132.8" fill="none" stroke="#df3130" stroke-width="2.0" stroke-linecap="round" opacity="0.9"/>
+<path d="M290.4 107.4 L307.1 128.2" stroke="#2c2f33" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<circle cx="290.4" cy="107.4" r="0.7" fill="#fff" stroke="#2c2f33" stroke-width="0.2"/>
+<circle cx="307.1" cy="128.2" r="3.2" fill="#df3130" stroke="#1e1e1e" stroke-width="0.9"/>
+<circle cx="288.0" cy="81.0" r="3.2" fill="#df3130" stroke="#1e1e1e" stroke-width="0.9"/>
+<path d="M318.1 174.0 L318.1 174.8 L318.1 175.6 L318.0 176.4 L318.0 177.1 L317.9 177.9 L317.8 178.7 L317.7 179.5 L317.5 180.3 L317.3 181.0 L317.2 181.8 L316.9 182.6 L316.7 183.3 L316.5 184.1 L316.2 184.8 L315.9 185.6 L315.6 186.3 L315.2 187.0 L314.9 187.7 L314.5 188.4 L314.1 189.1 L313.7 189.8 L313.3 190.4 L312.9 191.1 L312.4 191.7 L311.9 192.4 L311.4 193.0 L310.9 193.6 L310.4 194.2 L309.9 194.7 L309.3 195.3 L308.7 195.9 L308.1 196.3 L307.5 196.3 L306.9 196.3 L306.3 196.3 L305.6 196.3 L305.0 196.3 L304.3 196.3 L303.7 196.3 L303.0 196.3 L302.3 196.3 L301.6 196.3 L300.9 196.3 L300.2 196.3 L299.5 196.3 L298.8 196.3 L298.0 196.3 L297.3 196.3 L296.5 196.3 L295.8 196.3 L295.0 196.3 L294.2 196.3 L293.5 196.3 L292.7 196.3 L291.9 196.3 L291.1 196.3 L290.4 196.3 L289.6 196.3 L288.8 196.3 L288.0 196.3 L287.2 196.4 L286.4 196.4 L285.6 196.4 L284.9 196.4 L284.1 196.4 L283.3 196.4 L282.5 196.4 L281.8 196.4 L281.0 196.4 L280.2 196.4 L279.5 196.4 L278.7 196.4 L278.0 196.4 L277.2 196.4 L276.5 196.4 L275.8 196.5 L275.1 196.5 L274.4 196.5 L273.7 196.5 L273.0 196.5 L272.3 196.5 L271.7 196.4 L271.0 196.4 L270.4 196.4 L269.7 196.4 L269.1 196.4 L268.5 196.4 L267.9 196.4 L267.2 195.9 L266.7 195.3 L266.1 194.8 L265.6 194.2 L265.1 193.6 L264.6 193.0 L264.1 192.3 L263.7 191.7 L263.2 191.0 L262.8 190.4 L262.4 189.7 L262.0 189.0 L261.6 188.3 L261.3 187.6 L261.0 186.9 L260.6 186.2 L260.3 185.5 L260.1 184.7 L259.8 184.0 L259.6 183.2 L259.4 182.5 L259.2 181.7 L259.0 181.0 L258.8 180.2 L258.7 179.4 L258.6 178.7 L258.5 177.9 L258.4 177.1 L258.4 176.3 L258.3 175.6 L258.3 174.8 L258.3 174.0 L258.3 173.2 L258.3 172.4 L258.4 171.7 L258.5 170.9 L258.6 170.1 L258.7 169.4 L258.8 168.6 L259.0 167.8 L259.1 167.1 L259.3 166.3 L259.5 165.6 L259.8 164.8 L260.0 164.1 L260.3 163.4 L260.6 162.6 L260.9 161.9 L261.2 161.2 L261.5 160.5 L261.9 159.8 L262.2 159.1 L262.6 158.4 L263.0 157.8 L263.5 157.1 L263.9 156.5 L264.3 155.9 L264.8 155.2 L265.3 154.6 L265.8 154.0 L266.3 153.4 L266.9 152.9 L267.4 152.3 L268.0 151.8 L268.6 151.3 L269.2 150.8 L269.8 150.3 L270.4 149.8 L271.0 149.3 L271.7 148.9 L272.3 148.5 L273.0 148.1 L273.7 147.7 L274.4 147.3 L275.1 146.9 L275.8 146.6 L276.5 146.3 L277.3 146.0 L278.0 145.7 L278.7 145.5 L279.5 145.3 L280.2 145.0 L281.0 144.8 L281.8 144.7 L282.5 144.5 L283.3 144.4 L284.1 144.3 L284.9 144.2 L285.6 144.1 L286.4 144.1 L287.2 144.1 L288.0 144.1 L288.8 144.1 L289.6 144.1 L290.3 144.2 L291.1 144.2 L291.9 144.3 L292.7 144.4 L293.5 144.6 L294.2 144.7 L295.0 144.9 L295.7 145.1 L296.5 145.3 L297.2 145.6 L298.0 145.8 L298.7 146.1 L299.4 146.4 L300.2 146.7 L300.9 147.0 L301.6 147.3 L302.3 147.7 L303.0 148.1 L303.6 148.5 L304.3 148.9 L305.0 149.3 L305.6 149.8 L306.2 150.2 L306.9 150.7 L307.5 151.2 L308.1 151.7 L308.7 152.2 L309.2 152.8 L309.8 153.3 L310.3 153.9 L310.9 154.5 L311.4 155.1 L311.9 155.7 L312.4 156.3 L312.8 156.9 L313.3 157.6 L313.7 158.2 L314.1 158.9 L314.5 159.6 L314.9 160.3 L315.3 161.0 L315.6 161.7 L316.0 162.4 L316.3 163.2 L316.5 163.9 L316.8 164.6 L317.1 165.4 L317.3 166.2 L317.5 166.9 L317.7 167.7 L317.8 168.5 L318.0 169.3 L318.1 170.0 L318.2 170.8 L318.3 171.6 L318.3 172.4 L318.3 173.2 L318.4 174.0" fill="none" stroke="#1e1e1e" stroke-width="1.3" stroke-dasharray="3 3" stroke-linecap="round"/>
+<path d="M288.0 170.4 L287.9 144.0" stroke="#2c2f33" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<path d="M269.3 197.7 L268.9 197.4 L268.5 197.0 L268.1 196.6 L267.7 196.3 L267.3 195.9 L266.9 195.6 L266.5 195.2 L266.1 194.9 L265.7 194.5 L265.4 194.1 L265.0 193.7 L264.8 193.2 L264.5 192.7 L264.3 192.2 L264.0 191.7 L263.8 191.3 L263.5 190.9 L263.2 190.4 L262.8 190.0 L262.5 189.6 L262.2 189.1 L262.0 188.7 L261.7 188.2 L261.5 187.7 L261.3 187.2 L261.1 186.7 L260.9 186.2 L260.6 185.8 L260.4 185.3 L260.1 184.8 L259.9 184.3 L259.7 183.8 L259.5 183.3 L259.5 182.8" fill="none" stroke="#df3130" stroke-width="2.0" stroke-linecap="round" opacity="0.9"/>
+<path d="M285.6 176.4 L263.2 190.9" stroke="#2c2f33" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<circle cx="285.6" cy="176.4" r="0.7" fill="#fff" stroke="#2c2f33" stroke-width="0.2"/>
+<circle cx="263.3" cy="191.0" r="3.2" fill="#df3130" stroke="#1e1e1e" stroke-width="0.9"/>
+<path d="M316.3 182.7 L316.1 183.2 L316.0 183.7 L315.8 184.2 L315.6 184.7 L315.4 185.2 L315.2 185.7 L315.0 186.2 L314.9 186.7 L314.8 187.3 L314.7 187.8 L314.5 188.3 L314.3 188.8 L314.0 189.3 L313.8 189.7 L313.4 190.2 L313.1 190.6 L312.8 191.0 L312.4 191.4 L312.1 191.9 L311.8 192.3 L311.5 192.8 L311.2 193.2 L310.9 193.6 L310.5 194.0 L310.0 194.3 L309.6 194.6 L309.2 195.0 L308.8 195.3 L308.4 195.7 L308.1 196.1 L307.7 196.5 L307.4 196.9 L307.0 197.3 L306.6 197.7" fill="none" stroke="#df3130" stroke-width="2.0" stroke-linecap="round" opacity="0.9"/>
+<path d="M290.4 176.5 L312.8 190.9" stroke="#2c2f33" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+<circle cx="290.4" cy="176.4" r="0.7" fill="#fff" stroke="#2c2f33" stroke-width="0.2"/>
+<circle cx="312.7" cy="191.0" r="3.2" fill="#df3130" stroke="#1e1e1e" stroke-width="0.9"/>
+<circle cx="288.0" cy="144.0" r="3.2" fill="#df3130" stroke="#1e1e1e" stroke-width="0.9"/>
+</svg></figure>
+          <p>Use two arms at the bottom instead of one, and let them sweep out to the sides. Each arm's clamp moves along an arc that crosses the wheel (red), so it meets the wheel somewhere along that arc, whatever the diameter or shape: oval, squarish, or flat-bottomed.</p>
           <figure class="ga-fig" style="--h:150px"><img src="../assets/GenAutoVids/slides/arm-gears.jpg" alt="Close-up of the meshed gears at the base of the lower arms"></figure>
           <p>Coupling the two arms mechanically with gears keeps them symmetric: they always counter-rotate by the same angle.</p>
         </div>
       </div>
 
-      <h3 class="ga-h3" id="offset">4. Offset</h3>
+      <h3 class="ga-h3" id="offset">4. Wheels aren't concentric</h3>
       <div class="ga-grid" style="--h:180px;">
-        <span class="ga-label problem" style="grid-area:1 / 1">Problem</span>
+        <span class="ga-label problem" style="grid-area:1 / 1">Problem<b class="ga-prob">Geometric ≠ rotational center (for a reason).</b></span>
         <figure class="ga-fig" style="grid-area:2 / 1"><img src="../assets/GenAutoVids/slides/offset-axis.jpg" alt="Two steering wheels: the geometric center and the axis of rotation don't line up"></figure>
         <p style="grid-area:3 / 1">Steering wheels almost always have an offset between their geometric center and their axis of rotation, to improve turning ease. The motor has to sit on the axis of rotation, not the center.</p>
         <span class="ga-arrow" aria-hidden="true" style="grid-area:2 / 2"><svg viewBox="0 0 40 24"><path d="M4 12h18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M22 5l14 7-14 7z" fill="currentColor" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg></span>
@@ -422,17 +470,17 @@
             <ul class="splide__list">
             <li class="splide__slide">
                 <video width="100%" height="100%" autoplay muted loop playsinline>
-                    <source src="../assets/GenAutoVids/attachedMoving.mp4" type="video/mp4">
+                    <source src="../assets/web/attachedMoving.mp4" type="video/mp4">
                 </video>
             </li>
             <li class="splide__slide">
                 <video width="100%" height="100%" autoplay muted loop playsinline>
-                    <source src="../assets/GenAutoVids/mainViewRotation.mp4" type="video/mp4">
+                    <source src="../assets/web/mainViewRotation.mp4" type="video/mp4">
                 </video>
             </li>
             <li class="splide__slide">
                 <video width="100%" height="100%" autoplay muted loop playsinline>
-                    <source src="../assets/GenAutoVids/mountedActuation.mp4" type="video/mp4">
+                    <source src="../assets/web/mountedActuation.mp4" type="video/mp4">
                 </video>
             </li>
         </ul>
@@ -444,17 +492,17 @@
             <ul class="splide__list">
             <li class="splide__slide">
                 <video width="100%" height="100%" autoplay muted loop playsinline>
-                    <source src="../assets/GenAutoVids/attachmentVid.mp4" type="video/mp4">
+                    <source src="../assets/web/attachmentVid.mp4" type="video/mp4">
                 </video>
             </li>
             <li class="splide__slide">
                 <video width="100%" height="100%" autoplay muted loop playsinline>
-                    <source src="../assets/GenAutoVids/attachment.mp4" type="video/mp4">
+                    <source src="../assets/web/attachment.mp4" type="video/mp4">
                 </video>
             </li>
             <li class="splide__slide">
                 <video width="100%" height="100%" autoplay muted loop playsinline>
-                    <source src="../assets/GenAutoVids/gui.mp4" type="video/mp4">
+                    <source src="../assets/web/gui.mp4" type="video/mp4">
                 </video>
             </li>
         </ul>
@@ -463,10 +511,10 @@
     </section>
 
 
-    <!-- ================= REACTION TORQUE ================= -->
+    <!-- ================= FRAME-BASED ACTUATION ================= -->
 
-    <section class="ga-sec" id="reaction">
-      <h2 class="ga-h2"><span>Reaction torque</span></h2>
+    <section class="ga-sec" id="frame">
+      <h2 class="ga-h2"><span>Frame-based actuation</span></h2>
       <div class="ga-fit">
         <div>
           <p class="ga-lead">For the actuator to turn the steering wheel, its housing has to be held still. Every N·m it applies to the wheel acts on the housing in the opposite direction, and something has to take that reaction torque.</p>
@@ -490,39 +538,57 @@
       </div>
       <p class="ga-price ga-mine">This robot: <strong>&lt; $500</strong> in parts</p>
 
-      <h3 class="ga-h3">Our floor-constrained version</h3>
+      <h3 class="ga-h3">The floor as a constraint</h3>
       <div class="ga-cols top" style="--c: minmax(0,1fr) auto minmax(0,1fr); --g:1.6rem; align-items:start !important;">
         <div class="ga-stack" style="--g:1rem;">
-          <figure class="ga-fig" style="--h:230px"><img src="../assets/GenAutoVids/slides/react-floor.jpg" alt="Sketch of the arm from the actuator down to the floor"></figure>
-          <p>The current build takes the reaction torque through the floor, with an arm from the actuator down to the footwell.</p>
-          <span class="ga-label problem">Problem</span>
-          <p>The arm has to fit any car too. The steering column angle and the wheel height are different in every car, and they are measured relative to a floor whose shape, height and angle are also different in every car.</p>
+          <span class="ga-label problem">Problem<b class="ga-prob">Every car's footwell is different.</b></span>
+          <p>A frame has to fit any car too. The steering column angle and the wheel height are different in every car, and they are measured relative to a floor whose shape, height and angle are also different in every car.</p>
           <div class="ga-strip" style="--g:1.4rem;flex-wrap:nowrap;">
             <figure class="ga-fig" style="--h:110px"><img src="../assets/GenAutoVids/slides/column-angle.jpg" alt="Two steering wheels with different column angles"><figcaption>Column angle</figcaption></figure>
             <figure class="ga-fig" style="--h:110px"><img src="../assets/GenAutoVids/slides/column-height.jpg" alt="Two steering wheels at different heights"><figcaption>Wheel height</figcaption></figure>
           </div>
         </div>
-        <span class="ga-arrow" aria-hidden="true" style="align-self:center;"><svg viewBox="0 0 40 24"><path d="M4 12h18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M22 5l14 7-14 7z" fill="currentColor" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg></span>
+        <span class="ga-arrow" style="align-self:center;" aria-hidden="true"><svg viewBox="0 0 40 24"><path d="M4 12h18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M22 5l14 7-14 7z" fill="currentColor" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg></span>
         <div class="ga-stack" style="--g:1rem;">
           <span class="ga-label solution">Solution</span>
-          <p>The arm isn't mounted to the floor. It is constrained by it: it extends until it meets the floor, without fastening to anything, and once extended it stops the actuator housing from moving in any direction.</p>
-          <figure class="ga-fig ga-vertical">
-            <video autoplay muted loop playsinline preload="metadata" aria-label="The floor constraint extending in a car">
-              <source src="../assets/GenAutoVids/floorConstraint.mov" type="video/mp4">
-            </video>
-            <figcaption>Extending the floor constraint in a car.</figcaption>
-          </figure>
+          <p>Instead of a frame fixed to the car, the arm uses the floor as a constraint. It extends from the actuator until it meets the floor, without fastening to anything, and once extended it stops the actuator housing from moving in any direction.</p>
+          <figure class="ga-fig" style="--h:200px"><img src="../assets/GenAutoVids/slides/react-floor.jpg" alt="Sketch of the arm from the actuator down to the floor"></figure>
         </div>
       </div>
-      <h3 class="ga-h3">Self-contained</h3>
-      <p class="ga-under" style="margin-top:0 !important;">Removing the mount entirely would make the robot much simpler to use. It wouldn't have to adapt to each car's interior, it would be smaller, and with a battery it would be wireless, with no power cables running through the cabin. The whole robot would be the part on the steering wheel.</p>
-      <p class="ga-under" style="margin-top:1rem !important;">The only common way to produce torque without pushing against a fixed reference frame is a reaction wheel: accelerate a flywheel, and the housing gets the opposite torque.</p>
 
-      <div class="ga-fit fig-left" style="margin-top:1.2rem;">
-        <figure class="ga-fig fit"><img src="../assets/GenAutoVids/slides/react-wheel.jpg" alt="A reaction wheel mounted behind the actuator"></figure>
-        <div class="ga-flow" style="align-items:flex-start;">
-          <p class="ga-subtitle">Reaction wheel</p>
-          <p>The torque only lasts while the flywheel is accelerating. Once it reaches the motor's maximum speed, the motor can't produce any more torque (saturation).</p>
+      <div class="ga-frame-media">
+        <figure class="ga-fig ga-vertical">
+          <video autoplay muted loop playsinline preload="metadata" poster="../assets/web/floorConstraint.jpg" aria-label="The floor constraint extending in a car"><source src="../assets/web/floorConstraint.mp4" type="video/mp4"></video>
+          <figcaption>Extending the floor constraint.</figcaption>
+        </figure>
+        <figure class="ga-fig ga-vertical">
+          <video autoplay muted loop playsinline preload="metadata" poster="../assets/web/manualSteeringTest.jpg" aria-label="A driver steering normally with the robot attached"><source src="../assets/web/manualSteeringTest.mp4" type="video/mp4"></video>
+          <figcaption>Driving normally with it attached: the frame sits between the driver's legs, and zero-torque mode makes the wheel feel as if the robot weren't there.</figcaption>
+        </figure>
+        <figure class="ga-fig ga-vertical">
+          <img src="../assets/GenAutoVids/standCCMAssembly.jpg" alt="The final assembly on a stand: wheel coupling, actuator, frame and the CCM with its screen and buttons">
+          <figcaption>The final assembly, with the CCM.</figcaption>
+        </figure>
+      </div>
+
+      <p>Because the motor senses the steering torque itself, the frame needs no torque sensors. Industry solutions have to put them in their frames.</p>
+      <p>The frame also carries the battery and the CCM (controls and communication module). Its screen shows sensor data, the steering angle, telemetry and connection status, and its buttons take control, trigger the emergency stop, and power cycle the robot.</p>
+    </section>
+
+
+    <!-- ================= SELF-CONTAINED ACTUATION ================= -->
+
+    <section class="ga-sec" id="self">
+      <h2 class="ga-h2"><span>Self-contained actuation <small>basis for patent</small></span></h2>
+      <p class="ga-lead">Removing the frame entirely would make the robot much simpler to use. It wouldn't have to adapt to each car's interior, it would be smaller, and with a battery it would be wireless, with no power cables running through the cabin. The whole robot would be the part on the steering wheel.</p>
+
+      <p class="ga-claim"><strong><u>Self-contained actuation should be impossible.</u></strong> Without pushing against the car, the only thing left to push against is a mass carried by the robot, and no mass that fits within a steering wheel's envelope can produce enough reaction torque.</p>
+
+      <div class="ga-vs">
+        <h4 class="ga-subhead">Reaction wheel</h4>
+        <p>The usual way to make torque without a fixed reference is a reaction wheel: accelerate a flywheel, and the housing gets the opposite torque. But the torque only lasts while the flywheel is accelerating. Once it reaches the motor's maximum speed, the motor can't produce any more (saturation). A flywheel's inertia also goes with <i>r</i>², so the small radius behind a steering wheel hurts it badly.</p>
+        <div class="ga-vs-row">
+          <figure class="ga-fig"><img src="../assets/GenAutoVids/slides/react-wheel.jpg" alt="A reaction wheel mounted behind the actuator"></figure>
           <div class="ga-calc ga-math">
             <div class="note">Solid steel disc, <i>r</i> = 7.5 in, <i>t</i> = 2 in</div>
             <div><i>I</i> = ½ <i>m r</i>²</div>
@@ -530,25 +596,25 @@
             <div><i>α</i> = <i>τ</i> / <i>I</i> = 3 / 0.41 ≈ 7.32 rad/s²</div>
             <div><i>t</i> = <i>ω</i><sub>max</sub> / <i>α</i> = 40 / 7.32 ≈ <span class="res">5.46 s</span></div>
           </div>
-          <p>Even with a 50 lb steel disc, the motor couldn't hold a 3 N·m turn for more than 5.5 seconds. A larger disc helps through the <i>r</i>² term, but anything that fits behind a steering wheel saturates within seconds.</p>
         </div>
+        <p>Even with a 50 lb steel disc, the motor couldn't hold a 3 N·m turn for more than 5.5 seconds.</p>
       </div>
 
       <p class="ga-question">So the robot can't push against the car, and it can't keep accelerating a mass. How can it produce a torque at all?</p>
 
-      <div class="ga-fit fig-left" style="margin-top:0.4rem;">
-        <figure class="ga-fig fit"><img src="../assets/GenAutoVids/slides/pendulum.jpg" alt="A pendulum hanging from the actuator, with gravity providing the reaction torque"></figure>
-        <div class="ga-flow" style="align-items:flex-start;">
-          <p class="ga-subtitle">Pendulum</p>
-          <p>Push against gravity instead. Gravity is always there, so holding an offset mass up produces a sustained torque without accelerating anything. Under a steering load, the pendulum tilts until gravity balances the torque. It never saturates, and it fits behind the steering wheel.</p>
+      <div class="ga-vs">
+        <h4 class="ga-subhead">My idea</h4>
+        <p>Push against gravity instead, with a <strong><u>pendulum</u></strong>. Holding an offset mass up produces a sustained torque without accelerating anything: under a steering load, the pendulum tilts until gravity balances the torque. It never saturates, and it fits behind the steering wheel.</p>
+        <div class="ga-vs-row">
+          <figure class="ga-fig"><img src="../assets/GenAutoVids/slides/pendulum.jpg" alt="A pendulum hanging from the actuator, with gravity providing the reaction torque"></figure>
           <div class="ga-calc ga-math">
             <div class="note">Half annulus, <i>R</i><sub>o</sub> = 15 in, <i>R</i><sub>i</sub> = 3 in, <i>t</i> = 2 in, <i>m</i> ≈ 46 lb</div>
             <div><i>r</i><sub>cm</sub> = <span class="frac"><span>4(<i>R</i><sub>o</sub>³ − <i>R</i><sub>i</sub>³)</span><span>3π(<i>R</i><sub>o</sub>² − <i>R</i><sub>i</sub>²)</span></span></div>
             <div><i>τ</i>(<i>θ</i>) = <i>m g r</i><sub>cm</sub> sin <i>θ</i></div>
             <div><i>τ</i><sub>max</sub> = <i>τ</i>(90°) ≈ <span class="res">19.45 N·m</span></div>
           </div>
-          <p>Holding the pendulum at 90° takes 19.45 N·m, more than the 15 N·m peak steering torque, so in practice it never gets there.</p>
         </div>
+        <p>Gravity is a free ~10× multiplier (<i>g</i> ≈ 9.8 m/s²) on the torque a mass can make, and it never runs out. The pendulum's torque also goes with <i>r</i>, not <i>r</i>², so a small radius matters much less: the opposite of the reaction wheel. Holding this pendulum at 90° takes 19.45 N·m, more than the 15 N·m peak steering torque, so in practice it never gets there.</p>
       </div>
     </section>
 
@@ -568,7 +634,7 @@
           <li>Patent process and protection through TechAdvance at Rutgers.</li>
           <li>Interest from universities and ADAS testing subcontractors.</li>
         </ul>
-        <figure class="ga-fig fit" data-ar="1.1794"><video autoplay muted loop playsinline preload="metadata"><source src="../assets/GenAutoVids/attachedDemo.mp4" type="video/mp4"></video><figcaption>An early prototype on a stock steering wheel.</figcaption></figure>
+        <figure class="ga-fig fit" data-ar="1.1794"><video autoplay muted loop playsinline preload="metadata"><source src="../assets/web/attachedDemo.mp4" type="video/mp4"></video><figcaption>An early prototype on a stock steering wheel.</figcaption></figure>
       </div>
     </section>
 
@@ -588,7 +654,7 @@
             <ul class="splide__list">
             <li class="splide__slide">
                 <video width="100%" height="100%" autoplay muted loop playsinline>
-                    <source src="../assets/GenAutoVids/lidarWave.mp4" type="video/mp4">
+                    <source src="../assets/web/lidarWave.mp4" type="video/mp4">
                 </video>
             </li>
             <li class="splide__slide">
@@ -596,7 +662,7 @@
             </li>
             <li class="splide__slide">
                 <video width="100%" height="100%" autoplay muted loop playsinline>
-                    <source src="../assets/GenAutoVids/lidarZoom.mp4" type="video/mp4">
+                    <source src="../assets/web/lidarZoom.mp4" type="video/mp4">
                 </video>
             </li>
         </ul>
@@ -653,6 +719,7 @@
   <script src="genauto-nav.js"></script>
   <!-- Sizes figures to match the text beside them; collapsible sections on phones -->
   <script src="genauto-layout.js"></script>
+  <script src="toggle-clamp.js"></script>
 
   <!-- Opening block: solve for one shared height so the three columns form a clean rectangle -->
   <script>

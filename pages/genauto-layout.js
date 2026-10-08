@@ -91,12 +91,12 @@
 
 /* Collapsible sections on phones.
    Every section heading becomes a button that shows/hides the section. On
-   phones all sections start collapsed except Goals & requirements, which holds
-   the final videos, and any section marked data-open. On desktop nothing is collapsed and the button is inert. */
+   phones all sections start collapsed except the first (drifting, with the
+   goals), and any section marked data-open. On desktop nothing is collapsed and the button is inert. */
 (function () {
   var mq = window.matchMedia('(max-width: 1000px)');
   var sections = Array.prototype.slice.call(document.querySelectorAll('.ga-sec, .ga-dark'));
-  var OPEN_BY_DEFAULT = ['requirements'];
+  var OPEN_BY_DEFAULT = ['goal'];
 
   sections.forEach(function (sec, n) {
     var h2 = sec.querySelector(':scope > .ga-h2');

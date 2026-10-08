@@ -56,8 +56,8 @@
     <nav class="ga-nav" aria-label="Page sections">
       <ol>
         <li><a href="#overview"><span class="tick"></span><span class="label">Overview</span></a></li>
-        <li><a href="#math"><span class="tick"></span><span class="label">The math</span></a></li>
         <li><a href="#reduction"><span class="tick"></span><span class="label">Gear ratio</span></a></li>
+        <li><a href="#actuator"><span class="tick"></span><span class="label">Actuator</span></a></li>
         <li><a href="#tool"><span class="tick"></span><span class="label">Try it</span></a></li>
         <li><a href="#liquid-piston"><span class="tick"></span><span class="label">Liquid piston</span></a></li>
       </ol>
@@ -68,17 +68,10 @@
       <!-- ================= OVERVIEW ================= -->
       <section class="ga-sec" id="overview" data-open>
         <h2 class="ga-h2"><span>Overview</span></h2>
-        <p>This is a cycloidal gear generator I made with the Desmos API. It generates an epitrochoid (basically a circle rolling around another circle) from four parameters: the overall radius <span class="ga-math"><i>R</i></span>, the number of pins <span class="ga-math"><i>N</i></span>, the pin radius <span class="ga-math"><i>S</i></span>, and the eccentricity <span class="ga-math"><i>E</i></span>.</p>
-        <p>It's built around two functions, x(t) and y(t), that use the same four variables, so you can copy them straight into the Equation Driven Curve add-in in Fusion 360 (with z(t) = 0). I used it to make all of the cycloidal actuators in my <a href="6dof.html">6DOF arm</a>, and they turned out with nearly zero backlash and are still backdrivable.</p>
         <div class="pj-video">
           <iframe src="https://www.youtube-nocookie.com/embed/pa9qdXy_RqI" title="Cycloid video on YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
-      </section>
-
-
-      <!-- ================= MATH ================= -->
-      <section class="ga-sec" id="math">
-        <h2 class="ga-h2"><span>The math</span></h2>
+        <p>A cycloidal gear generator I built with the Desmos API. It takes four numbers (the overall radius <span class="ga-math"><i>R</i></span>, the number of pins <span class="ga-math"><i>N</i></span>, the pin radius <span class="ga-math"><i>S</i></span> and the eccentricity <span class="ga-math"><i>E</i></span>) and gives two equations, x(t) and y(t), that paste straight into Fusion 360's Equation Driven Curve add-in (with z(t) = 0). Every cycloidal actuator in my <a href="6dof.html">6DOF arm</a> came from it.</p>
 
         <h3 class="ga-h3">The base curve</h3>
         <div class="pj-split fig-wide">
@@ -128,6 +121,37 @@
             <label class="cyc-ctl"><span><span class="ga-math"><i>EN</i>/<i>R</i></span> = <b data-o="q">0.70</b></span><input type="range" min="0.2" max="0.95" step="0.01" value="0.7" data-k="q"></label>
             <button type="button" aria-pressed="false">Pause</button>
           </div>
+        </div>
+      </section>
+
+
+      <!-- ================= ACTUATOR ================= -->
+      <section class="ga-sec" id="actuator" data-open>
+        <h2 class="ga-h2"><span>The actuator</span></h2>
+
+        <div class="pj-split fig-wide">
+          <div>
+            <p>The arm needed reducers to get more torque and precision out of its NEMA stepper motors, so I made them with the generator instead of buying them.</p>
+            <p>The motor turns an eccentric input, offset by <span class="ga-math"><i>E</i></span>, which drives the disc around inside a ring of fixed pins, and an output plate picks up the disc's slow turning. The result is a 28:1 gearbox with nearly zero backlash that's still backdrivable.</p>
+            <p>The parts are laser cut from acrylic, which is why everything is see-through. They can be 3D printed instead if laser cutting isn't an option.</p>
+          </div>
+          <figure class="pj-tile" style="--ar:960/686; margin:0;"><video data-autoplay data-src="../assets/web/cycloidMotor.mp4" poster="../assets/web/cycloidMotor.jpg" aria-label="A cycloidal actuator turning on its motor"></video><figcaption>The actuator running</figcaption></figure>
+        </div>
+
+        <div class="pj-grid" style="--cols:4;">
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/cy1.jpg" alt="A finished cycloidal reducer in clear acrylic" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/in2.jpg" alt="Cycloidal reducer mounted on a NEMA stepper motor" loading="lazy"><figcaption>On a NEMA stepper</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><video data-autoplay data-src="../assets/web/cycloidHand.mp4" poster="../assets/web/cycloidHand.jpg" aria-label="Turning a cycloidal reducer by hand"></video><figcaption>Turned by hand</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/cy7.jpg" alt="A cycloidal reducer with its output hub" loading="lazy"><figcaption>Output hub</figcaption></figure>
+        </div>
+
+        <h3 class="ga-h3">In the arm</h3>
+        <p>Every actuator in the <a href="6dof.html">6DOF arm</a> uses one of these.</p>
+        <div class="pj-grid" style="--cols:4;">
+          <figure class="pj-tile light" style="--ar:1"><img data-zoom src="../assets/web/img/arm6.jpg" alt="CAD of an arm joint with its stepper motor and cycloidal reducer" loading="lazy"><figcaption>A joint in CAD</figcaption></figure>
+          <figure class="pj-tile light" style="--ar:1"><img data-zoom src="../assets/web/img/arm7.jpg" alt="CAD of two stepper motors with their cycloidal reducers" loading="lazy"><figcaption>Two joint drives</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/arm3.jpg" alt="A printed arm link with a cycloidal reducer" loading="lazy"><figcaption>In a printed link</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/finalarm3.jpg" alt="The finished 6DOF arm" loading="lazy"><figcaption>The finished arm</figcaption></figure>
         </div>
       </section>
 

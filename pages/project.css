@@ -130,6 +130,11 @@
 .pj-split.fig-wide { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
 .pj-split > div > p:last-child { margin-bottom: 0; }
 
+/* text with a column of two figures beside it */
+.pj-split.pj-side { grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); align-items: start; }
+.pj-stack { display: flex; flex-direction: column; gap: 0.6rem; }
+.pj-stack > .pj-tile { margin: 0; }
+
 /* a short list of facts (cost, time, materials) */
 .pj-facts {
   display: grid;
@@ -259,8 +264,11 @@
 
   .pj-grid { --cols: 2 !important; gap: 0.4rem; margin: 0.8rem 0; }
   .pj-tile.span2 { grid-column: span 2; }
+  .pj-grid.row3 { --cols: 3 !important; gap: 0.3rem; }
   .pj-tile figcaption { font-size: 0.62rem !important; padding: 1rem 0.5rem 0.35rem 0.5rem; }
-  .pj-split, .pj-split.fig-wide { grid-template-columns: minmax(0, 1fr); gap: 0.8rem; }
+  .pj-split, .pj-split.fig-wide, .pj-split.pj-side { grid-template-columns: minmax(0, 1fr); gap: 0.8rem; }
+  .pj-stack { flex-direction: row; gap: 0.4rem; }
+  .pj-stack > .pj-tile { flex: 1 1 0; min-width: 0; }
   .pj-facts { --cols: 2 !important; gap: 0.4rem; }
   .pj-fact { padding: 0.7rem 0.75rem; }
   .pj-fact b { font-size: 1.15rem; }
