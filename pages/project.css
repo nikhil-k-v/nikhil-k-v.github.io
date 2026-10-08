@@ -290,3 +290,31 @@
 .pj-top { width: var(--ga-col); margin: 1.6rem auto 0 auto; }
 .pj-top .pj-grid { margin: 0; }
 @media (max-width: 1000px) { .pj-top { margin-top: 0.9rem; } }
+
+/* ---------- motion platform: sketches and the comparison table ---------- */
+.pf-fig { margin: 0.6rem auto 1.4rem auto; max-width: 700px; }
+.pf-fig .pf-sketch { display: block; width: 100%; height: auto; overflow: visible; }
+.pf-fig.small { margin: 0; max-width: none; }
+.pf-fig figcaption { position: static; transform: none; white-space: normal !important; width: auto !important;
+  margin: 0.35rem 0 0 0; text-align: center; font-size: 0.78rem; color: var(--ga-ink-soft); }
+.pf-sketch text { font-weight: 500; }
+.pf-sim-row { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.75fr) minmax(0, 1fr); gap: 1.6rem; align-items: center; margin: 1.2rem 0; }
+.pf-text { margin-top: 1.2rem; }
+.pf-table { width: 100%; border-collapse: collapse; margin: 1.4rem 0 0.6rem 0; font-size: 0.86rem; }
+.pf-table th, .pf-table td { padding: 0.5rem 0.8rem 0.5rem 0; text-align: left; vertical-align: top; border-bottom: 1px solid var(--ga-rule); font-weight: 300; color: rgba(240, 240, 240, 0.9); overflow: visible !important; }
+.pf-table thead th { font-weight: 600; color: var(--light-primary); border-bottom: 1.5px solid rgba(240, 240, 240, 0.35); }
+.pf-table thead th span { display: block; font-size: 0.72rem; font-weight: 300; color: var(--ga-ink-soft); margin-top: 0.15rem; }
+.pf-table tbody th { font-weight: 500; color: var(--ga-ink-soft); white-space: nowrap; }
+.pf-table td:nth-child(2) { color: var(--light-primary); }
+
+@media (max-width: 1000px) {
+  .pf-sim-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.8rem; }
+  .pf-sim-row > div { grid-column: 1 / -1; }
+  .pf-table { font-size: 0.72rem; }
+  .pf-table th, .pf-table td { padding: 0.4rem 0.5rem 0.4rem 0; }
+  .pf-table tbody th { white-space: normal; }
+  .pf-fig figcaption { font-size: 0.66rem; }
+}
+/* page-styles.css forces Montserrat on everything with !important */
+.pf-sketch text { font-family: Caveat, cursive !important; }
+.pf-sketch text[style*="italic"] { font-family: "STIX Two Text", Georgia, serif !important; font-style: italic; }
