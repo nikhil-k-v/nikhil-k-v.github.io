@@ -20,11 +20,14 @@ Pushing straight to `master` is the normal workflow for this repo.
 | `pages/project.js` | Lazy-plays `video[data-autoplay][data-src]` in view; `img[data-zoom]` opens the modal. |
 | `pages/paper-edges.js` | Draws the scanline edges of the steering robot's white sheet. |
 | `pages/toggle-clamp.js`, `pages/cycloid-sim.js` | Small animated diagrams (four-bar toggle clamp; cycloidal disc sim). |
-| `assets/anim/` | Card/hero animations: MP4s rendered on black + JPG poster. |
+| `assets/anim/` | Card/hero animations rendered on black. Pages use the web copies `X-960.mp4` (≤1100 px screens) and `X-1280.mp4` via `<source media>`, poster `X-960.jpg`; width is pinned to 1920 px in CSS so layout matches the original renders. TUBAA uses trimmed seamless loops (`tubaa-loop`, `tubaa-6blade-loop`). |
+| `blend.js` | Safari/iOS only: copies `video.anims` / `video.anim` into a canvas that does the `lighten` blend (WebKit doesn't blend video). `?blendfix` forces it on for testing. |
 | `assets/web/` | Web copies of videos (≈960 px wide H.264, faststart) + JPG posters; `assets/web/img/` 1400 px photos; hand-made SVG diagrams. |
 | `assets/GenAutoVids/`, `old-media/` | Originals. Large; don't link them from pages — make a web copy. |
 | `assets/preview/` | Pre-rendered home previews (generated, see below). |
-| `tools/make-previews.py` | Generates `assets/preview/`. |
+| `tools/make-previews.py` | Generates `assets/preview/` (image URLs carry `?v=<hash>`). |
+| `tools/ga-diagrams.py` | Sketch SVGs for the steering page (clamp four-bar, shape arms). |
+| `tools/platform-diagrams.py` | Inline sketches on the platform page, injected between `<!-- sketch:NAME -->` markers (Caveat labels). |
 
 ## Home page previews
 
@@ -33,7 +36,9 @@ The split-view preview does **not** load the project page. `tools/make-previews.
 (500 px) and a tablet width (1100 px) with the title, meta strip, back button and
 section menu hidden and videos blanked, and writes `assets/preview/previews.json`
 listing where each video sits. `home.js` dithers the picture and plays those videos
-itself on top. Shows the card animation for ≥1.4 s ("LOADING"), then a dither dissolve.
+itself on top. Shows the card animation for ≥1.4 s (label reads LOADING, then unscrambles to
+VIEW PROJECT), then a dither dissolve during which both pictures keep playing; the page's
+header animation reuses the card's video so it never restarts.
 
 **Re-run it whenever the top of a project page changes** (hero, meta, first section):
 
@@ -68,7 +73,7 @@ Cards with no page (TUBAA → tubaa.dev, coming-soon) show their card animation;
   (`document.documentElement.scrollWidth === 390`). Arrows between stacked columns
   point down on phones.
 - Videos: `muted loop playsinline`, a `poster`, and `data-src` + `data-autoplay`
-  on long pages so they only download in view. Animations on black use
+  on long pages (project.js loads them ~1.5 screens ahead and plays them in view). Animations on black use
   `mix-blend-mode: lighten`.
 - New media: make a web copy, e.g.
   `ffmpeg -i in.mov -an -vf scale=960:-2 -c:v libx264 -crf 26 -preset slow -pix_fmt yuv420p -movflags +faststart out.mp4`
