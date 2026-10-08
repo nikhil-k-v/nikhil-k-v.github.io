@@ -14,7 +14,7 @@ Run from the repo root after changing the top of a project page:
 Needs Playwright (Python) and Chromium, plus ffmpeg for video stills.
 Writes assets/preview/*.jpg and assets/preview/previews.json.
 """
-import json, os, re, subprocess, sys, threading, functools, http.server, socketserver
+import json, os, re, subprocess, sys, threading, functools, http.server, socketserver, hashlib
 from urllib.parse import urljoin, urlparse
 from playwright.sync_api import sync_playwright
 from PIL import Image
@@ -52,6 +52,11 @@ def pages():
 def site_path(url):
     """absolute localhost URL → path relative to the site root"""
     return urlparse(url).path.lstrip('/')
+
+def versioned(rel):
+    """rel?v=<content hash>, so phones never keep showing an old picture"""
+    with open(os.path.join(ROOT, rel), 'rb') as f:
+        return rel + '?v=' + hashlib.md5(f.read()).hexdigest()[:8]
 
 def still_for(video_path):
     """first frame of a video, for videos without a poster"""
@@ -189,8 +194,8 @@ def main():
                 sheet.save(img, quality=78, optimize=True, progressive=True)
                 for m in media:
                     m['src'] = site_path(m['src'])
-                    m['poster'] = site_path(m['poster']) if m['poster'] else still_for(m['src'])
-                entry[str(v['w'])] = {'img': os.path.relpath(img, ROOT), 'w': v['w'], 'h': h, 'media': media}
+                    m['poster'] = versioned(site_path(m['poster']) if m['poster'] else still_for(m['src']))
+                entry[str(v['w'])] = {'img': versioned(os.path.relpath(img, ROOT)), 'w': v['w'], 'h': h, 'media': media}
                 ctx.close()
                 print(name, v['w'], h, len(media), 'videos')
             manifest[href] = entry

@@ -308,8 +308,10 @@
 .pf-table td:nth-child(2) { color: var(--light-primary); }
 
 @media (max-width: 1000px) {
-  .pf-sim-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.8rem; }
-  .pf-sim-row > div { grid-column: 1 / -1; }
+  .pf-sim-row { grid-template-columns: minmax(0, 1fr); gap: 1rem; justify-items: center; }
+  .pf-sim-row > div { justify-self: stretch; }
+  .pf-sim-row .pf-fig.small { width: 100%; max-width: 330px; }
+  .pf-fig { margin: 0.2rem -0.6rem 1rem -0.6rem; }
   .pf-table { font-size: 0.72rem; }
   .pf-table th, .pf-table td { padding: 0.4rem 0.5rem 0.4rem 0; }
   .pf-table tbody th { white-space: normal; }
