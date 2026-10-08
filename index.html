@@ -84,7 +84,7 @@
           <div class="divider"></div>
         </div>
 
-        <div class="box" data-external="https://tubaa.dev" data-preview-zoom="1.15">
+        <div class="box" data-external="https://tubaa.dev" data-preview-zoom="1.15" data-preview-alt="assets/anim/tubaa-6blade.mp4">
           <span class="s-title">PROPELLER RESEARCH</span>
           <video style="right: 0%; top: 50%; max-width: 115%; opacity: 95%; mix-blend-mode: lighten;" class="anims" src="assets/anim/tubaa.mp4" poster="assets/anim/tubaa.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
           <p class="index-label">V</p>
@@ -159,13 +159,13 @@
     </section>
 
     <!-- ============ PREVIEW (portrait phones/tablets only) ============
-         The selected project's page is snapshotted in a hidden iframe and
-         redrawn as an animated dither: regions drift between crisp blocks
+         A pre-rendered picture of the selected project's page (see
+         tools/make-previews.py), with its videos playing, is drawn as an
+         animated dither: regions drift between crisp blocks
          of the page and colour halftone dots that fade toward the edges.
          The whole pane is one link.                                       -->
     <section class="preview" id="preview" data-state="loading" aria-label="Selected project preview">
       <div class="preview-stage">
-        <iframe class="preview-frame" src="about:blank" title="" tabindex="-1" aria-hidden="true" scrolling="no"></iframe>
         <canvas class="preview-dither" aria-hidden="true"></canvas>
         <span class="preview-loading" aria-hidden="true">LOADING</span>
         <a class="preview-open" href="#">

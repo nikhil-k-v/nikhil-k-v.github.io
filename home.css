@@ -464,23 +464,18 @@ body.home {
     border-radius: 12px;
   }
 
-  /* The frame holds the live project page. It stays fully opaque so the
-     browser keeps painting it (GIFs only animate and videos only play when
-     painted), and a navy layer on top hides it; the canvas reads its media
-     and draws the dither above both. For other sites the cover is removed
-     and the canvas becomes a navy sheet with dot-shaped holes. */
-  .preview-frame {
+  /* videos for the preview play in here, under a navy cover; the canvas
+     copies their frames into the dithered picture */
+  .preview-media {
     position: absolute;
     top: 0;
     left: 0;
-    width: calc(100% / var(--ps));
-    height: calc(100% / var(--ps));
-    border: 0;
-    transform: scale(var(--ps));
-    transform-origin: 0 0;
-    background-color: var(--dark-primary);
+    width: 64px;
+    height: 36px;
+    overflow: hidden;
     pointer-events: none;
   }
+  .preview-media video { position: absolute; top: 0; left: 0; width: 64px; height: 36px; }
   .preview-stage::after {
     content: "";
     position: absolute;
@@ -488,7 +483,6 @@ body.home {
     background-color: var(--dark-primary);
     pointer-events: none;
   }
-  .preview-stage.is-live::after { display: none; }
 
   .preview-dither {
     position: absolute;

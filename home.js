@@ -277,6 +277,11 @@
     var mask = document.createElement('canvas'), mctx = mask.getContext('2d');
 
     var W = 0, H = 0, dpr = 1, cols = 0, rows = 0, dImg = null, mImg = null;
+    // cross-dissolve: the previous picture, frozen, and the order cells switch in
+    var old = null, trans = null, order = null;
+    var oldCv = document.createElement('canvas'), oldCtx = oldCv.getContext('2d');
+    var mask2 = document.createElement('canvas'), m2ctx = mask2.getContext('2d'), m2Img = null;
+    var blk = document.createElement('canvas'), blkCtx = blk.getContext('2d');
     var src = null, mode = 'empty', rgb = null, lum = null;
     var level = -1, tween = null, waiters = [];
     var raf = 0, running = false, last = 0, clock = 0, prevNow = 0;
@@ -297,8 +302,18 @@
       cols = Math.ceil(W / C); rows = Math.ceil(H / C);
       dots.width = cols * K; dots.height = rows * K;
       mask.width = cols; mask.height = rows;
+      mask2.width = cols; mask2.height = rows;
       dImg = dctx.createImageData(dots.width, dots.height);
       mImg = mctx.createImageData(cols, rows);
+      m2Img = m2ctx.createImageData(cols, rows);
+      // cells switch from the middle outward, grainy rather than as a ring
+      order = new Float32Array(cols * rows);
+      for (var oy = 0; oy < rows; oy++) for (var ox = 0; ox < cols; ox++) {
+        var hsh = Math.sin(ox * 12.9898 + oy * 78.233) * 43758.5453; hsh -= Math.floor(hsh);
+        var ou = (ox + 0.5) / cols - 0.5, ov = (oy + 0.5) / rows - 0.5;
+        order[oy * cols + ox] = Math.min(0.999, 0.6 * hsh + 0.55 * Math.sqrt(ou * ou + ov * ov) * 1.4);
+      }
+      old = null; trans = null;
       if (live) compose();
       sample();
       if (!running) draw(prevNow || performance.now());
@@ -399,6 +414,34 @@
       sample();
     }
 
+    /* swap to a new picture through a dither dissolve: cell by cell, the old
+       picture (frozen at this moment) gives way to the new one */
+    function crossTo(canvasOrNull, m, liveFn, opts) {
+      opts = opts || {};
+      var dur = REDUCED_MQ.matches ? 1 : (opts.dur || 900);
+      var to = opts.level === undefined ? 0 : opts.level;
+      if (level > -0.95 && W && (mode !== 'content' || rgb)) {
+        if (mode === 'content') {
+          if (oldCv.width !== src.width || oldCv.height !== src.height) { oldCv.width = src.width; oldCv.height = src.height; }
+          oldCtx.clearRect(0, 0, oldCv.width, oldCv.height);
+          oldCtx.drawImage(src, 0, 0);
+          old = { mode: 'content', rgb: rgb.slice(), lum: lum.slice(), level: level };
+        } else {
+          old = { mode: mode === 'mask' ? 'empty' : mode, level: level };
+        }
+        trans = { t0: performance.now(), dur: dur };
+        tween = null;
+        level = to;
+        setSource(canvasOrNull, m, liveFn);
+        kick();
+        if (!running) draw(performance.now() + dur);
+      } else {
+        old = null; trans = null;
+        setSource(canvasOrNull, m, liveFn);
+        animate(to, dur, easeOut);
+      }
+    }
+
     function write(d, DW, x0, y0, s, r, g, bl, a) {
       for (var yy = 0; yy < s; yy++) {
         var idx = ((y0 + yy) * DW + x0) * 4;
@@ -432,9 +475,20 @@
       }
 
       var vis = level < -1 ? 0 : level > 0 ? 1 : 1 + level;
-      var d = dImg.data, m = mImg.data, DW = cols * K;
+      var d = dImg.data, m = mImg.data, m2 = m2Img.data, DW = cols * K;
       d.fill(0);
       m.fill(0);
+      var tp = 2, oldVis = 0, oldLevel = 0;
+      if (trans) {
+        tp = (now - trans.t0) / trans.dur;
+        if (tp >= 1) { trans = null; old = null; tp = 2; }
+        else {
+          tp = easeInOut(tp);
+          m2.fill(0);
+          oldLevel = old.level;
+          oldVis = oldLevel < -1 ? 0 : oldLevel > 0 ? 1 : 1 + oldLevel;
+        }
+      }
 
       // whole pane drifts between "a few solid clumps" and "all dots"
       var breathe = 0.5 + 0.5 * Math.sin(t * 0.31);
@@ -463,6 +517,9 @@
           var px = (cx + 0.5) * C;
           var e = Math.min(ey, smoothstep(0, FALL, Math.min(px, W - px)));
           var ci = cy * cols + cx;
+          var useOld = tp < 2 && order[ci] >= tp;
+          var cm = useOld ? old.mode : mode;
+          var cvis = useOld ? oldVis : vis;
 
           // metaball sum: 1 at a blob's centre, 0.5 at its radius, tails merge
           var sum = 0;
@@ -477,14 +534,14 @@
           var u = (px - hx) / hx, v = (py - hy) / hy;
           var r = Math.sqrt(u * u + v * v);
           var centre = 1 - smoothstep(0.1, 1.05, r);     // outer ring stays less blocky
-          var f = (field * 0.78 + centre * 0.18 + 0.06) * gain * e + level;
+          var f = (field * 0.78 + centre * 0.18 + 0.06) * gain * e + (useOld ? oldLevel : level);
 
           var x0 = cx * K, y0 = cy * K;
           var block = f >= TH && e > 0.55 && r < 0.75;
           var q = f / TH; q = q < 0 ? 0 : q > 1 ? 1 : q;
           var bayer = BAYER4[by | (cx & 3)];
 
-          if (mode === 'mask') {
+          if (cm === 'mask') {
             if (block) continue;                       // live page shows through
             var hole = Math.floor(q * (K - 1) + bayer - 0.25);
             if (hole < 0) hole = 0;
@@ -497,15 +554,16 @@
             continue;
           }
 
-          if (block && mode === 'content') {
+          if (block && cm === 'content') {
             var ba = e > 0.85 ? 1 : e > 0.7 ? 0.72 : 0.45;
-            m[ci * 4 + 3] = 255 * ba * vis;
+            (useOld ? m2 : m)[ci * 4 + 3] = 255 * ba * cvis;
             continue;
           }
 
           var L, r, g, bl;
-          if (mode === 'content') {
-            L = lum[ci]; r = rgb[ci * 3]; g = rgb[ci * 3 + 1]; bl = rgb[ci * 3 + 2];
+          if (cm === 'content') {
+            var A = useOld ? old.rgb : rgb, Lm = useOld ? old.lum : lum;
+            L = Lm[ci]; r = A[ci * 3]; g = A[ci * 3 + 1]; bl = A[ci * 3 + 2];
           } else {
             L = EMPTY_L; r = EMPTY_RGB[0]; g = EMPTY_RGB[1]; bl = EMPTY_RGB[2];
             if (block) q = 1;
@@ -519,7 +577,7 @@
           if (s <= 0) continue;
           if (s > K - 1) s = K - 1;
 
-          var a = (0.55 + 0.45 * q) * Math.min(1, e * 1.3) * vis;
+          var a = (0.55 + 0.45 * q) * Math.min(1, e * 1.3) * cvis;
           a = Math.ceil(a * 4) / 4;                   // stepped, like the paper edges
           if (a <= 0) continue;
 
@@ -534,6 +592,20 @@
       ctx.clearRect(0, 0, cw, ch);
       ctx.imageSmoothingEnabled = false;
 
+      var oldBlocks = tp < 2 && old.mode === 'content';
+      if (oldBlocks) {
+        // old blocks go through a scratch canvas so the new ones can follow
+        if (blk.width !== cw || blk.height !== ch) { blk.width = cw; blk.height = ch; }
+        m2ctx.putImageData(m2Img, 0, 0);
+        blkCtx.globalCompositeOperation = 'source-over';
+        blkCtx.clearRect(0, 0, cw, ch);
+        blkCtx.imageSmoothingEnabled = false;
+        blkCtx.drawImage(mask2, 0, 0, gw, gh);
+        blkCtx.globalCompositeOperation = 'source-in';
+        blkCtx.imageSmoothingEnabled = true;
+        blkCtx.drawImage(oldCv, 0, 0, W * dpr, H * dpr);
+        blkCtx.globalCompositeOperation = 'source-over';
+      }
       if (mode === 'content' && src) {
         mctx.putImageData(mImg, 0, 0);
         ctx.drawImage(mask, 0, 0, gw, gh);
@@ -543,6 +615,7 @@
         ctx.globalCompositeOperation = 'source-over';
         ctx.imageSmoothingEnabled = false;
       }
+      if (oldBlocks) ctx.drawImage(blk, 0, 0);
 
       dctx.putImageData(dImg, 0, 0);
       ctx.drawImage(dots, 0, 0, gw, gh);
@@ -551,8 +624,8 @@
     function loop(now) {
       raf = 0;
       if (!running) return;
-      if (now - last >= (busy ? BUSY_GAP : FPS_GAP) || (tween && !busy)) { last = now; draw(now); }
-      if (REDUCED_MQ.matches && !tween) { draw(now); return; }   // one still frame
+      if (now - last >= (busy ? BUSY_GAP : FPS_GAP) || ((tween || trans) && !busy)) { last = now; draw(now); }
+      if (REDUCED_MQ.matches && !tween && !trans) { draw(now); return; }   // one still frame
       raf = requestAnimationFrame(loop);
     }
 
@@ -594,7 +667,7 @@
       animate(to === undefined ? 0 : to, 900, easeOut);
     }
 
-    function hold() { tween = null; waiters = []; level = -1; draw(performance.now()); }
+    function hold() { tween = null; trans = null; old = null; waiters = []; level = -1; draw(performance.now()); }
 
     if ('ResizeObserver' in window) new ResizeObserver(resize).observe(stage);
     window.addEventListener('resize', resize);
@@ -607,7 +680,7 @@
     return {
       setBusy: function (b) { busy = !!b; },
       setLive: setLive,
-      setSource: setSource, cover: cover, reveal: reveal, hold: hold,
+      setSource: setSource, crossTo: crossTo, cover: cover, reveal: reveal, hold: hold,
       start: start, stop: stop, resize: resize,
       size: function () { return { w: W, h: H, dpr: dpr }; }
     };
@@ -615,14 +688,12 @@
 
   /* ------------------------------------------------------------------
      Split-view preview
-     Same-origin project pages load in a hidden iframe, get snapshotted
-     once with html2canvas (top of the page, at pane size), and are then
-     drawn by the renderer. Snapshots are cached and the iframe is emptied
-     afterwards, so the big GIFs don't stay in memory.
-     Cross-origin pages (tubaa.dev) can't be snapshotted, so the iframe
-     stays live underneath and the renderer runs in 'mask' mode.
-     The iframe is navigated with location.replace() so the preview never
-     adds entries to the browser's back history.
+     Each project page has a pre-rendered picture of its top (made by
+     tools/make-previews.py, at a phone and a tablet width) plus a list of
+     where its videos sit. The renderer dithers the picture and the videos
+     are played here and painted over it, so nothing of the project page
+     itself has to load. Projects without a page show their card's
+     animation instead.
      ------------------------------------------------------------------ */
   var Preview = (function () {
     var pane = document.getElementById('preview');
@@ -630,85 +701,66 @@
     if (!pane) return noop;
 
     var stage = pane.querySelector('.preview-stage');
-    var frame = pane.querySelector('.preview-frame');
     var link = pane.querySelector('.preview-open');
     var ctaEl = pane.querySelector('.preview-cta');
     var R = createRenderer(pane.querySelector('.preview-dither'), stage);
 
-    var H2C_SRC = '/vendor/html2canvas.min.js';
-    var PREVIEW_CSS =
-      'html,body{overflow:hidden!important;scrollbar-width:none!important}' +
-      '::-webkit-scrollbar{display:none!important}' +
-      '#back-to-home,.ga-nav{display:none!important}';
+    var PS = 0.72;          // how far the page is zoomed out in the pane
+    var MIN_LOAD = 1400;    // the loading animation always gets this long
+    var DISSOLVE = 1100;
+    var CYCLE = 5200;       // cards with two animations swap this often
 
-    var cache = {};        // url → snapshot canvas
-    if (/[?&]previewdebug\b/.test(location.search)) window.__previewCache = cache;
-    var token = 0;         // invalidates stale work when the user taps quickly
-    var current = null;    // box being previewed
+    var manifest = null;
+    var manifestP = fetch('assets/preview/previews.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .catch(function () { return {}; })
+      .then(function (j) { manifest = j; return j; });
 
-    function absUrl(href) { return new URL(href, window.location.href).href; }
-    function samePage(a, b) {
-      try {
-        var A = new URL(a), B = new URL(b);
-        return A.origin === B.origin && A.pathname === B.pathname;
-      } catch (_) { return false; }
-    }
+    // videos play in here, under the navy cover, and are copied into the canvas
+    var holder = document.createElement('div');
+    holder.className = 'preview-media';
+    holder.setAttribute('aria-hidden', 'true');
+    stage.insertBefore(holder, stage.firstChild);
 
-    /* html2canvas has to run inside the project page's own window: its
-       document clone resolves relative URLs (stylesheets, images) against
-       whichever page called it */
-    var h2cSource = null;
-    function fetchH2C() {
-      if (!h2cSource) {
-        h2cSource = fetch(absUrl(H2C_SRC)).then(function (r) {
-          if (!r.ok) throw new Error('h2c ' + r.status);
-          return r.text();
+    var token = 0, current = null, cycleTimer = 0, loadTimer = 0;
+    var playing = [];
+    var images = {};
+
+    function loadImage(url) {
+      if (!images[url]) {
+        images[url] = new Promise(function (resolve, reject) {
+          var im = new Image();
+          im.decoding = 'async';
+          im.onload = function () { resolve(im); };
+          im.onerror = function () { delete images[url]; reject(new Error('img')); };
+          im.src = url;
         });
-        h2cSource.catch(function () { h2cSource = null; });
       }
-      return h2cSource;
+      return images[url];
     }
 
-    /* The library is fetched once by this page, then its source is run as an
-       inline script inside each project page. Loading it as a separate file
-       from inside the frame queued it behind all of that page's videos. */
-    function loadH2C(win, doc) {
-      if (win.html2canvas) return Promise.resolve(win.html2canvas);
-      return fetchH2C().then(function (src) {
-        var s = doc.createElement('script');
-        s.textContent = src;
-        (doc.head || doc.documentElement).appendChild(s);
-        if (!win.html2canvas) throw new Error('h2c');
-        return win.html2canvas;
+    function makeVideo(src) {
+      var v = document.createElement('video');
+      v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true;
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.preload = 'auto';
+      v.src = src;
+      holder.appendChild(v);
+      playing.push(v);
+      var pr = v.play();
+      if (pr && pr.catch) pr.catch(function () {});
+      return v;
+    }
+
+    function clearMedia() {
+      playing.forEach(function (v) {
+        try { v.pause(); v.removeAttribute('src'); v.load(); } catch (_) {}
+        if (v.parentNode) v.parentNode.removeChild(v);
       });
-    }
-
-    /* copy into a canvas owned by this page, so the snapshot survives the
-       frame being emptied */
-    function adopt(c) {
-      var out = document.createElement('canvas');
-      out.width = c.width; out.height = c.height;
-      out.getContext('2d').drawImage(c, 0, 0);
-      return out;
-    }
-
-    function navigate(url) {
-      try { frame.contentWindow.location.replace(url); }
-      catch (_) { frame.src = url; }
-    }
-
-    function decorate(doc) {
-      if (!doc || !doc.documentElement) return;
-      doc.documentElement.classList.add('is-preview');
-      if (doc.getElementById('__preview_css')) return;
-      var s = doc.createElement('style');
-      s.id = '__preview_css';
-      s.textContent = PREVIEW_CSS;
-      (doc.head || doc.documentElement).appendChild(s);
+      playing = [];
     }
 
     function setState(s) { pane.setAttribute('data-state', s); }
-    function setLive(on) { stage.classList.toggle('is-live', !!on); }
 
     function setLink(p) {
       link.removeAttribute('target');
@@ -732,151 +784,69 @@
       }
     }
 
-    /* wait until the page in the frame is parsed and styled, then a little
-       longer for the hero image, but never more than ~3s in total */
-    /* A project page starts downloading every video (tens of MB each) and
-       every photo as soon as it parses, and that traffic is what made
-       snapshots slow. So while the page loads in the hidden frame:
-         - every video's source is parked (download aborted) until the
-           snapshot is done; then only the videos in the first screen get
-           theirs back (see wakeMedia)
-         - images below the first screen are dropped for good */
-    function starve(doc) {
-      var vids = doc.getElementsByTagName('video');
-      for (var i = 0; i < vids.length; i++) {
-        var v = vids[i];
-        if (v.__pv) continue;
-        v.__pv = { src: v.getAttribute('src'), sources: [] };
-        try {
-          v.pause();
-          v.removeAttribute('autoplay');
-          if (v.__pv.src) v.removeAttribute('src');
-          var srcs = v.getElementsByTagName('source');
-          for (var j = 0; j < srcs.length; j++) {
-            v.__pv.sources.push(srcs[j].getAttribute('src'));
-            srcs[j].removeAttribute('src');
-          }
-          v.load();                     // aborts any download in flight
-        } catch (_) {}
-      }
-      if (doc.readyState === 'loading') return;   // no reliable layout yet
-      var vh = doc.documentElement.clientHeight;
-      var imgs = doc.images;
-      for (var k = 0; k < imgs.length; k++) {
-        var im = imgs[k];
-        if (im.__pv || im.complete) continue;
-        if (im.getBoundingClientRect().top > vh * 1.1) {
-          im.__pv = true;
-          im.removeAttribute('srcset');
-          im.removeAttribute('src');
-        }
-      }
+    /* the pre-rendered width closest to how wide the page is in this pane */
+    function pickVariant(entry) {
+      var want = (stage.clientWidth || 360) / PS, best = null;
+      Object.keys(entry).forEach(function (k) {
+        var v = entry[k];
+        if (!best || Math.abs(v.w - want) < Math.abs(best.w - want)) best = v;
+      });
+      return best;
     }
 
-    /* give the first-screen videos their sources back and start them */
-    function wakeMedia(doc) {
-      var vh = doc.documentElement.clientHeight;
-      var vids = doc.getElementsByTagName('video');
-      for (var i = 0; i < vids.length; i++) {
-        var v = vids[i], pv = v.__pv;
-        var r = v.getBoundingClientRect();
-        if (r.bottom <= 0 || r.top >= vh) continue;
-        try {
-          if (pv && !pv.woken) {
-            pv.woken = true;
-            if (pv.src) v.setAttribute('src', pv.src);
-            var srcs = v.getElementsByTagName('source');
-            for (var j = 0; j < srcs.length; j++) if (pv.sources[j]) srcs[j].setAttribute('src', pv.sources[j]);
-            v.preload = 'auto';
-            v.load();
-          }
-          v.muted = true;
-          v.loop = true;
-          v.playsInline = true;
-          if (v.paused) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
-        } catch (_) {}
-      }
+    /* the picture, cut to the pane's shape (page width across, from the top) */
+    function crop(img) {
+      var c = document.createElement('canvas');
+      var cw = img.naturalWidth;
+      var ch = Math.round(cw * (stage.clientHeight || 1) / (stage.clientWidth || 1));
+      c.width = cw; c.height = ch;
+      var x = c.getContext('2d');
+      x.fillStyle = '#051220';
+      x.fillRect(0, 0, cw, ch);
+      x.drawImage(img, 0, 0);
+      return c;
     }
 
-    /* Paints the page's first-screen images, GIFs and videos into the
-       preview each refresh, at their place on the page, so they load in
-       and move. Positions are re-read twice a second in case the page's
-       own scripts resize things. */
     var BLENDS = { lighten: 1, screen: 1, multiply: 1, darken: 1, overlay: 1, 'color-dodge': 1, difference: 1 };
-    function mediaLayer(doc, my) {
-      var items = [], scanned = 0;
 
-      function clipBox(el, win) {
-        for (var p = el.parentElement; p && p !== doc.body && p !== doc.documentElement; p = p.parentElement) {
-          var cs = win.getComputedStyle(p);
-          if (cs.overflowX !== 'visible' || cs.overflowY !== 'visible') return p.getBoundingClientRect();
-        }
-        return null;
-      }
-
-      function scan() {
-        var win = doc.defaultView;
-        if (!win) return;
-        var vw = doc.documentElement.clientWidth, vh = doc.documentElement.clientHeight;
-        items = [];
-        var els = doc.querySelectorAll('img, video');
-        for (var i = 0; i < els.length; i++) {
-          var el = els[i], r = el.getBoundingClientRect();
-          if (r.width < 2 || r.height < 2 || r.bottom <= 0 || r.top >= vh || r.right <= 0 || r.left >= vw) continue;
-          var cs = win.getComputedStyle(el);
-          if (cs.display === 'none' || cs.visibility === 'hidden') continue;
-          var op = 1;
-          for (var a = el; a && a.nodeType === 1; a = a.parentElement) op *= parseFloat(win.getComputedStyle(a).opacity) || 0;
-          if (op <= 0.01) continue;
-          var c = clipBox(el, win);
-          var x0 = Math.max(0, c ? c.left : 0), y0 = Math.max(0, c ? c.top : 0);
-          var x1 = Math.min(vw, c ? c.right : vw), y1 = Math.min(vh, c ? c.bottom : vh);
-          if (x1 <= x0 || y1 <= y0) continue;
-          items.push({
-            el: el, r: r, clip: [x0, y0, x1 - x0, y1 - y0],
-            fit: cs.objectFit, filter: cs.filter && cs.filter !== 'none' ? cs.filter : 'none', op: op,
-            blend: BLENDS[cs.mixBlendMode] ? cs.mixBlendMode : 'source-over'
-          });
-        }
-        scanned = performance.now();
-      }
-
+    /* paints the page's videos (or their stills, until they play) where
+       they sit on the page */
+    function pageLayer(v) {
+      var items = (v.media || []).map(function (m) {
+        var it = { m: m, vid: makeVideo(m.src), still: null };
+        if (m.poster) loadImage(m.poster).then(function (im) { it.still = im; }, function () {});
+        return it;
+      });
       return function paint(ctx, w) {
-        if (my !== token || !doc.defaultView) return;
-        if (performance.now() - scanned > 500) scan();
-        var k = w / (doc.documentElement.clientWidth || 1);
+        var k = w / v.w;
         for (var i = 0; i < items.length; i++) {
-          var it = items[i], el = it.el, nw, nh;
-          if (el.tagName === 'VIDEO') {
-            if (el.readyState < 2) continue;
-            nw = el.videoWidth; nh = el.videoHeight;
-          } else {
-            if (!el.complete || !el.naturalWidth) continue;
-            nw = el.naturalWidth; nh = el.naturalHeight;
-          }
-          var r = it.r, dx = r.left, dy = r.top, dw = r.width, dh = r.height;
+          var it = items[i], m = it.m, el = null, nw, nh;
+          if (it.vid.readyState >= 2 && it.vid.videoWidth) { el = it.vid; nw = el.videoWidth; nh = el.videoHeight; }
+          else if (it.still) { el = it.still; nw = el.naturalWidth; nh = el.naturalHeight; }
+          if (!el || !nw || !nh) continue;
+          var dx = m.r[0], dy = m.r[1], dw = m.r[2], dh = m.r[3];
           var sx = 0, sy = 0, sw = nw, sh = nh, sc;
-          if (it.fit === 'cover') {
+          if (m.fit === 'cover') {
             sc = Math.max(dw / nw, dh / nh); sw = dw / sc; sh = dh / sc; sx = (nw - sw) / 2; sy = (nh - sh) / 2;
-          } else if (it.fit === 'contain' || it.fit === 'scale-down') {
+          } else if (m.fit !== 'fill') {      // contain (and the default for video)
             sc = Math.min(dw / nw, dh / nh); dx += (dw - nw * sc) / 2; dy += (dh - nh * sc) / 2; dw = nw * sc; dh = nh * sc;
           }
           ctx.save();
           ctx.beginPath();
-          ctx.rect(it.clip[0] * k, it.clip[1] * k, it.clip[2] * k, it.clip[3] * k);
+          ctx.rect(m.clip[0] * k, m.clip[1] * k, m.clip[2] * k, m.clip[3] * k);
           ctx.clip();
-          ctx.globalAlpha = Math.min(1, it.op);
-          ctx.filter = it.filter;
-          ctx.globalCompositeOperation = it.blend;
+          ctx.globalAlpha = Math.min(1, m.op);
+          if (m.filter && m.filter !== 'none') ctx.filter = m.filter;
+          ctx.globalCompositeOperation = BLENDS[m.blend] ? m.blend : 'source-over';
           try { ctx.drawImage(el, sx, sy, sw, sh, dx * k, dy * k, dw * k, dh * k); } catch (_) {}
           ctx.restore();
         }
       };
     }
 
-    /* the card's own animation, live, for the moment before the page arrives */
-    function cardLayer(box) {
-      var el = box.querySelector('.anims');
+    /* a card's animation, centred and enlarged (black drops out) */
+    function cardLayer(box, el) {
+      el = el || box.querySelector('.anims');
       if (!el) return null;
       var isVideo = el.tagName === 'VIDEO';
       var zoom = parseFloat(box.getAttribute('data-preview-zoom')) || 2.3;
@@ -887,237 +857,75 @@
         // most card renders have wide empty margins, so scale up past 'contain'
         var k = Math.min(w / nw, h / nh) * zoom;
         var dw = nw * k, dh = nh * k;
-        ctx.globalCompositeOperation = 'lighten';     // black background drops out
+        ctx.globalCompositeOperation = 'lighten';
         try { ctx.drawImage(el, (w - dw) / 2, (h - dh) / 2, dw, dh); } catch (_) {}
         ctx.globalCompositeOperation = 'source-over';
       };
     }
 
-    /* wait until the page is parsed and styled and the images in its first
-       screen have loaded (capped), not for every video further down */
-    function waitForPage(url, my) {
-      return new Promise(function (resolve, reject) {
-        var start = performance.now();
-        var interactiveAt = 0;
-        (function poll() {
-          if (my !== token) { reject(new Error('stale')); return; }
-          var doc = null;
-          try { doc = frame.contentDocument; } catch (_) { reject(new Error('cross-origin')); return; }
-          var here = doc && samePage(doc.location.href, url);
-          if (here) starve(doc);
-          var ok = here && doc.readyState !== 'loading';
-          if (ok) {
-            decorate(doc);
-            if (!interactiveAt) interactiveAt = performance.now();
-            var since = performance.now() - interactiveAt;
-            var vh = doc.documentElement.clientHeight;
-            var imgsReady = Array.prototype.every.call(doc.images, function (im) {
-              return im.complete || im.getBoundingClientRect().top > vh;
-            });
-            var fontsReady = !doc.fonts || doc.fonts.status === 'loaded';
-            // pages that draw part of themselves with JS (the scanline edges on
-            // the steering robot page) need that drawn before the snapshot
-            var edge = doc.querySelector('.ga-paper') ? doc.querySelector('.ga-edge') : null;
-            var drawnReady = !edge || !!edge.style.width;    // set once it has been drawn
-            if ((imgsReady && fontsReady && drawnReady && since > 100) || since > 1600) { resolve(doc); return; }
-          }
-          if (performance.now() - start > 12000) { reject(new Error('timeout')); return; }
-          setTimeout(poll, here && doc.readyState === 'loading' ? 15 : 60);
-        })();
-      });
-    }
-
-    function capture(url, my) {
-      navigate(url);
-      var doc;
-      return waitForPage(url, my).then(function (d) {
-        doc = d;
-        return loadH2C(frame.contentWindow, doc);
-      }).then(function () {
-        if (my !== token) throw new Error('stale');
-        return Promise.resolve().then(function () {
-          if (my !== token) throw new Error('stale');
-          var size = R.size();
-          var vw = doc.documentElement.clientWidth || frame.clientWidth;
-          var vh = doc.documentElement.clientHeight || frame.clientHeight;
-          var win = frame.contentWindow;
-          var els = doc.body.getElementsByTagName('*');
-          for (var q = 0; q < els.length; q++) {
-            var ecs = win.getComputedStyle(els[q]);
-            if (ecs.isolation === 'isolate' && ecs.zIndex === 'auto') {
-              els[q].setAttribute('data-pv-iso', ecs.position === 'static' ? 'static' : '');
-            }
-          }
-          win.__snapOpts = {
-            backgroundColor: '#051220',
-            x: 0, y: 0, scrollX: 0, scrollY: 0,
-            width: vw, height: vh,
-            windowWidth: vw, windowHeight: vh,
-            scale: (size.w * size.dpr) / vw,
-            useCORS: true,
-            imageTimeout: 1500,
-            logging: false,
-            // only copy what's in the first screen; the rest of a long page
-            // (dozens of videos and photos) is what made this slow
-            // media is painted live on top, so leave it out of the still picture
-            // (hidden, not removed, so nothing reflows)
-            onclone: function (cdoc) {
-              var m = cdoc.querySelectorAll('img, video');
-              for (var i = 0; i < m.length; i++) m[i].style.visibility = 'hidden';
-              // html2canvas ignores "isolation: isolate", so children with a
-              // negative z-index (the steering robot page's scanline edges)
-              // would be painted behind their parent's background. An explicit
-              // z-index gives the same layering in a way it understands.
-              var iso = cdoc.querySelectorAll('[data-pv-iso]');
-              for (var j = 0; j < iso.length; j++) {
-                if (iso[j].getAttribute('data-pv-iso') === 'static') iso[j].style.position = 'relative';
-                iso[j].style.zIndex = '0';
-              }
-            },
-            ignoreElements: function (el) {
-              var tag = el.tagName;
-              if (tag === 'SCRIPT') return true;
-              // don't stall on media that hasn't arrived yet
-              if (tag === 'IMG' && !(el.complete && el.naturalWidth)) return true;
-              if (tag === 'VIDEO' && el.readyState < 2) return true;
-              var r = el.getBoundingClientRect();
-              return r.top > vh + 10 || (r.bottom < -10 && r.height > 0);
-            }
-          };
-          // started from a script element inside the frame, so the page is
-          // the "entry" document and its relative URLs resolve correctly
-          var run = doc.createElement('script');
-          run.textContent = 'window.__snap = window.html2canvas(document.body, window.__snapOpts);';
-          (doc.head || doc.documentElement).appendChild(run);
-          if (!win.__snap) throw new Error('h2c');
-          return win.__snap.then(adopt);
-        });
-      });
-    }
-
-    /* for projects without a page: the card's own animation on navy */
-    /* snapshots survive reloads of the home page for the rest of the
-       browser session (coming back from a project page is instant) */
-    var STORE_VER = 'pv5';   // bump when the snapshot format changes
-    function storeKey(url) {
-      var z = R.size();
-      return STORE_VER + ':' + url + ':' + Math.round(z.w * z.dpr) + 'x' + Math.round(z.h * z.dpr);
-    }
-    function storeSave(url, c) {
-      try { sessionStorage.setItem(storeKey(url), c.toDataURL('image/jpeg', 0.82)); } catch (_) {}
-    }
-    function storeLoad(url) {
-      var data = null;
-      try { data = sessionStorage.getItem(storeKey(url)); } catch (_) {}
-      if (!data) return Promise.resolve(null);
-      return new Promise(function (resolve) {
-        var img = new Image();
-        img.onload = function () {
-          var c = document.createElement('canvas');
-          c.width = img.naturalWidth; c.height = img.naturalHeight;
-          c.getContext('2d').drawImage(img, 0, 0);
-          resolve(c);
-        };
-        img.onerror = function () { resolve(null); };
-        img.src = data;
-      });
-    }
-
-    /* Hand the renderer a still picture plus a live-media painter, swapped
-       in under the dissolve. pageLive can arrive later (once the page's
-       media is ready), so it's held here and attached whenever it shows up. */
-    var pageLive = null, shown = 0;
-
-    function present(box, source, m, my, liveFn) {
-      R.cover(function () {
-        if (my !== token) return;
-        R.setSource(source, m, liveFn !== undefined ? liveFn : pageLive);
-        setState(m === 'empty' ? 'static' : 'frame');
-        R.reveal(0);
-        shown = my;
-      });
-    }
-
-    function attachLive(doc, my) {
-      if (my !== token) return;
-      wakeMedia(doc);
-      pageLive = mediaLayer(doc, my);
-      if (shown === my) R.setLive(pageLive);
+    /* two animations on one card (TUBAA): swap between them every few seconds */
+    function alternate(box, first, altSrc, my) {
+      var vid = makeVideo(altSrc);
+      var second = cardLayer(box, vid);
+      var onFirst = true;
+      (function next(delay) {
+        cycleTimer = setTimeout(function () {
+          if (my !== token) return;
+          if (onFirst && vid.readyState < 2) { next(400); return; }
+          onFirst = !onFirst;
+          R.crossTo(null, 'content', onFirst ? first : second, { dur: 1500 });
+          next(CYCLE);
+        }, delay);
+      })(CYCLE);
     }
 
     function show(box) {
-      fetchH2C();
       var p = projectOf(box);
       var my = ++token;
       current = box;
-      pageLive = null;
-      shown = 0;
+      clearTimeout(cycleTimer);
+      clearTimeout(loadTimer);
+      clearMedia();
       setLink(p);
       link.classList.remove('nudge');
       R.start();
 
-      R.cover(function () {
-        if (my !== token) return;
+      var card = cardLayer(box);
 
-        // no page of ours to show (coming soon, or hosted on another site):
-        // the card's own animation, live. The button still links out.
-        if (!p.href) {
-          setLive(false);
-          navigate('about:blank');
-          var card = cardLayer(box);
-          present(box, null, card ? 'content' : 'empty', my, card);
-          return;
-        }
+      // no page of ours: the card's own animation, live
+      if (!p.href) {
+        setState('static');
+        R.crossTo(null, card ? 'content' : 'empty', card, { dur: DISSOLVE });
+        var alt = box.getAttribute('data-preview-alt');
+        if (alt && card) alternate(box, card, alt, my);
+        return;
+      }
 
-        // project page: the frame always loads it (its media is painted live);
-        // the still picture comes from memory, the session cache, or a capture
-        var url = absUrl(p.href);
-        setLive(false);
+      // the loading animation (the card's animation, dimmed) plays for a
+      // moment, then the page dissolves in over it
+      setState('loading');
+      R.crossTo(null, card ? 'content' : 'empty', card, { dur: 700, level: card ? -0.15 : -0.3 });
+      var t0 = performance.now();
 
-        var cached = cache[url];
-        if (cached) {
-          present(box, cached, 'content', my);
-          navigate(url);
-          waitForPage(url, my).then(function (doc) { attachLive(doc, my); }, function () {});
-          return;
-        }
-
-        // straight away: the card's own animation, live, as a placeholder
-        var card = cardLayer(box);
-        R.setSource(null, card ? 'content' : 'empty', card);
-        R.reveal(card ? -0.15 : -0.3);
-        setState('loading');
-
-        storeLoad(url).then(function (stored) {
-          if (my !== token) return null;
-          if (stored) {
-            navigate(url);
-            waitForPage(url, my).then(function (doc) { attachLive(doc, my); }, function () {});
-            return stored;
-          }
-          R.setBusy(true);
-          var idle = function (x) { R.setBusy(false); return x; };
-          return capture(url, my).then(idle, function (err) { idle(); throw err; }).then(function (snap) {
-            storeSave(url, snap);
-            try { attachLive(frame.contentDocument, my); } catch (_) {}
-            return snap;
-          });
-        }).then(function (snap) {
-          if (!snap) return;
-          cache[url] = snap;
+      manifestP.then(function () {
+        if (my !== token) return null;
+        var entry = manifest && manifest[p.href];
+        if (!entry) throw new Error('no preview');
+        var v = pickVariant(entry);
+        return loadImage(v.img).then(function (img) {
           if (my !== token) return;
-          present(box, snap, 'content', my);
-        }).catch(function (err) {
-          if (my !== token || (err && err.message === 'stale')) return;
-          // couldn't draw it: fall back to the live page under the dot mask
-          R.cover(function () {
+          var base = crop(img);
+          var live = pageLayer(v);      // videos start now, so they're ready for the reveal
+          loadTimer = setTimeout(function () {
             if (my !== token) return;
-            R.setSource(null, 'mask');
-            setLive(true);
             setState('frame');
-            R.reveal(0);
-          });
+            R.crossTo(base, 'content', live, { dur: DISSOLVE });
+          }, Math.max(0, MIN_LOAD - (performance.now() - t0)));
         });
+      }).catch(function () {
+        if (my !== token) return;
+        setState('static');
+        R.reveal(0);
       });
     }
 
@@ -1129,19 +937,23 @@
 
     function unload() {
       token++;
-      pageLive = null;
       current = null;
-      setLive(false);
+      clearTimeout(cycleTimer);
+      clearTimeout(loadTimer);
+      clearMedia();
       R.stop();
       R.hold();
-      navigate('about:blank');
       setState('loading');
     }
 
     function resume() {
       if (!current) return;
       R.start();
+      playing.forEach(function (v) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); });
     }
+
+    // phones pause background video when the tab is hidden
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) resume(); });
 
     return { show: show, nudge: nudge, unload: unload, resume: resume };
   })();
