@@ -9,7 +9,7 @@ Writes into assets/GenAutoVids/slides/:
   shape-solution.svg  the wheel coupling's two lower arms on a round wheel: they pivot
                       below the wheel's centre, so the arc each clamp sweeps is not
                       concentric with the rim and crosses it at exactly one point
-  shape-examples.svg  the same arms on an oval, a squarish and a flat-bottomed wheel
+  shape-examples.svg  the same arms on a round, a long tapered, a flat-bottomed and an oval wheel
 
 Lines get a small deterministic wobble so they read as sketched.
 """
@@ -209,9 +209,27 @@ def arms(mid, c, s, side_scale=1.0, arc_span=0.95, big=True):
 from shapely.geometry import Polygon, Point, box as sbox
 from shapely.ops import unary_union
 
-WR, RIM, HUB = 60.0, 11.0, 19.0             # top radius, rim width, hub radius
+WR, RIM, HUB = 60.0, 8.5, 16.0              # top radius, rim width, hub radius
+BAR, SPOKE = 8.5, 6.5                       # half-widths of the cross bar and the lower spoke
 PIV_G, PIV_DY = 7.0, 21.0                   # lower-arm pivots: +-x and below the centre
 ARM_L = 41.0                                # lower arm length (pivot to clamp)
+
+
+def bez(p0, p1, p2, p3, n=60):
+    out = []
+    for i in range(n + 1):
+        t = i / n; u = 1 - t
+        out.append((u ** 3 * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t ** 3 * p3[0],
+                    u ** 3 * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t ** 3 * p3[1]))
+    return out
+
+
+# 'tapered': longer than round, with the bottom edges bowed outward but kept
+# inside the red arcs, so each arc crosses the edge only near its top end and
+# the arms meet it close to horizontal. (B, kx, ky, kb) were searched for in
+# shapely: depth 66 (round is 60), crossing about 3 degrees above horizontal,
+# at least 3 units between the edge and the rest of the arc.
+TAPER = (66.0, 6.0, 9.0, 20.0)
 
 
 def wheel_outline(kind, c):
@@ -219,6 +237,11 @@ def wheel_outline(kind, c):
     for k in range(0, 91):                  # top half: always the same semicircle
         t = math.pi + math.pi * k / 90
         pts.append((c[0] + WR * math.cos(t), c[1] + WR * math.sin(t)))
+    if kind == 'tapered':
+        B, kx, ky, kb = TAPER
+        right = bez((WR, 0), (WR - kx, ky), (kb, B), (0, B))
+        half = right[1:] + [(-x, y) for x, y in reversed(right)][1:-1]
+        return pts + [(c[0] + x, c[1] + y) for x, y in half]
     for k in range(1, 90):                  # bottom half: the part that changes
         t = math.pi * k / 90
         ct, st = math.cos(t), math.sin(t)
@@ -239,9 +262,9 @@ def wheel_parts(kind, c):
     outer = Polygon(wheel_outline(kind, c)).buffer(0)
     inner = outer.buffer(-RIM, join_style=1)
     hub = Point(c).buffer(HUB, 48)
-    top_hole = inner.intersection(sbox(c[0] - 200, c[1] - 200, c[0] + 200, c[1] - 11)).difference(hub)
-    bottom = inner.intersection(sbox(c[0] - 200, c[1] + 11, c[0] + 200, c[1] + 200))
-    bottom = bottom.difference(sbox(c[0] - 8.5, c[1] - 200, c[0] + 8.5, c[1] + 200)).difference(hub)
+    top_hole = inner.intersection(sbox(c[0] - 200, c[1] - 200, c[0] + 200, c[1] - BAR)).difference(hub)
+    bottom = inner.intersection(sbox(c[0] - 200, c[1] + BAR, c[0] + 200, c[1] + 200))
+    bottom = bottom.difference(sbox(c[0] - SPOKE, c[1] - 200, c[0] + SPOKE, c[1] + 200)).difference(hub)
     holes = [top_hole] + (list(bottom.geoms) if hasattr(bottom, 'geoms') else [bottom])
     return outer, [h for h in holes if not h.is_empty and h.area > 4]
 
@@ -283,7 +306,7 @@ def arm_hit(outer, P, side):
     return end
 
 
-def arms_on(c, outer, body, angles=None, solid=True, width=4.6, dot=4.2, top=True):
+def arms_on(c, outer, body, angles=None, solid=True, width=5.4, dot=5.6, top=True):
     PL, PR = (c[0] - PIV_G, c[1] + PIV_DY), (c[0] + PIV_G, c[1] + PIV_DY)
     st = '' if solid else ' stroke-dasharray="4 4" opacity="0.6"'
     tips = []
@@ -298,16 +321,25 @@ def arms_on(c, outer, body, angles=None, solid=True, width=4.6, dot=4.2, top=Tru
     return tips
 
 
+ARC_RED = '#f0332b'
+
+
 def red_arcs(c, body):
+    """each clamp's path: a dotted arc with a small arrowhead at both ends"""
     for P, side in (((c[0] - PIV_G, c[1] + PIV_DY), -1), ((c[0] + PIV_G, c[1] + PIV_DY), 1)):
         a0, a1 = arc_span(P, side)
-        body.append(path(d(wobble(arc_pts(P, ARM_L, a0, a1, 40), 0.5)), stroke=RED, width=2.4))
+        body.append(path(d(wobble(arc_pts(P, ARM_L, a0, a1, 40), 0.4)), stroke=ARC_RED, width=3.0,
+                         extra=' stroke-dasharray="0.1 5.4"'))
+        for a, sgn in ((a0, -1), (a1, 1)):
+            tip = (P[0] + ARM_L * math.cos(a), P[1] + ARM_L * math.sin(a))
+            tang = math.atan2(math.cos(a), -math.sin(a)) + (0 if sgn > 0 else math.pi)
+            body.append(arrowhead(tip, tang, size=4.6, color=ARC_RED, width=2.0))
 
 
-def hub_and_top(c, body, width=4.6):
+def hub_and_top(c, body, width=5.4):
     topP = (c[0], c[1] - WR)
     body.append(path(line(c, topP, amp=0.25), stroke=ARM, width=width))
-    body.append('<circle cx="%.1f" cy="%.1f" r="4.2" fill="%s" stroke="%s" stroke-width="1.1"/>' % (topP[0], topP[1], RED, INK))
+    body.append('<circle cx="%.1f" cy="%.1f" r="5.0" fill="%s" stroke="%s" stroke-width="1.1"/>' % (topP[0], topP[1], RED, INK))
     for P in ((c[0] - PIV_G, c[1] + PIV_DY), (c[0] + PIV_G, c[1] + PIV_DY)):
         body.append(circle(P, PIV_G * 0.95, fill=RIM_DARK, stroke=ARM, width=1.2))
     body.append('<circle cx="%.1f" cy="%.1f" r="3.4" fill="%s"/>' % (c[0], c[1], INK))
@@ -332,7 +364,7 @@ def shape_arms():
 
 def shape_examples():
     body = []
-    kinds = ('round', 'squarer', 'flat', 'long')
+    kinds = ('round', 'tapered', 'flat', 'long')
     xs = [72 + 150 * k for k in range(4)]
     cy = 82.0
     # the top point and the centre line up across all four

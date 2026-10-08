@@ -16,8 +16,8 @@
   var COMPACT_MQ = window.matchMedia('(max-width: 1380px), (max-height: 640px)');
   var REDUCED_MQ = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  var WHEEL_GAIN = 0.4;
-  var PREVIEW_DELAY = 1000;   // ms into the home loading screen that the preview starts   // same feel as the old window.scrollBy(deltaY * 0.4)
+  var WHEEL_GAIN = 0.4;       // same feel as the old window.scrollBy(deltaY * 0.4)
+  var PREVIEW_DELAY = 1500;   // ms into the home loading screen that the preview starts
 
   function isSplit() { return SPLIT_MQ.matches; }
   function isCompact() { return COMPACT_MQ.matches; }
@@ -760,7 +760,7 @@
     var MIN_LOAD = 1400;    // the loading animation always gets this long
     var DISSOLVE = 2100;
     var UNSCRAMBLE = 1600;  // VIEW PROJECT settles a little before the dissolve ends
-    var TICK = 95;          // ms between scrambled-letter changes
+    var TICK = 70;          // ms between scrambled-letter changes
 
     var manifest = null;
     var manifestP = fetch('assets/preview/previews.json', { cache: 'no-cache' })
@@ -1047,7 +1047,7 @@
     if (isSplit()) {
       var box = activeBox() || boxes[0];
       setActive(box);
-      // on first load the preview starts a second into the loading screen:
+      // on first load the preview starts 1.5 s into the loading screen:
       // late enough that its loading animation is still showing when the
       // screen dithers away, early enough that the page dissolves in soon after
       if (window.__nvLoading && !window.__nvLoaded) {

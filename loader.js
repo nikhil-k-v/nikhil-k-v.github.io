@@ -27,9 +27,19 @@
 
   var NAVY = '#051220', INK = '#f0f0f0';
   var B4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-  var CELL = 4, BAND = 0.4;
+  // the dither: 4 px cells, each a centred square 0..4 px across (a halftone
+  // dot, like the home previews), sized by how much of the screen is left
+  // there plus grain and a slow drifting noise. Two fronts sweep the screen:
+  // the first breaks the solid screen down to a sparse dot pattern (PLATEAU),
+  // the second, which starts once the first is most of the way across, takes
+  // the dots away and shows the page.
+  var CELL = 4, K = 4;
+  var PLATEAU = 0.5;                  // share of the screen still covered between the two fronts
+  var F1 = 0.6, F2 = 0.4;             // front 1 runs over [0, F1], front 2 over [F2, 1]
+  var B1 = 0.16, B2 = 0.26;           // how soft each front is (fraction of the screen)
+  var RAG = 0.045;                    // how ragged the fronts are
   var WORD = 'LOADING', GLYPHS = '!@#$%^&*()_+?><:{}[]';
-  var TICK = 95;                      // ms between scrambled-letter changes
+  var TICK = 70;                      // ms between scrambled-letter changes
   var LEAVE = 560;                    // ms to cover the page before navigating
   var KEY = 'nv-cover';
 
@@ -107,9 +117,8 @@
     cv.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100vh;height:100lvh;z-index:10000;pointer-events:none;display:block;margin:0;padding:0;border:0;';
     var x = cv.getContext('2d');
     var content = document.createElement('canvas'), cx = content.getContext('2d');
-    var inMask = document.createElement('canvas'), inX = inMask.getContext('2d');
-    var outMask = document.createElement('canvas'), outX = outMask.getContext('2d');
-    var W, H, VH, dpr, cp, cols, rows, inImg, outImg;
+    var mcv = document.createElement('canvas'), mx = mcv.getContext('2d');
+    var W, H, VH, dpr, cp, cols, rows, mImg, m32, grain;
     var shown = '', lastTick = -1;
     var t0 = performance.now(), raf = 0, done = false, covered = false;
     var spin0 = o.spin0 || Date.now();
@@ -121,10 +130,13 @@
       dpr = Math.min(window.devicePixelRatio || 1, 3);
       cv.width = content.width = Math.round(W * dpr);
       cv.height = content.height = Math.round(H * dpr);
-      cp = Math.max(2, Math.round(CELL * dpr));           // dither cell, whole device pixels
+      cp = K * Math.max(1, Math.round(CELL * dpr / K));   // dither cell: whole device pixels per dot step
       cols = Math.ceil(cv.width / cp); rows = Math.ceil(cv.height / cp);
-      inMask.width = outMask.width = cols; inMask.height = outMask.height = rows;
-      inImg = inX.createImageData(cols, rows); outImg = outX.createImageData(cols, rows);
+      mcv.width = cols * K; mcv.height = rows * K;
+      mImg = mx.createImageData(mcv.width, mcv.height);
+      m32 = new Uint32Array(mImg.data.buffer);
+      grain = new Float32Array(cols * rows);
+      for (var g = 0; g < grain.length; g++) { var h = Math.sin(g * 12.9898 + 78.233) * 43758.5453; grain[g] = h - Math.floor(h) - 0.5; }
     }
     root.appendChild(cv);
     size();
@@ -159,22 +171,49 @@
       cx.fillText(w, W / 2, top + d + gap + fs / 2);
     }
 
-    // cells switch over in Bayer order as a band sweeps across the screen
-    function mask(img, p, dir) {
-      var front = p * (1 + BAND), dta = img.data;
+    function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+    /* the dot pattern for progress p. dir: which way the fronts travel.
+       rise: false = the screen thins out to nothing, true = it builds up */
+    function mask(p, dir, rise, ms) {
+      var u1 = clamp01(p / F1), u2 = clamp01((p - F2) / (1 - F2));
+      var f1 = -RAG + u1 * (1 + 2 * RAG + B1), f2 = -RAG + u2 * (1 + 2 * RAG + B2);
+      var t = ms / 1000, DW = cols * K, ON = 0xff000000;
+      var sx = cp / dpr;                                    // css px per cell
+      m32.fill(0);
       for (var r = 0; r < rows; r++) {
-        var rr = dir === 'down' ? r / rows : 1 - (r + 1) / rows;
-        var lvl = (front - rr) / BAND;
-        lvl = lvl < 0 ? 0 : lvl > 1 ? 1 : lvl;
+        var py = (r + 0.5) * sx;
+        var yn = (r + 0.5) / rows; if (dir !== 'down') yn = 1 - yn;
+        var by = (r & 3) << 2, row = r * K * DW;
         for (var c = 0; c < cols; c++) {
-          dta[(r * cols + c) * 4 + 3] = B4[((r & 3) << 2) | (c & 3)] < lvl * 16 ? 255 : 0;
+          var px = (c + 0.5) * sx;
+          // slow noise: a few drifting waves, roughly -1..1
+          var fld = 0.55 * Math.sin(px * 0.021 + t * 1.3 + Math.sin(py * 0.017 - t * 0.6) * 1.6) *
+                    Math.sin(py * 0.026 - t * 1.1) + 0.45 * Math.sin((px + py) * 0.043 + t * 0.8);
+          var y = yn + RAG * fld;
+          var l1 = clamp01((f1 - y) / B1), l2 = clamp01((f2 - y) / B2);
+          var dd = rise ? l1 * PLATEAU + l2 * (1 - PLATEAU) : 1 - l1 * (1 - PLATEAU) - l2 * PLATEAU;
+          if (dd <= 0) continue;
+          var ci = r * cols + c;
+          // mid-pattern, dots vary a lot: per-cell grain, clumps from a finer
+          // drifting wave, and the slow field; solid stays solid, empty stays empty
+          if (dd < 1) {
+            var clump = Math.sin(px * 0.11 + t * 1.7 + fld) * Math.sin(py * 0.09 - t * 1.3);
+            dd = clamp01(dd + (1.1 * grain[ci] + 0.35 * clump + 0.25 * fld) * 4 * dd * (1 - dd));
+          }
+          var thr = 0.45 * (B4[by | (c & 3)] + 0.5) / 16 + 0.55 * (grain[(ci * 7 + 3) % grain.length] + 0.5);
+          var sz = Math.floor(Math.sqrt(dd) * K + thr);   // dot area follows the density
+          if (sz <= 0) continue;
+          if (sz > K) sz = K;
+          var off = (K - sz) >> 1, base = row + c * K + off * DW + off;
+          for (var yy = 0; yy < sz; yy++, base += DW) for (var xx = 0; xx < sz; xx++) m32[base + xx] = ON;
         }
       }
     }
-    function applyMask(ctx, img, mcv, mx, op) {
-      mx.putImageData(img, 0, 0);
+    // keep only what the dots cover
+    function applyMask(ctx) {
+      mx.putImageData(mImg, 0, 0);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.globalCompositeOperation = op;
+      ctx.globalCompositeOperation = 'destination-in';
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(mcv, 0, 0, cols * cp, rows * cp);
       ctx.globalCompositeOperation = 'source-over';
@@ -189,15 +228,15 @@
       var pout = !isFinite(o.out) || ms < o.out ? 0 : o.outDur ? Math.min(1, (ms - o.out) / o.outDur) : 1;
 
       drawContent(ms);
-      if (pin < 1) { mask(inImg, pin, 'up'); applyMask(cx, inImg, inMask, inX, 'destination-in'); }
+      if (pin < 1) { mask(pin, 'up', true, ms); applyMask(cx); }
 
       x.setTransform(1, 0, 0, 1, 0, 0);
       x.globalCompositeOperation = 'source-over';
       x.clearRect(0, 0, cv.width, cv.height);
       x.fillStyle = NAVY; x.fillRect(0, 0, cv.width, cv.height);
       x.drawImage(content, 0, 0);
-      if (pcov < 1) { mask(inImg, pcov, 'up'); applyMask(x, inImg, inMask, inX, 'destination-in'); }
-      if (pout > 0) { mask(outImg, pout, o.outDir); applyMask(x, outImg, outMask, outX, 'destination-out'); }
+      if (pcov < 1) { mask(pcov, 'up', true, ms); applyMask(x); }
+      else if (pout > 0) { mask(pout, o.outDir, false, ms); applyMask(x); }
 
       if (pcov >= 1 && !covered) { covered = true; if (o.onCovered) o.onCovered(); }
       if (pout >= 1) { finish(); return; }

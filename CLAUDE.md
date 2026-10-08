@@ -21,7 +21,7 @@ Pushing straight to `master` is the normal workflow for this repo.
 | `pages/paper-edges.js` | Draws the scanline edges of the steering robot's white sheet. |
 | `pages/toggle-clamp.js`, `pages/cycloid-sim.js` | Small animated diagrams (four-bar toggle clamp; cycloidal disc sim). |
 | `assets/anim/` | Card/hero animations rendered on black. Pages use the web copies `X-960.mp4` (≤1100 px screens) and `X-1280.mp4` via `<source media>`, poster `X-960.jpg`; width is pinned to 1920 px in CSS so layout matches the original renders. The TUBAA card keeps its original `tubaa.mp4`; its preview plays `tubaa-preview.mp4`, one seamless loop with both propellers (each trimmed to a blade period, joined with crossfades), about 3.3 s on each. |
-| `loader.js` | The loading screen, all in one canvas sized from what it measures (100lvh tall, so it's never stretched and always reaches the bottom). Home pages: `<script src="loader.js">` (dithers out top to bottom; the home preview starts 1 s in). Project pages: `<script src="../loader.js" data-mode="page">` right after `<body>` (same screen, a bit shorter, dithers out from the bottom). Clicks on links into `/pages/` (and `window.nvGo(url)`) dither the screen in over the current page first, then navigate; the next page starts covered (sessionStorage `nv-cover`). Scrambled letters change every 95 ms. Skipped under `html.is-preview` / `window.__nvPreview`. |
+| `loader.js` | The loading screen, all in one canvas sized from what it measures (100lvh tall, so it's never stretched and always reaches the bottom). Home pages: `<script src="loader.js">` (dithers out top to bottom; the home preview starts 1.5 s in). Project pages: `<script src="../loader.js" data-mode="page">` right after `<body>` (same screen, a bit shorter, dithers out from the bottom). Clicks on links into `/pages/` (and `window.nvGo(url)`) dither the screen in over the current page first, then navigate; the next page starts covered (sessionStorage `nv-cover`). The dither is halftone dots in 4 px cells with grain and drifting noise, in two fronts: the first thins the screen to a sparse pattern over the page, the second (starting once the first is ~80 % across) clears it. Scrambled letters change every 70 ms. Skipped under `html.is-preview` / `window.__nvPreview`. |
 | `blend.js` | Safari/iOS only: copies `video.anims` / `video.anim` into a canvas that does the `lighten` blend (WebKit doesn't blend video). `?blendfix` forces it on for testing. |
 | `assets/web/` | Web copies of videos (≈960 px wide H.264, faststart) + JPG posters; `assets/web/img/` 1400 px photos; hand-made SVG diagrams. |
 | `assets/GenAutoVids/`, `old-media/` | Originals. Large; don't link them from pages — make a web copy. |
@@ -40,7 +40,7 @@ listing where each video sits. `home.js` dithers the picture and plays those vid
 itself on top. Shows the card animation for ≥1.4 s (label reads LOADING, then unscrambles to
 VIEW PROJECT), then a dither dissolve during which both pictures keep playing; the page's
 header animation reuses the card's video so it never restarts. The pane is drawn at 90 %
-opacity with a slight radial vignette (CSS mask).
+opacity with a radial vignette (CSS mask) down to 50 % at the corners.
 
 **Re-run it whenever the top of a project page changes** (hero, meta, first section):
 

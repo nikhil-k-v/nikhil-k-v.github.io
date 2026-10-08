@@ -511,8 +511,8 @@ body.home {
     height: 100%;
     pointer-events: none;
     opacity: 0.9;
-    -webkit-mask-image: radial-gradient(ellipse farthest-corner at 50% 50%, #000 45%, rgba(0, 0, 0, 0.72) 100%);
-    mask-image: radial-gradient(ellipse farthest-corner at 50% 50%, #000 45%, rgba(0, 0, 0, 0.72) 100%);
+    -webkit-mask-image: radial-gradient(ellipse farthest-corner at 50% 50%, #000 45%, rgba(0, 0, 0, 0.5) 100%);
+    mask-image: radial-gradient(ellipse farthest-corner at 50% 50%, #000 45%, rgba(0, 0, 0, 0.5) 100%);
   }
 
 
