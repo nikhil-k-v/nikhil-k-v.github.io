@@ -897,3 +897,103 @@
   .ga-nav.is-open .label { display: inline; }
 }
 .ga-vs + .ga-question { margin-top: 1.6rem !important; margin-bottom: 0.4rem !important; }
+
+
+/* =====================================================================
+   Revision 3: numbered problems above the subsection titles, bigger
+   shape figures, recording/playback block, full-assembly figures, the
+   merged attachment carousel
+   ===================================================================== */
+
+/* page-styles.css gives every element overflow-x: hidden, which makes the
+   section bodies their own vertical scrollers on phones (the carousel's
+   negative margin was enough to trigger it). Sections never scroll inside. */
+.ga-sec, .ga-sec-body { overflow: visible !important; }
+
+/* "— PROBLEM 2  Summary" on one line, then the subsection title */
+.ga-probhead { margin: 2.4rem 0 0.9rem 0; }
+.ga-probhead .ga-label { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.7rem; row-gap: 0.25rem; }
+.ga-probhead .ga-label::before { align-self: center; }
+.ga-probhead .ga-label .ga-prob { margin-left: 0; }
+.ga-probhead .ga-h3 { margin: 0.45rem 0 0 0 !important; }
+
+/* clamping: wider solution column so three figures fit in one row */
+.ga-grid-wide { --c: minmax(0, 0.72fr) auto minmax(0, 1.28fr); }
+.ga-clamp-row { display: flex; flex-wrap: nowrap; gap: 0.5rem; align-items: flex-end; width: 100%; }
+.ga-clamp-row > .ga-fig { min-width: 0; margin: 0; }
+.ga-clamp-row > .ga-fig:nth-child(1) { flex: 1.333 1 0; }
+.ga-clamp-row > .ga-fig:nth-child(2) { flex: 0.82 1 0; }
+.ga-clamp-row > .ga-fig:nth-child(3) { flex: 0.771 1 0; }
+.ga-grid .ga-clamp-row .ga-fig img { width: 100%; height: auto; max-height: none; cursor: zoom-in; }
+.ga-sketchbox img { box-sizing: border-box; border: 1px solid rgba(15, 31, 48, 0.12); border-radius: 3px; }
+
+/* adapting to any shape */
+.ga-shape-row { margin: 0.4rem 0 0.9rem 0; }
+.ga-shape-row .ga-row3 { display: flex; gap: 0.9rem; justify-content: center; align-items: center; }
+.ga-shape-row .ga-row3 img { height: 150px; width: auto; min-width: 0; max-width: 33%; object-fit: contain; cursor: zoom-in; }
+.ga-side {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.6rem;
+  align-items: center;
+  margin: 1.1rem 0;
+}
+.ga-side > .ga-fig img { height: 240px; width: auto; cursor: zoom-in; }
+.ga-side > div > p:last-child { margin-bottom: 0 !important; }
+.ga-sol-gap { margin-top: 1.6rem; }
+.ga-shape-diags { display: flex; gap: 0.8rem; align-items: center; flex-wrap: nowrap; }
+.ga-shape-diags .ga-fig img { height: 250px; width: auto; cursor: zoom-in; }
+.ga-shape-cad, .ga-assembly-row { display: flex; gap: 0.8rem; align-items: center; flex-wrap: nowrap; margin: 1rem 0 0.4rem 0; }
+.ga-shape-cad > .ga-fig, .ga-assembly-row > .ga-fig { min-width: 0; margin: 0; }
+.ga-shape-cad > .ga-fig:nth-child(1) { flex: 1.286 1 0; }
+.ga-shape-cad > .ga-fig:nth-child(2) { flex: 1.549 1 0; }
+.ga-assembly-row > .ga-fig:nth-child(1) { flex: 1.026 1 0; }
+.ga-assembly-row > .ga-fig:nth-child(2) { flex: 1.286 1 0; }
+.ga-shape-cad img, .ga-assembly-row img { width: 100%; height: auto; cursor: zoom-in; }
+.ga-modular { margin: 0.6rem auto 0.4rem auto; text-align: center; }
+.ga-modular img { width: 100%; max-width: 860px; height: auto; cursor: zoom-in; }
+
+/* recording and playback */
+.ga-rec {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 0.62fr) minmax(0, 0.62fr);
+  gap: 1rem;
+  align-items: center;
+  margin: 0.6rem 0 0.4rem 0;
+}
+.ga-rec .ga-fig { margin: 0; width: 100%; }
+.ga-rec-diag img { width: 100%; height: auto; cursor: zoom-in; }
+.ga-rec video { width: 100%; height: auto; aspect-ratio: 686 / 960; object-fit: cover; display: block; background: #0b2135; }
+
+/* outcome: the control loop on its own */
+.ga-outcome-loop { max-width: 680px; margin: 0.4rem auto 0 auto; }
+.ga-outcome-loop img { width: 100%; height: auto; cursor: zoom-in; }
+
+/* the attachment carousel: one height, each clip as wide as its shape */
+#splideAttach { max-width: 100% !important; padding: 0 3.6rem 34px 3.6rem !important; margin: 1.6rem 0 0 0 !important; }
+#splideAttach .splide__slide { width: auto !important; max-height: none !important; padding: 0 !important; }
+#splideAttach video { display: block; height: 100%; width: auto; border-radius: 4px; background: #0b2135; }
+
+@media (max-width: 1000px) {
+  .ga-probhead { margin: 1.6rem 0 0.6rem 0; }
+  .ga-grid-wide { --c: minmax(0, 1fr); }
+  .ga-shape-row .ga-row3 { gap: 0.4rem; }
+  .ga-shape-row .ga-row3 img { height: auto; width: 32%; max-width: none; }
+  .ga-side { grid-template-columns: minmax(0, 1fr); gap: 0.6rem; justify-items: center; }
+  .ga-side > .ga-fig img { height: auto; width: 100%; max-width: 330px; }
+  .ga-side-figs > div { justify-self: stretch; }
+  .ga-shape-diags { gap: 0.4rem; width: 100%; }
+  .ga-shape-diags .ga-fig { flex: 1 1 0; min-width: 0; margin: 0; }
+  .ga-shape-diags .ga-fig img { height: auto; width: 100%; }
+  .ga-shape-cad, .ga-assembly-row { gap: 0.4rem; }
+  .ga-rec { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.5rem; }
+  .ga-rec-diag { grid-column: 1 / -1; }
+  #splideAttach { padding: 0 0 1.75rem 0 !important; }
+  #splideAttach .splide__arrow { display: none; }
+}
+.ga-shape-row figcaption { max-width: none !important; margin-top: 0.45rem; }
+@media (max-width: 1000px) {
+  .ga-clamp-row .ga-incap { white-space: normal; line-height: 1.2; right: 4px; }
+  .ga-side > .ga-fig img { max-width: 250px; }
+  .ga-outcome-loop + .ga-fit .ga-fig.fit video { max-height: 46svh; }
+}

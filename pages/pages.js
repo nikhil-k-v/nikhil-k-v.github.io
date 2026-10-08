@@ -130,6 +130,19 @@ window.addEventListener('load', function () {
       } ).mount();
     }
 
+    if (document.getElementById('splideAttach')) {
+      new Splide( '#splideAttach', {
+        type     : 'slide',
+        rewind   : true,
+        autoWidth: true,
+        focus    : 'center',
+        trimSpace: false,
+        gap      : '0.7rem',
+        height   : '22rem',
+        breakpoints: { 1000: { height: '13rem' } },
+      } ).mount();
+    }
+
     if (document.getElementById('splide3')) {
       new Splide( '#splide3', {
       type  : 'loop',
