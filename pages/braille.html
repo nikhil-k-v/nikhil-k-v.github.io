@@ -2,11 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Braille Display</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>BRAILLE DISPLAY</title>
+  <meta name="description" content="A modular, 3D printed refreshable braille display that sets a whole row of dots with one servo, using a De Bruijn sequence cut into a rotating key.">
   <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
   <link rel="stylesheet" href="page-styles.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Century+Schoolbook">  
+  <link rel="stylesheet" href="../about.css">
+  <link rel="stylesheet" href="genauto.css">
+  <link rel="stylesheet" href="project.css?v=3">
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
@@ -19,14 +22,17 @@
 
 <body>
   <script src="../loader.js?v=10" data-mode="page"></script>
-  <header>
-    <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
-  </header>
+  <header></header>
 
-    <div class="mdbody">
-        <div class="mdh1">Modular, Refreshable Braille Display</div>
+  <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
 
-    <section class="project-meta" style="margin: 1.2rem auto 2rem auto !important; max-width: 100% !important;">
+  <main>
+    <div id="arm-anim-container" class="img-container" style="margin-top: 2rem !important;">
+      <h1 class="page-title">BRAILLE DISPLAY</h1>
+      <video class="anim" poster="../assets/anim/BraileAnim-960.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source media="(max-width: 1100px)" src="../assets/anim/BraileAnim-960.mp4" type="video/mp4"><source src="../assets/anim/BraileAnim-1280.mp4" type="video/mp4"></video>
+    </div>
+
+    <section class="project-meta">
       <div class="meta-box meta-timeframe">
         <span class="meta-label">Timeframe</span>
         <span class="meta-value">2023</span>
@@ -44,154 +50,161 @@
         <span class="meta-value">4-cell prototype</span>
       </div>
     </section>
-        <div class="mdc">
-            <div class="columns">
-                <div class="left-column mdh2">1</div>
-                <div class="right-column mdh2">Introduction</div>
-            </div>
-            <div class="mdp">
-                The motivation of this project is <strong>reducing the cost</strong> and <strong>improving the actuation efficiency/complexity</strong> of refreshable braille displays, which are currently in the thousand to ten-thousand dollar range. Generally, every dot on every braille cell is individually actuated, which I find an inefficient solution. The <strong>maintenance costs</strong> are also extremely high for current devices.<br><br>I aim to streamline that with new mechanisms, in order to decrease cost, increase reliability, and improve overall ease-of-use for users and educators.
-            </div>
+
+    <!-- media straight under the meta strip -->
+    <div class="pj-top">
+      <div class="pj-grid" style="--cols:4;">
+        <figure class="pj-tile span2 tall"><img data-zoom src="../assets/web/img/br-device.jpg" alt="Two braille cells side by side, each with two servos turning blue keys under white printed dots" loading="lazy"></figure>
+        <figure class="pj-tile" style="--ar:4/3"><img data-zoom src="../assets/web/img/br-6key-proto.jpg" alt="An early printed prototype with six keys and four cell windows" loading="lazy"></figure>
+        <figure class="pj-tile light" style="--ar:4/3"><img data-zoom src="../assets/web/img/br-cell-cad.jpg" alt="CAD of one assembled cell with its cover made see-through" loading="lazy"></figure>
+        <figure class="pj-tile" style="--ar:4/3"><img data-zoom src="../assets/web/img/br-onecell.jpg" alt="A yellow one-cell prototype" loading="lazy"></figure>
+        <figure class="pj-tile light" style="--ar:4/3"><img data-zoom src="../assets/web/img/br-key-gear.jpg" alt="The printed key: the De Bruijn sequence as bumps along an arc, with a herringbone gear" loading="lazy"></figure>
+      </div>
+    </div>
+
+    <nav class="ga-nav" aria-label="Page sections">
+      <ol>
+        <li><a href="#overview"><span class="tick"></span><span class="label">Overview</span></a></li>
+        <li><a href="#idea"><span class="tick"></span><span class="label">The idea</span></a></li>
+        <li><a href="#device"><span class="tick"></span><span class="label">Device</span></a></li>
+        <li><a href="#cost"><span class="tick"></span><span class="label">Cost</span></a></li>
+        <li><a href="#code"><span class="tick"></span><span class="label">Code</span></a></li>
+        <li><a href="#prototypes"><span class="tick"></span><span class="label">Prototypes</span></a></li>
+      </ol>
+    </nav>
+
+    <div class="ga-night">
+
+      <!-- ================= OVERVIEW ================= -->
+      <section class="ga-sec" id="overview" data-open>
+        <h2 class="ga-h2"><span>Overview</span></h2>
+        <p>Refreshable braille displays cost somewhere between a thousand and ten thousand dollars. In most of them every dot on every cell is actuated on its own, which I think is an inefficient way to do it, and with hundreds of tiny, fragile parts being pressed all day they're also expensive to maintain.</p>
+        <p>I wanted to bring the cost down and make the actuation simpler, so I came up with a way to set a whole row of dots with one motor. It's a modular, 3D printed display with two servos per cell, built for teachers at Morris Knolls High School.</p>
+      </section>
+
+
+      <!-- ================= THE IDEA ================= -->
+      <section class="ga-sec" id="idea" data-open>
+        <h2 class="ga-h2"><span>The idea</span></h2>
+        <p>The up/down of a braille dot is just the 0/1 of binary. Take a cell lying on its side, so it's 2 rows of 3 dots. Each row can be written as a three-character string, like "101" or "000". I'll call that the row string.</p>
+
+        <div class="pj-white">
+          <div class="br-sketches">
+            <figure><img src="braille-assets/bfig1.png" alt="A cell lying flat with two raised dots, next to the array [1, 0, 1] over [0, 0, 0]" loading="lazy"><figcaption>A cell and its array</figcaption></figure>
+            <figure><img src="braille-assets/bfig2.png" alt="A row of three lowered dots" loading="lazy"><figcaption>All down: "000"</figcaption></figure>
+            <figure><img src="braille-assets/bfig3.png" alt="The row with a key underneath it, pushing some dots up" loading="lazy"><figcaption>Key "10111000" pushed 3 places in</figcaption></figure>
+          </div>
         </div>
 
+        <p>Three dots that are each up or down make 8 possible row strings. Now picture a key slid in under the row, like the pins in a lock: its bumps push some dots up and leave others alone. If the key is longer than the row, what you get depends on how far in it goes.</p>
+        <p>A key with all 8 combinations written one after another would work, but it'd be 24 characters long. A much shorter one does the same job. Sliding the key in <i>i</i> places is the same as reading the substring from <i>i</i> to <i>i</i> + 3, so what I need is the shortest string that contains every 3-character binary string somewhere inside it. That's a De Bruijn sequence: the shortest string containing every length-<i>n</i> string over a size-<i>k</i> alphabet exactly once. Here <i>k</i> = 2 and <i>n</i> = 3, and it's only 8 long: "10111000".</p>
 
-        <div class="mdc">
+        <div class="pj-white narrow"><img src="braille-assets/bfig4.png" alt="Table of the eight positions of the key: at each one, the three characters under the row and the dots they raise" loading="lazy"></div>
+        <span class="pj-cap">The De Bruijn sequence for k = 2, n = 3, at each of its 8 positions</span>
 
-            <div class="columns">
-                <div class="left-column mdh2">2</div>
-                <div class="right-column mdh2">Solution</div>
-            </div>
-            <div class="mdp">
-                I’ve created a method for actuating multiple dots at once, in a very efficient way! You will see in subsection 3.2 that it decreases the price of braille displays by hundreds, possibly thousands of dollars. To understand how the solution works, realize: <strong>the up/down of a braille dot can be represented with the 0/1 of binary.</strong>
-            </div>
-            <div class="columns">
-                <div class="left-column mdh3">2.1</div>
-                <div class="right-column mdh3">A Binary Solution</div>
-            </div>
-            <div class="mdp">
-                Take a braille cell, with 6 dots. We’ll assume that it is horizontal: there are 2 rows, and 3 columns, represented by a 2x3 array.
-            </div>
-            <div class="mdimg">
-                <img src="braille-assets/bfig1.png" alt="Figure 1">
-            </div>
-            <div class="mdic">
-                <strong>Figure 1:</strong> Example 2x3 braille cell and corresponding array
-            </div>
-            <div class="mdp">
-                Now, take one row, [x, x, x], and represent this as a string “xxx”. We will refer to this as the <strong>row string.</strong>
-            </div>
-            <div class="mdimg">
-                <img src="braille-assets/bfig2.png" alt="Figure 2"  style="width: 15em;">
-            </div>
-            <div class="mdic">
-                <strong>Figure 2:</strong> All dots are down, so [0, 0, 0] -> “000”
-            </div>
-            <div class="mdp">
-                There are 3 dots (n = 3), and each can be up or down (k = 2), meaning there are 8 possible combinations. Therefore, there exists 8 possible row strings: “000”, “001”, “010”, and so on.<br><br>A <strong>key </strong>can be inserted into the row: moving some dots up and leaving some alone, like the pins inside a lock. If the key is much longer than the row, you’ll get different results depending on how far you insert it before turning.
-            </div>
-            <div class="mdimg">
-                <img src="braille-assets/bfig3.png" alt="Figure 3" style="width: 25em;">
-            </div>
-            <div class="mdic">
-                <strong>Figure 3:</strong> Key “10111000” inserted 3 places in before turning
-            </div>
-            <div class="mdp">
-                Keys with every combination on them “000” + “001” + “010”... = “000001010…” would work to produce all the combinations, but they’d be 24 characters long. There exists a more efficient solution. As shown in Figure 1.3, <strong>an extremely short key</strong> (“10111000”, length of 8)<strong> actually allows for every combination.</strong> It actually boils down to an algorithmic problem.<br><br>Inserting a key i characters before turning is the same as looking at the (i, i+3) substring of the key. Our goal is to get every possible sequence of three up-down dots as a substring somewhere in the key string. <strong>A De Bruijn Sequence is the shortest string containing every possible combination of n characters in the size-k alphabet as a substring, exactly once.</strong><br><br>Here, k is 2 (the alphabet size is 2, since it is binary), and the length n is 3. The table in Figure 1.4 shows this.
-            </div>
-            <div class="mdimg">
-                <img src="braille-assets/bfig4.png" alt="Figure 4">
-            </div>
-            <div class="mdic">
-                <strong>Figure 4:</strong> De Bruijn Sequence (k = 2, n = 3)
-            </div>
-            <div class="mdp">
-                <strong>Note: All 0s are mechanically represented by nothing. </strong>This is why the strings in the “De Bruijn Sequence” column of Figure 1.4 are 10 long instead of 8: the first two characters (both 0) don’t really exist, just like all the other 0s; they’re just there for illustration. The De Bruijn Sequence is also cyclic, which you may have realized if you tried checking for all 8 substrings in “10111000”.
-            </div>
+        <p>The 0s are just gaps on the key, which is why the strings in the table are 10 long instead of 8: the two leading 0s aren't really there. The sequence is also cyclic, which you might notice if you try to find all 8 substrings in "10111000" directly.</p>
+        <p>So instead of six actuators per cell there are two, one per row, and each one only has to move its key to one of 8 positions.</p>
+      </section>
+
+
+      <!-- ================= DEVICE ================= -->
+      <section class="ga-sec" id="device" data-open>
+        <h2 class="ga-h2"><span>The device</span></h2>
+        <div class="pj-split fig-wide">
+          <div>
+            <p>Everything is modeled in Fusion 360 and 3D printed. The rigid parts are PLA, and the dots themselves are TPU so they're softer under your finger.</p>
+            <p>It only fastens together with press fits. After the 6 or 7 steps to put one cell together, you repeat that for as many cells as you want and clip them onto each other. Four to eight is useful for teaching.</p>
+          </div>
+          <figure class="pj-tile light" style="--ar:683/318; margin:0;"><img data-zoom src="../assets/web/img/br-proto-cad.jpg" alt="CAD of a red prototype cell, and a top view of its dot window" loading="lazy"><figcaption>An earlier prototype using the k = 2, n = 4 sequence</figcaption></figure>
         </div>
 
-        
-
-
-        <div class="mdc">
-            <div class="columns">
-                <div class="left-column mdh2">3</div>
-                <div class="right-column mdh2">Current Device</div>
-            </div>
-            <div class="columns">
-                <div class="left-column mdh3">3.1</div>
-                <div class="right-column mdh3">Modular, 3D Printed Device</div>
-            </div>
-            <div class="mdp">
-                Everything is designed and modeled in Fusion 360 and 3D printed. Rigid parts use PLA while softer materials (such as the actual braille dots themselves) are printed with TPU for comfort & compliance. 
-            </div>
-            <div class="mdimg">
-                <img src="braille-assets/bfig5.png" alt="Figure 5">
-            </div>
-            <div class="mdic">
-                <strong>Figure 5:</strong> CAD for one of my prototypes using the De Bruijn Sequence for (k = 2, n = 4)
-            </div>
-            <div class="mdp">
-                It is completely modular and fastens together only using press-fits, so after the 6-7 steps to assemble one cell, you can repeat the process for as many as you want and continue to attach them together.
-            </div>
-            <!-- figure 6 -->
-            <div class="mdp">
-                This allows schools to choose how they want to use the device and allows for easier troubleshooting/replacement of parts. Current braille displays (yes, the $10000 ones) are notorious for having horrible maintenance costs. And of course, they do: hundreds of tiny fragile individually-actuated dots are being touched and pressed and torqued constantly. <strong>Reducing the number of parts doesn’t just make it cheaper to manufacture but cheaper to repair, harder to break, and easier to fix.</strong>
-            </div>
-            
-            <div class="columns">
-                <div class="left-column mdh3">3.2</div>
-                <div class="right-column mdh3">Cost, Functionality, and Code</div>
-            </div>
-            <div class="mdp">
-                Since there are only 2 MG90 servos per cell, the device is extremely cheap and very small. There are only two other parts: the 3D printed pieces and the microcontroller. I currently use an ATmega32U4 board (Arduino Pro Micro) due to its small size.
-            </div>
-            <!-- figure 7 -->
-            <div class="mdp">
-                <strong>Cost per cell:</strong> ($1.90/servo x 2 sides) + $0.13/prints = <strong>$2.03&nbsp</strong>
-                <br><br> <strong>Cost in total:</strong> ($2.03/cell x 4 cells) + $7.00/microcontroller =<strong> $15.02</strong>
-            </div>
-            <div class="mdp">
-                However, compared to the Focus 14, which is an “industry standard” for braille displays, my 4 cells are still limited. This is what 14 would cost with my device:
-            </div>
-            <div class="mdp">
-                <strong>Cost overall: </strong>($2.03/cell x 14 cells) + $40.00/electronics = <strong>$68.02</strong>
-            </div>
-            <div class="mdp">
-                Assuming that 14 servos requires a bigger microcontroller with more IO pins + a different power source/shield (though this is a very low torque application so you can still do this on cheap microcontrollers with I2C and cycle through them quickly). But that's not all that the Focus 14 does! Let’s add the rest: a Bluetooth module ($16), 9 keyboard switches ($3: splurging on very nice Akko Jelly Black switches), 12 push buttons ($15: this gets you a box of 240 for some variety), and a USB-C breakout ($5). That’s all the main functionality, but let's throw in $50 so we can order a custom PCB, whatever other electronics we need, and a whole kilogram of 3D-printing filament (I’ve bought all of these for other projects, which is where the numbers come from–everything is heavily rounded up). Another $50 on top just in case.
-            </div>
-            <!-- figure 8 -->
-            <div class="mdp">
-                That’s a lot! How much could the Focus 14 cost? Maybe $300 because they have extra parts like rubber feet? $500 because they have a metal housing?
-            </div>
-            <!-- figure 9 -->
-            <div class="mdp">
-                If it seems like I’m misrepresenting the situation: the software isn’t included and must be purchased separately, the manual also needs to be purchased (and is somehow out-of-stock?), the leather carrying case they sell for these displays is over $100, and they only include a 2-year warranty… for a target market of people with a permanent condition.
-                <br><br> Thanks to the simplicity of the De Bruijn Sequence and the simple components required, the electronics and code in this project are far, far simpler than the mechanisms and ideas, so I will not waste space here with too many details.
-            </div>
-
-            <div class="mdp">
-                Currently, it takes English input through a GUI and converts it to rotation angles for the servos in a 2-D array. Then it rotates the servos to those angles, displaying the text. This is what educators at Morris Knolls, the high school I’m working with, have asked for: a simple way for sighted-supervisors to write words out in braille without needing to use complex, outdated, or expensive tools. I’m working on additional functionality for the device such as control systems (keyboards + other inputs) so that users can interact with technology.
-                <br><br>  This shows the principles of the current functionality:
-            </div>
-            <!-- figure 10 -->
-            <div class="mdp">
-                In reality, I don’t need braille anywhere in the code. I simply convert characters directly to rotation angles, as it requires very little memory to store the character-angle conversion directly. However, the code shown above could still work because this situation is not bottlenecked by computational efficiency or servo rotation speed, but rather human reaction time.
-            </div>
+        <div class="pj-grid" style="--cols:2;">
+          <figure class="pj-tile" style="--ar:742/418"><img data-zoom src="../assets/web/img/br-assembly.jpg" alt="Four photos of the first press-fit steps of assembling a cell" loading="lazy"><figcaption>The first few press-fit steps</figcaption></figure>
+          <figure class="pj-tile" style="--ar:741/413"><img data-zoom src="../assets/web/img/br-cells.jpg" alt="Four photos of identical cells being joined together" loading="lazy"><figcaption>Every cell is the same, and they join together</figcaption></figure>
         </div>
 
-        <div class="mdc">
-            <div class="columns">
-                <div class="left-column mdh3">3.3</div>
-                <div class="right-column mdh3">Additional Documentation</div>
-            </div>
+        <p>That lets a school decide how big they want it, and it makes troubleshooting and replacing parts easy. Fewer parts doesn't just make it cheaper to build. It also makes it cheaper to repair, harder to break and easier to fix.</p>
+      </section>
+
+
+      <!-- ================= COST ================= -->
+      <section class="ga-sec" id="cost" data-open>
+        <h2 class="ga-h2"><span>Cost</span></h2>
+        <p>With only two MG90 servos per cell, the display is cheap and small. The only other parts are the prints and the microcontroller, an ATmega32U4 board (Arduino Pro Micro), picked because it's tiny.</p>
+
+        <table class="pf-table br-cost">
+          <tbody>
+            <tr><th>One cell</th><td>Two MG90 servos and $0.13 of filament</td><td>$2.03</td></tr>
+            <tr><th>4 cells</th><td>4 × $2.03 + $7 microcontroller</td><td>$15.12</td></tr>
+            <tr><th>14 cells</th><td>14 × $2.03 + $40 of electronics (a bigger board with more pins, and power)</td><td>$68.42</td></tr>
+          </tbody>
+        </table>
+
+        <p>Fourteen cells is what the Focus 14 has, which is something of an industry standard. It does more than show braille, so I added the rest of what it has: a Bluetooth module ($16), 9 keyboard switches ($3), 12 push buttons ($15), a USB-C breakout ($5), $50 for a custom PCB, any other electronics and a kilogram of filament, and another $50 just in case. All of those prices are rounded up from parts I've bought for other projects.</p>
+        <p>That comes to about <b>$207</b>. When I priced this in 2023 the Focus 14 Blue was $1,545, and at the time the software, the manual and the carrying case were all sold separately, with a 2-year warranty, for people with a permanent condition.</p>
+      </section>
+
+
+      <!-- ================= CODE ================= -->
+      <section class="ga-sec" id="code" data-open>
+        <h2 class="ga-h2"><span>Code</span></h2>
+        <p>Because the mechanism does most of the work, the electronics and code are simple. It takes English text from a GUI, turns it into servo angles in a 2-D array, and moves the servos there. That's what the teachers at Morris Knolls asked for: a simple way for sighted staff to write words out in braille without complicated, outdated or expensive tools. I was also working on keyboard and other inputs so users could interact with it.</p>
+
+<pre class="pj-code"><span class="c">//goal: convert input string to rotation angles for servos</span>
+<span class="c">//example: "MIT" → [["36","96"], ["18","96"], ["48","80"]]</span>
+<span class="k">int</span> n = input.length();
+<span class="k">int</span>[][] rotationAngles = <span class="k">new int</span>[n][2];
+
+<span class="k">for</span> (n iterations) {
+    <span class="c">//convert the ith character of input to a braille array</span>
+    <span class="c">//example: convertToBraille("M") → ["101","100"]</span>
+    String[] braille = convertToBraille(input.substring(i, i+1));
+
+    <span class="c">//find the position of each row string in the De Bruijn sequence</span>
+    <span class="c">//since each substring is 3 chars long, there are 8 possible positions</span>
+    <span class="k">int</span> row1Pos = <span class="s">"0010111000"</span>.indexOf(braille[0]);
+    <span class="k">int</span> row2Pos = <span class="s">"0010111000"</span>.indexOf(braille[1]);
+
+    <span class="c">//the dots are 18 degrees apart</span>
+    rotationAngles[i][0] = row1Pos * 18;
+    rotationAngles[i][1] = row2Pos * 18;
+}</pre>
+
+        <p>In the actual firmware there's no braille at all: each character maps straight to its two angles, since storing that table takes very little memory. The version above would work just as well, though. Nothing here is limited by processing or servo speed, only by how fast a person reads.</p>
+      </section>
+
+
+      <!-- ================= PROTOTYPES ================= -->
+      <section class="ga-sec" id="prototypes" data-open>
+        <h2 class="ga-h2"><span>Prototypes</span></h2>
+        <p>Some of the versions along the way. One used a sliding key with the 2 × 4 sequence, since some braille is 2 × 4, but I was told that's not useful and went back to 2 × 3. Another was a single cell that oscillates under one finger, to mimic dragging your finger along a line of braille.</p>
+
+        <div class="pj-grid" style="--cols:3;">
+          <figure class="pj-tile light" style="--ar:598/317"><img data-zoom src="../assets/web/img/br-key-cad.jpg" alt="CAD of the sliding key mechanism with gears" loading="lazy"><figcaption>Sliding key, k = 2, n = 4</figcaption></figure>
+          <figure class="pj-tile" style="--ar:987/375"><img data-zoom src="../assets/web/img/br-6key-render.jpg" alt="Render of a black six-key display" loading="lazy"><figcaption>Six-key display, render</figcaption></figure>
+          <figure class="pj-tile" style="--ar:583/437"><img data-zoom src="../assets/web/img/br-6key-proto.jpg" alt="The printed six-key prototype" loading="lazy"><figcaption>Six-key display, early print</figcaption></figure>
+          <figure class="pj-tile" style="--ar:391/275"><img data-zoom src="../assets/web/img/br-onecell-open.jpg" alt="The yellow one-cell prototype opened up, showing its servos" loading="lazy"><figcaption>One cell that oscillates</figcaption></figure>
+          <figure class="pj-tile light" style="--ar:278/286"><img data-zoom src="../assets/web/img/br-key-sketch.jpg" alt="Fusion 360 sketch of the key with the sequence laid out along an arc" loading="lazy"><figcaption>Sketching the sequence</figcaption></figure>
+          <figure class="pj-tile light" style="--ar:407/280"><img data-zoom src="../assets/web/img/br-key-gear.jpg" alt="The extruded key with a herringbone gear" loading="lazy"><figcaption>The key with its herringbone gear</figcaption></figure>
         </div>
 
+        <p>My 2023 maker portfolio video goes over this and a few of my other projects from high school:</p>
+        <div class="pj-video">
+          <iframe src="https://www.youtube-nocookie.com/embed/NxsyXVb6r7Q" title="Maker Portfolio 2023" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </section>
 
     </div>
-    
+  </main>
+
+  <div id="modal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage" alt="">
+  </div>
+
+  <script src="genauto-nav.js"></script>
+  <script src="genauto-layout.js"></script>
+  <script src="project.js"></script>
+  <script src="../blend.js" defer></script>
 </body>
-
-
-    <script src="app.js"></script>
-
 </html>

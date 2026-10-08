@@ -9,7 +9,7 @@ Writes into assets/GenAutoVids/slides/:
   shape-solution.svg  the wheel coupling's two lower arms on a round wheel: they pivot
                       below the wheel's centre, so the arc each clamp sweeps is not
                       concentric with the rim and crosses it at exactly one point
-  shape-examples.svg  the same arms on a round, a long tapered, a flat-bottomed and an oval wheel
+  shape-examples.svg  the same arms on a round, a long waisted, a flat-bottomed and a long round-cornered wheel
 
 Lines get a small deterministic wobble so they read as sketched.
 """
@@ -224,12 +224,16 @@ def bez(p0, p1, p2, p3, n=60):
     return out
 
 
-# 'tapered': longer than round, with the bottom edges bowed outward but kept
-# inside the red arcs, so each arc crosses the edge only near its top end and
-# the arms meet it close to horizontal. (B, kx, ky, kb) were searched for in
-# shapely: depth 66 (round is 60), crossing about 3 degrees above horizontal,
-# at least 3 units between the edge and the rest of the arc.
-TAPER = (66.0, 6.0, 9.0, 20.0)
+# 'waisted': longer than round. Below the centre line the edge coves in to a
+# short vertical stretch, which is where the arcs cross it (arms close to
+# horizontal), then curves in (concave) to a rounded point well below the
+# round wheel's bottom, staying inside the arcs so they cross only once.
+WAIST_X, WAIST_Y0, WAIST_Y1, WAIST_B = 47.5, 12.0, 27.0, 78.0
+# 'long': a semicircle on a rounded rectangle
+LONG_B, LONG_R = 68.0, 26.0
+# how far each arm sits back up its arc from where the arc leaves the wheel
+# (degrees), so the clamp lands on the rim rather than its outer edge
+RAISE = {'round': 4.0, 'flat': 7.0}
 
 
 def wheel_outline(kind, c):
@@ -237,10 +241,22 @@ def wheel_outline(kind, c):
     for k in range(0, 91):                  # top half: always the same semicircle
         t = math.pi + math.pi * k / 90
         pts.append((c[0] + WR * math.cos(t), c[1] + WR * math.sin(t)))
-    if kind == 'tapered':
-        B, kx, ky, kb = TAPER
-        right = bez((WR, 0), (WR - kx, ky), (kb, B), (0, B))
+    if kind == 'waisted':
+        X, Y0, Y1, B = WAIST_X, WAIST_Y0, WAIST_Y1, WAIST_B
+        right = (bez((WR, 0), (WR, Y0 * 0.55), (X, Y0 * 0.45), (X, Y0), 20)
+                 + [(X, Y0 + (Y1 - Y0) * k / 8) for k in range(1, 9)]
+                 + bez((X, Y1), (30, Y1 + 9), (9, B - 15), (0, B), 40)[1:])
         half = right[1:] + [(-x, y) for x, y in reversed(right)][1:-1]
+        return pts + [(c[0] + x, c[1] + y) for x, y in half]
+    if kind == 'long':
+        X, B, r = WR, LONG_B, LONG_R
+        right = []
+        for k in range(1, 21):
+            right.append((X, (B - r) * k / 20))
+        for k in range(1, 23):
+            t = math.pi / 2 * k / 22
+            right.append((X - r + r * math.cos(t), B - r + r * math.sin(t)))
+        half = right[:-1] + [(-x, y) for x, y in reversed(right)]
         return pts + [(c[0] + x, c[1] + y) for x, y in half]
     for k in range(1, 90):                  # bottom half: the part that changes
         t = math.pi * k / 90
@@ -260,6 +276,8 @@ def wheel_outline(kind, c):
 
 def wheel_parts(kind, c):
     outer = Polygon(wheel_outline(kind, c)).buffer(0)
+    if kind == 'waisted':
+        outer = outer.buffer(-3, join_style=1).buffer(3, join_style=1)     # round the point
     inner = outer.buffer(-RIM, join_style=1)
     hub = Point(c).buffer(HUB, 48)
     top_hole = inner.intersection(sbox(c[0] - 200, c[1] - 200, c[0] + 200, c[1] - BAR)).difference(hub)
@@ -306,12 +324,12 @@ def arm_hit(outer, P, side):
     return end
 
 
-def arms_on(c, outer, body, angles=None, solid=True, width=5.4, dot=5.6, top=True):
+def arms_on(c, outer, body, angles=None, solid=True, width=6.2, dot=6.6, top=True, raise_deg=0.0):
     PL, PR = (c[0] - PIV_G, c[1] + PIV_DY), (c[0] + PIV_G, c[1] + PIV_DY)
     st = '' if solid else ' stroke-dasharray="4 4" opacity="0.6"'
     tips = []
     for P, side in ((PL, -1), (PR, 1)):
-        a = angles[0 if side < 0 else 1] if angles else arm_hit(outer, P, side)
+        a = angles[0 if side < 0 else 1] if angles else arm_hit(outer, P, side) - side * math.radians(raise_deg)
         tip = (P[0] + ARM_L * math.cos(a), P[1] + ARM_L * math.sin(a))
         body.append(path(line(P, tip, amp=0.25), stroke=ARM, width=width if solid else width * 0.45, extra=st))
         tips.append(tip)
@@ -321,14 +339,14 @@ def arms_on(c, outer, body, angles=None, solid=True, width=5.4, dot=5.6, top=Tru
     return tips
 
 
-ARC_RED = '#f0332b'
+ARC_RED = '#a3161b'
 
 
 def red_arcs(c, body):
     """each clamp's path: a dotted arc with a small arrowhead at both ends"""
     for P, side in (((c[0] - PIV_G, c[1] + PIV_DY), -1), ((c[0] + PIV_G, c[1] + PIV_DY), 1)):
         a0, a1 = arc_span(P, side)
-        body.append(path(d(wobble(arc_pts(P, ARM_L, a0, a1, 40), 0.4)), stroke=ARC_RED, width=3.0,
+        body.append(path(d(wobble(arc_pts(P, ARM_L, a0, a1, 40), 0.4)), stroke=ARC_RED, width=3.2,
                          extra=' stroke-dasharray="0.1 5.4"'))
         for a, sgn in ((a0, -1), (a1, 1)):
             tip = (P[0] + ARM_L * math.cos(a), P[1] + ARM_L * math.sin(a))
@@ -336,10 +354,10 @@ def red_arcs(c, body):
             body.append(arrowhead(tip, tang, size=4.6, color=ARC_RED, width=2.0))
 
 
-def hub_and_top(c, body, width=5.4):
+def hub_and_top(c, body, width=6.2):
     topP = (c[0], c[1] - WR)
     body.append(path(line(c, topP, amp=0.25), stroke=ARM, width=width))
-    body.append('<circle cx="%.1f" cy="%.1f" r="5.0" fill="%s" stroke="%s" stroke-width="1.1"/>' % (topP[0], topP[1], RED, INK))
+    body.append('<circle cx="%.1f" cy="%.1f" r="5.8" fill="%s" stroke="%s" stroke-width="1.1"/>' % (topP[0], topP[1], RED, INK))
     for P in ((c[0] - PIV_G, c[1] + PIV_DY), (c[0] + PIV_G, c[1] + PIV_DY)):
         body.append(circle(P, PIV_G * 0.95, fill=RIM_DARK, stroke=ARM, width=1.2))
     body.append('<circle cx="%.1f" cy="%.1f" r="3.4" fill="%s"/>' % (c[0], c[1], INK))
@@ -364,7 +382,7 @@ def shape_arms():
 
 def shape_examples():
     body = []
-    kinds = ('round', 'tapered', 'flat', 'long')
+    kinds = ('round', 'waisted', 'flat', 'long')
     xs = [72 + 150 * k for k in range(4)]
     cy = 82.0
     # the top point and the centre line up across all four
@@ -374,9 +392,9 @@ def shape_examples():
         c = (float(x), cy)
         outer = draw_wheel(kind, c, body)
         red_arcs(c, body)
-        arms_on(c, outer, body)
+        arms_on(c, outer, body, raise_deg=RAISE.get(kind, 0.0))
         hub_and_top(c, body)
-    return svg(600, 168, body,
+    return svg(600, 176, body,
                'Four steering wheels straight on, all with the same top half and centre, different below. The top arm is '
                'the same on all of them. The lower clamps move on the same red arcs every time, and each arm stops where '
                'its arc meets that wheel\'s edge.')

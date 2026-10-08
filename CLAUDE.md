@@ -14,7 +14,7 @@ Pushing straight to `master` is the normal workflow for this repo.
 | `pages/*.html` | One page per project. `genauto.html` = steering robot (Gen Auto AI), `platform.html` = motion platform, `6dof.html` = desktop arm, `desmos.html` = cycloid generator, plus `braille`, `cycloid`, `controller`, `liq`, `sumo`. |
 | `pages/page-styles.css` | Old global stylesheet every project page loads. Has sharp edges (see Gotchas). |
 | `pages/genauto.css` | Components for the write-up style (`.ga-sec`, `.ga-h2/h3`, `.ga-fig`, `.ga-grid`, `.ga-label`, `.ga-calc`, `.ga-nav` …). Steering robot page puts them on a white sheet (`.ga-paper`). |
-| `pages/project.css` | Same components on the navy background (`.ga-night`) plus media blocks: `.pj-grid/.pj-tile`, `.pj-split`, `.pj-wide`, `.pj-video`, `.pj-embed`, `.cyc-sim`. Used by platform, 6dof, desmos. |
+| `pages/project.css` | Same components on the navy background (`.ga-night`) plus media blocks: `.pj-grid/.pj-tile`, `.pj-split`, `.pj-wide`, `.pj-video`, `.pj-embed`, `.cyc-sim`, plus `.pj-white` (white panel for black-ink sketches), `.pj-code`, `.cy-bom`. Used by platform, 6dof, desmos, cycloid, braille. |
 | `pages/genauto-nav.js` | Side section menu. Fades after 900 ms idle; on phones shows only ticks until tapped. |
 | `pages/genauto-layout.js` | Sizes `.ga-fit` figure/text pairs; makes sections collapsible on phones (open by default: first section, or any with `data-open`). |
 | `pages/project.js` | Lazy-plays `video[data-autoplay][data-src]` in view; `img[data-zoom]` opens the modal. |

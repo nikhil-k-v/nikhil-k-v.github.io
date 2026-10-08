@@ -328,3 +328,40 @@
 .cyc-readout .cyc-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem; }
 .cyc-readout .cyc-val { min-width: 0; }
 @media (max-width: 1000px) { .cyc-readout { gap: 0.5rem; } .cyc-readout .cyc-val { font-size: 0.95rem; } }
+
+/* ---------- cycloidal actuator: exploded view beside its parts list ---------- */
+.pj-split.cy-bom { grid-template-columns: minmax(0, 0.55fr) minmax(0, 1fr); align-items: center; }
+.cy-bom .pj-tile.light > img { object-fit: contain; padding: 0.6rem; box-sizing: border-box; background: #fff; }
+.cy-table { margin: 0 !important; }
+.cy-table td:last-child, .cy-table th:last-child { text-align: right; padding-right: 0; }
+.cy-table tbody th { width: 2.2rem; }
+@media (max-width: 1000px) {
+  .pj-split.cy-bom { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); gap: 0.8rem; }
+  .cy-table th, .cy-table td { padding: 0.28rem 0.35rem 0.28rem 0 !important; }
+}
+
+/* ---------- braille display ---------- */
+/* black-ink sketches and the table sit on white panels */
+.pj-white { background: #ffffff; border-radius: 6px; padding: 1rem 1.2rem; margin: 1rem auto; box-sizing: border-box; }
+.pj-white img { display: block; width: 100%; height: auto; margin: 0 auto; }
+.pj-white + .pj-cap, .ga-night .pj-cap { display: block; width: 100%; max-width: none !important; margin: -0.5rem 0 1.2rem 0; text-align: center; font-size: 0.78rem; color: var(--ga-ink-soft); }
+.br-sketches { display: grid; grid-template-columns: 1.4fr 0.6fr 1fr; gap: 1.2rem; align-items: end; }
+.br-sketches figure { margin: 0; }
+.br-sketches figcaption { position: static !important; transform: none !important; white-space: normal !important; width: auto !important;
+  margin: 0.5rem 0 0 0; font-size: 0.72rem; line-height: 1.35; color: #3a3f45; text-align: center; }
+.pj-white.narrow { max-width: 640px; }
+.pj-code { background: #0b1826; border: 1px solid var(--ga-rule); border-radius: 6px; padding: 0.9rem 1rem; margin: 1rem 0;
+  overflow-x: auto !important; font: 400 0.78rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: #d6dde6; white-space: pre; }
+.pj-code, .pj-code * { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace !important; }
+.pj-code * { overflow: visible !important; }
+.pj-code .c { color: #6f8aa5; }
+.pj-code .s { color: #9fd8a3; }
+.pj-code .k { color: #ff8ea0; }
+.br-cost { margin: 1rem 0; }
+.br-cost td:last-child { text-align: right; white-space: nowrap; color: var(--light-primary); }
+@media (max-width: 1000px) {
+  .br-sketches { grid-template-columns: 1fr 1fr; }
+  .br-sketches figure:first-child { grid-column: span 2; }
+  .pj-white { padding: 0.7rem 0.8rem; }
+  .pj-code { font-size: 0.66rem; padding: 0.7rem; }
+}

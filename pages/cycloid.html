@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cycloidal Actuator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>CYCLOIDAL ACTUATOR</title>
+  <meta name="description" content="Laser-cut cycloidal gearboxes for the NEMA stepper motors in my 6DOF robotic arm, with gear profiles from my own Desmos generator.">
   <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
   <link rel="stylesheet" href="page-styles.css">
+  <link rel="stylesheet" href="../about.css">
+  <link rel="stylesheet" href="genauto.css">
+  <link rel="stylesheet" href="project.css?v=3">
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
@@ -13,31 +17,29 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   if (window.self === window.top) gtag('config', 'G-ZPCC960TZ2');
 </script>
 
 <body>
   <script src="../loader.js?v=10" data-mode="page"></script>
-  <header>
-    <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
-    <h1 class="page-title">CYCLOIDAL ACTUATOR</h1>
-  </header>
+  <header></header>
+
+  <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
 
   <main>
-    <div class="img-container" style="margin-top: 6rem !important;">
-      <figcaption>28:1 CYCLOIDAL GEARBOX I CREATED FOR MY 6DOF ROBOTIC ARM</figcaption>  
+    <div id="arm-anim-container" class="img-container" style="margin-top: 2rem !important;">
+      <h1 class="page-title">CYCLOIDAL ACTUATOR</h1>
       <video class="anim" poster="../assets/anim/CycloidAnim-960.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source media="(max-width: 1100px)" src="../assets/anim/CycloidAnim-960.mp4" type="video/mp4"><source src="../assets/anim/CycloidAnim-1280.mp4" type="video/mp4"></video>
     </div>
 
-    <section class="project-meta after-caption">
+    <section class="project-meta">
       <div class="meta-box meta-timeframe">
         <span class="meta-label">Timeframe</span>
         <span class="meta-value">2023</span>
       </div>
       <div class="meta-box meta-summary">
         <span class="meta-label">Overview</span>
-        <span class="meta-value">28:1 Cycloidal Reducer <em>/</em> NEMA Steppers <em>/</em> Laser-Cut Parts <em>/</em> Desmos API <em>/</em> Fusion 360</span>
+        <span class="meta-value">Cycloidal Reducer <em>/</em> NEMA 17 Steppers <em>/</em> Laser-Cut Acrylic <em>/</em> Desmos API <em>/</em> Fusion 360</span>
       </div>
       <div class="meta-box meta-affiliation">
         <span class="meta-label">Affiliation</span>
@@ -48,55 +50,136 @@
         <span class="meta-value">In use in the 6DOF arm</span>
       </div>
     </section>
-    <div class="p-container">
-        <p>Gearboxes, transmissions, and actuators are extremely interesting to me, and for my current main project - creating a 6 degree of freedom robotic arm 
-          with a friend (<a href="https://leveraction.wixsite.com/sainventions" target="_blank">Sahil</a>) - we needed reducers to increase our NEMA stepper motors’ torque output and precision. </p> <p> Ratherthan buy/find actuators online, 
-          I chose to generate them myself to learn function driven modeling and apply some of my knowledge in parametric functions & cycloids. Using the Desmos API 
-          & Fusion 360s Equation Driven Curve add-in, I created a parametric cycloidal gear generator which can test the parameters and animate visualize/animate the 
-          cycloid you want. The generator was successfully used in creating the actuators for the robotic arm, and you can try it out <a href="https://www.desmos.com/calculator/qfcupuubfp" target="_blank">HERE</a>.
-        </p>
+
+    <!-- media straight under the meta strip -->
+    <div class="pj-top">
+      <div class="pj-grid" style="--cols:4;">
+        <figure class="pj-tile span2 tall"><video data-autoplay data-src="../assets/web/cycloidMotor.mp4" poster="../assets/web/cycloidMotor.jpg" aria-label="A cycloidal actuator turning on its stepper motor"></video><figcaption>Running on a NEMA 17</figcaption></figure>
+        <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/cy3.jpg" alt="A cycloidal reducer held in a hand" loading="lazy"></figure>
+        <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/in2.jpg" alt="Cycloidal reducer mounted on a NEMA stepper motor" loading="lazy"></figure>
+        <figure class="pj-tile" style="--ar:3/4"><video data-autoplay data-src="../assets/web/cycloidHand.mp4" poster="../assets/web/cycloidHand.jpg" aria-label="Turning a cycloidal reducer by hand"></video><figcaption>Turned by hand</figcaption></figure>
+        <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/cy6.jpg" alt="A cycloidal reducer with its output hub" loading="lazy"></figure>
+      </div>
     </div>
 
-    <div class="p-container">
-      <p>
-        A more comprehensive write-up is coming soon!
-      </p>
+    <nav class="ga-nav" aria-label="Page sections">
+      <ol>
+        <li><a href="#overview"><span class="tick"></span><span class="label">Overview</span></a></li>
+        <li><a href="#design"><span class="tick"></span><span class="label">Design</span></a></li>
+        <li><a href="#parts"><span class="tick"></span><span class="label">Parts</span></a></li>
+        <li><a href="#arm"><span class="tick"></span><span class="label">In the arm</span></a></li>
+        <li><a href="#video"><span class="tick"></span><span class="label">Video</span></a></li>
+      </ol>
+    </nav>
+
+    <div class="ga-night">
+
+      <!-- ================= OVERVIEW ================= -->
+      <section class="ga-sec" id="overview" data-open>
+        <h2 class="ga-h2"><span>Overview</span></h2>
+        <p>My <a href="6dof.html">6DOF arm</a> runs on NEMA 17 stepper motors, so it needed gearboxes with a high reduction to get more torque and precision out of them. I went with cycloidal reducers. I couldn't find cycloidal gear profiles in our size range, and we didn't want to buy them, so I made my own.</p>
+        <p>The gear profiles come from a <a href="desmos.html">cycloid generator</a> I built on the Desmos API. It turns a few parameters into equations that go straight into Fusion 360's Equation Driven Curve add-in, which is how every disc here was modeled. The actuators were all my work; the arm itself I built with Sahil Shah.</p>
+        <p>The result is a 28:1 gearbox with nearly zero backlash that's still backdrivable.</p>
+      </section>
+
+
+      <!-- ================= DESIGN ================= -->
+      <section class="ga-sec" id="design" data-open>
+        <h2 class="ga-h2"><span>Design</span></h2>
+        <div class="pj-split fig-wide">
+          <div>
+            <p>The motor turns an eccentric cam, which drives the cycloid disc around inside a ring of fixed pins. Each turn of the input moves the disc over by one lobe, so the disc turns slowly the other way, and an output plate picks that up.</p>
+            <p>The plates are laser cut from acrylic, which is why everything is see-through. They can be 3D printed instead if laser cutting isn't an option. The rest is MR106 and 6705 bearings and bolts.</p>
+            <p>The <a href="desmos.html#reduction">generator page</a> has a simulation of the disc and the math behind the profile.</p>
+          </div>
+          <figure class="pj-tile" style="--ar:960/686; margin:0;"><video data-autoplay data-src="../assets/web/cycloidBLDC.mp4" poster="../assets/web/cycloidBLDC.jpg" aria-label="A cycloidal stage driven by a brushless motor"></video><figcaption>One stage on a brushless motor</figcaption></figure>
+        </div>
+
+        <div class="pj-grid" style="--cols:4;">
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/cy1.jpg" alt="A finished cycloidal reducer in clear acrylic on black" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/cy2.jpg" alt="The reducer from above, showing the pins and the disc" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/cy5.jpg" alt="The reducer in a hand, with a red disc inside" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/cy7.jpg" alt="The reducer with its output hub fitted" loading="lazy"><figcaption>Output hub</figcaption></figure>
+        </div>
+      </section>
+
+
+      <!-- ================= PARTS ================= -->
+      <section class="ga-sec" id="parts" data-open>
+        <h2 class="ga-h2"><span>Parts</span></h2>
+        <div class="pj-split cy-bom">
+          <figure class="pj-tile light" style="--ar:330/494; margin:0;"><img data-zoom src="../assets/web/img/cyc-exploded-parts.jpg" alt="Exploded view of the cycloidal actuator with numbered parts" loading="lazy"></figure>
+          <div>
+            <table class="pf-table cy-table">
+              <thead><tr><th>#</th><th>Part</th><th>Qty</th></tr></thead>
+              <tbody>
+                <tr><th>1</th><td>Upper face</td><td>1</td></tr>
+                <tr><th>2</th><td>Cycloid ring</td><td>1</td></tr>
+                <tr><th>3</th><td>Lower face</td><td>1</td></tr>
+                <tr><th>4</th><td>Cycloid ring 2</td><td>1</td></tr>
+                <tr><th>5</th><td>Cycloid 2</td><td>1</td></tr>
+                <tr><th>6</th><td>Cycloid 1</td><td>1</td></tr>
+                <tr><th>7</th><td>Upper pin holder</td><td>1</td></tr>
+                <tr><th>8</th><td>Upper cam</td><td>1</td></tr>
+                <tr><th>9</th><td>Lower cam</td><td>1</td></tr>
+                <tr><th>10</th><td>Housing spacer</td><td>1</td></tr>
+                <tr><th>11</th><td>Lower pin holder</td><td>1</td></tr>
+                <tr><th>12</th><td>MR106 bearing</td><td>4</td></tr>
+                <tr><th>13</th><td>6705 bearing</td><td>2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ================= IN THE ARM ================= -->
+      <section class="ga-sec" id="arm" data-open>
+        <h2 class="ga-h2"><span>In the arm</span></h2>
+        <p>The arm uses three NEMA 17s, two NEMA 11s and a NEMA 8, with belt-and-pulley linkages in DOF 2, 3 and 5. At the base, DOF 1 sits on one of these actuators along with an axial bearing, radial bearings and a limit switch, all inside a printed housing.</p>
+
+        <div class="pj-grid" style="--cols:2;">
+          <figure class="pj-tile light" style="--ar:681/489"><img data-zoom src="../assets/web/img/armN-dof1.jpg" alt="The base of the arm under DOF 1 in CAD" loading="lazy"><figcaption>DOF 1</figcaption></figure>
+          <figure class="pj-tile light" style="--ar:681/489"><img data-zoom src="../assets/web/img/armN-dof1-xray.jpg" alt="The same base with the printed housing see-through, showing the cycloidal actuator, bearings and limit switch inside" loading="lazy"><figcaption>Housing made see-through</figcaption></figure>
+        </div>
+
+        <div class="pj-grid" style="--cols:4;">
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/cyc-in-arm.jpg" alt="A cycloidal actuator mounted in one of the arm's joints" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/arm3.jpg" alt="An acrylic cycloidal stage inside a black printed arm link" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/arm4.jpg" alt="The same link from another angle" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/cyc-arm-side.jpg" alt="The assembled arm, with steppers and actuators at the joints" loading="lazy"></figure>
+          <figure class="pj-tile light" style="--ar:1"><img data-zoom src="../assets/web/img/arm6.jpg" alt="Render of a stepper motor with a cycloidal stage on it" loading="lazy"></figure>
+          <figure class="pj-tile light" style="--ar:1"><img data-zoom src="../assets/web/img/arm7.jpg" alt="Render of two cycloidal stages side by side on their motors" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/cyc-arm-close.jpg" alt="Close-up of the arm's upper joints" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:1"><video data-autoplay data-src="../assets/web/armGood.mp4" poster="../assets/web/armGood.jpg" aria-label="The finished arm moving through a sequence of poses"></video></figure>
+        </div>
+      </section>
+
+
+      <!-- ================= VIDEO ================= -->
+      <section class="ga-sec" id="video" data-open>
+        <h2 class="ga-h2"><span>Video</span></h2>
+        <p>I made a video about the actuators and how I generated them:</p>
+        <div class="pj-video">
+          <iframe src="https://www.youtube-nocookie.com/embed/pa9qdXy_RqI" title="Cycloidal Robotic Actuators: The Cheap &amp; Compact Solution" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <p>My 2023 maker portfolio video goes over this and a few of my other projects from high school:</p>
+        <div class="pj-video">
+          <iframe src="https://www.youtube-nocookie.com/embed/NxsyXVb6r7Q" title="Maker Portfolio 2023" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div id="modal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage" alt="">
   </div>
 
-  <div class="container">
-    <iframe class="desmos-embed" scrolling="no" title="desmos" src="https://codepen.io/nikhil-k-v/embed/YzOyYpx?default-tab=result&theme-id=dark" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-      See the Pen <a href="https://codepen.io/nikhil-k-v/pen/YzOyYpx">
-      desmos</a> by nv (<a href="https://codepen.io/nikhil-k-v">@nikhil-k-v</a>)
-      on <a href="https://codepen.io">CodePen</a>.
-    </iframe>
-  </div>
-
-  <script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>
-
-
-    </main>
-
-    <div class="gallery">
-      <img class="gallery-img" src="/assets/img-gal/in1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/in2.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/in3.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy2.PNG" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy3.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy4.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy5.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy6.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy7.png" alt="Image 2">
-    </div>
-
-    <!-- Modal -->
-    <div id="modal" class="modal">
-      <span class="close">&times;</span>
-      <img class="modal-content" id="modalImage">
-    </div>
-    
-
-  <script src="app.js"></script>
+  <script src="genauto-nav.js"></script>
+  <script src="genauto-layout.js"></script>
+  <script src="project.js"></script>
   <script src="../blend.js" defer></script>
 </body>
 </html>
