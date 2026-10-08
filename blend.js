@@ -18,17 +18,27 @@
   var vids = Array.prototype.slice.call(document.querySelectorAll('video.anims, video.anim'));
   if (!vids.length) return;
 
+  // brightness(x) from the inline filter, done in the canvas for the cards
+  function brightnessOf(style) {
+    var m = /brightness\(\s*([\d.]+)(%?)\s*\)/.exec(style || '');
+    return m ? parseFloat(m[1]) / (m[2] ? 100 : 1) : 1;
+  }
+
   var pairs = vids.map(function (v) {
     var cv = document.createElement('canvas');
     cv.className = v.className;
-    cv.setAttribute('style', v.getAttribute('style') || '');
+    var style = v.getAttribute('style') || '';
+    // home cards sit on a flat colour, so their canvas paints that colour and
+    // blends the clip onto it itself: no CSS blending needed at all
+    var card = v.closest('.box');
+    cv.setAttribute('style', card ? style.replace(/filter\s*:[^;]*;?/g, '').replace(/mix-blend-mode\s*:[^;]*;?/g, '') + ';mix-blend-mode:normal' : style);
     cv.setAttribute('aria-hidden', 'true');
     cv.width = 960;                       // replaced with the clip's own size once known
     cv.height = 540;
     v.parentNode.insertBefore(cv, v.nextSibling);
     v.style.opacity = '0';
     v.style.mixBlendMode = 'normal';
-    var p = { v: v, cv: cv, cx: cv.getContext('2d'), seen: true, t: -1 };
+    var p = { v: v, cv: cv, cx: cv.getContext('2d'), seen: true, t: -1, card: card, bright: brightnessOf(style), bg: '' };
     if (v.poster) {
       var im = new Image();
       im.onload = function () { if (p.t < 0) paint(p, im, im.naturalWidth, im.naturalHeight); };
@@ -37,16 +47,36 @@
     return p;
   });
 
+  var tmp = document.createElement('canvas'), tx = tmp.getContext('2d');
   function paint(p, el, w, h) {
     if (!w || !h) return;
     if (p.cv.width !== w || p.cv.height !== h) { p.cv.width = w; p.cv.height = h; }
-    try { p.cx.drawImage(el, 0, 0, w, h); } catch (_) {}
+    var x = p.cx;
+    try {
+      if (!p.card) { x.drawImage(el, 0, 0, w, h); return; }
+      // clip, brightened by drawing it again additively
+      if (tmp.width !== w || tmp.height !== h) { tmp.width = w; tmp.height = h; }
+      tx.globalCompositeOperation = 'source-over'; tx.globalAlpha = 1;
+      tx.drawImage(el, 0, 0, w, h);
+      var b = p.bright;
+      while (b > 1.001) {
+        tx.globalCompositeOperation = 'lighter'; tx.globalAlpha = Math.min(1, b - 1);
+        tx.drawImage(el, 0, 0, w, h); b -= 1;
+      }
+      // card colour, then the clip with black dropped out
+      x.globalCompositeOperation = 'source-over';
+      x.fillStyle = getComputedStyle(p.card).backgroundColor;
+      x.fillRect(0, 0, w, h);
+      x.globalCompositeOperation = 'lighten';
+      x.drawImage(tmp, 0, 0);
+      x.globalCompositeOperation = 'source-over';
+    } catch (_) {}
   }
 
   function frame(p) {
     var v = p.v;
     if (v.readyState < 2 || !v.videoWidth) return;
-    if (v.currentTime === p.t) return;
+    if (v.currentTime === p.t && !p.card) return;
     p.t = v.currentTime;
     paint(p, v, v.videoWidth, v.videoHeight);
   }

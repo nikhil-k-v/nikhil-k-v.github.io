@@ -469,18 +469,6 @@ body.home {
     background-color: var(--dark-primary);
     border-radius: 12px;
   }
-  /* a thin frame like the cards', so the pane reads as one closed panel
-     rather than a page running off the bottom of the screen */
-  .preview-stage::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    border-radius: inherit;
-    box-shadow: inset 0 0 0 2px var(--dark-accent);
-    pointer-events: none;
-  }
-
   /* videos for the preview play in here, under a navy cover; the canvas
      copies their frames into the dithered picture */
   .preview-media {
@@ -581,3 +569,6 @@ body.home {
   .track { --dur: 0.01s; }
   .preview[data-state="loading"] .preview-cta { animation: none; }
 }
+
+/* labels stay above the card animation (blend.js paints an opaque copy of it on Safari) */
+.box .index-label { position: relative; z-index: 2; }

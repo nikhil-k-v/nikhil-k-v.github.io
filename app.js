@@ -47,7 +47,7 @@ window.addEventListener('load', function () {
 
   var HOLD = 1600;        // ms the loader stays up
   var SCRAMBLE = 1150;    // ms for LOADING to resolve
-  var DISSOLVE = 560;     // ms for the dither-out
+  var DISSOLVE = 1400;    // ms for the dither-out, top to bottom
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   loader.style.display = 'flex';
@@ -127,30 +127,64 @@ function cycloidDisc(canvas) {
   return function () { cancelAnimationFrame(raf); };
 }
 
-/* remove an element by stepping an ordered (Bayer 4x4) dither mask from
-   full to empty, so it breaks up into a pixel pattern instead of fading */
+/* the loader breaks up into an ordered (Bayer 4x4) dither pattern that sweeps
+   from the top of the screen to the bottom, uncovering the page. The loader
+   is redrawn into a canvas (background, the turning disc, the text) and
+   cells are cut out of it each frame, so it stays smooth. */
 function ditherOut(el, ms, done) {
   var B = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
-  if (!ms || !('maskImage' in el.style || 'webkitMaskImage' in el.style)) { if (done) done(); return; }
-  var CELL = 3, tiles = [], c = document.createElement('canvas');
-  c.width = c.height = 4 * CELL;
-  var x = c.getContext('2d');
-  for (var lvl = 0; lvl <= 16; lvl++) {
-    x.clearRect(0, 0, c.width, c.height);
-    x.fillStyle = '#000';
-    for (var i = 0; i < 16; i++) if (B[i] >= lvl) x.fillRect((i % 4) * CELL, Math.floor(i / 4) * CELL, CELL, CELL);
-    tiles.push('url(' + c.toDataURL() + ')');
+  if (!ms) { if (done) done(); return; }
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  var W = window.innerWidth, H = window.innerHeight, CELL = 4;
+  var cols = Math.ceil(W / CELL), rows = Math.ceil(H / CELL);
+  var cv = document.createElement('canvas');
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:10000;pointer-events:none;';
+  var x = cv.getContext('2d');
+  var mask = document.createElement('canvas'); mask.width = cols; mask.height = rows;
+  var mx = mask.getContext('2d'), img = mx.createImageData(cols, rows);
+
+  var disc = el.querySelector('#loaderAnim'), txt = el.querySelector('#loaderText');
+  var dr = disc ? disc.getBoundingClientRect() : null, tr = txt ? txt.getBoundingClientRect() : null;
+  var cs = txt ? getComputedStyle(txt) : null;
+  var bg = getComputedStyle(el).backgroundColor;
+  document.body.appendChild(cv);
+  el.style.visibility = 'hidden';
+
+  function scene() {
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    x.globalCompositeOperation = 'source-over';
+    x.fillStyle = bg; x.fillRect(0, 0, W, H);
+    if (disc && dr) { try { x.drawImage(disc, dr.left, dr.top, dr.width, dr.height); } catch (_) {} }
+    if (txt && tr) {
+      x.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+      if ('letterSpacing' in x) x.letterSpacing = cs.letterSpacing;
+      x.fillStyle = cs.color; x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillText(txt.textContent, tr.left + tr.width / 2, tr.top + tr.height / 2);
+    }
   }
-  var size = (4 * CELL) + 'px ' + (4 * CELL) + 'px';
-  el.style.webkitMaskSize = el.style.maskSize = size;
-  el.style.webkitMaskRepeat = el.style.maskRepeat = 'repeat';
-  var t0 = performance.now();
+
+  var BAND = 0.4, t0 = performance.now();
   (function step(now) {
     var p = Math.min(1, (now - t0) / ms);
-    var lvl = Math.min(16, Math.floor(p * p * 17));  // eases in: slow start, quick finish
-    el.style.webkitMaskImage = el.style.maskImage = tiles[lvl];
+    var front = p * (1 + BAND);                     // sweep position, top to bottom
+    var d = img.data;
+    for (var r = 0; r < rows; r++) {
+      var lvl = (front - r / rows) / BAND;          // 0 above the band .. 1 fully gone
+      lvl = lvl < 0 ? 0 : lvl > 1 ? 1 : lvl;
+      for (var c = 0; c < cols; c++) {
+        var gone = B[((r & 3) << 2) | (c & 3)] < lvl * 16;
+        d[(r * cols + c) * 4 + 3] = gone ? 255 : 0;
+      }
+    }
+    mx.putImageData(img, 0, 0);
+    scene();
+    x.setTransform(1, 0, 0, 1, 0, 0);
+    x.globalCompositeOperation = 'destination-out';
+    x.imageSmoothingEnabled = false;
+    x.drawImage(mask, 0, 0, cols * CELL * dpr, rows * CELL * dpr);
     if (p < 1) requestAnimationFrame(step);
-    else if (done) done();
+    else { cv.remove(); if (done) done(); }
   })(t0);
 }
 

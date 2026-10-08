@@ -923,7 +923,7 @@
 .ga-clamp-row > .ga-fig { min-width: 0; margin: 0; }
 .ga-clamp-row > .ga-fig:nth-child(1) { flex: 1.333 1 0; }
 .ga-clamp-row > .ga-fig:nth-child(2) { flex: 0.82 1 0; }
-.ga-clamp-row > .ga-fig:nth-child(3) { flex: 0.771 1 0; }
+.ga-clamp-row > .ga-fig:nth-child(3) { flex: 1.374 1 0; }
 .ga-grid .ga-clamp-row .ga-fig img { width: 100%; height: auto; max-height: none; cursor: zoom-in; }
 .ga-sketchbox img { box-sizing: border-box; border: 1px solid rgba(15, 31, 48, 0.12); border-radius: 3px; }
 

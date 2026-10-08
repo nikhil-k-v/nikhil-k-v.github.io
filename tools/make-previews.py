@@ -36,7 +36,9 @@ SCREENS = 2                    # keep two screens' worth, for panes taller than 
 HIDE_CSS = '''
 html, body { overflow: hidden !important; scrollbar-width: none !important; }
 ::-webkit-scrollbar { display: none !important; }
-#back-to-home, .ga-nav, .project-meta, .page-title { display: none !important; }
+#back-to-home, .ga-nav, .project-meta, .page-title, #arm-anim-container { display: none !important; }
+main { padding-top: 0 !important; margin-top: 0 !important; }
+.pj-top, .ga-night, .ga-paper { margin-top: 14px !important; }
 video { visibility: hidden !important; }
 iframe { visibility: hidden !important; }
 .pj-video { position: relative; background: #0b2135 !important; }

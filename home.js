@@ -178,6 +178,19 @@
       });
     }, { root: track, rootMargin: '0px 75% 0px 75%' });
     lazy.forEach(function (v) { io.observe(v); });
+
+    // only the cards in (or next to) view keep decoding; the rest pause,
+    // which matters a lot on phones with a dozen clips in the strip
+    var all = Array.prototype.slice.call(track.querySelectorAll('video.anims'));
+    var vis = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var v = e.target;
+        if (e.isIntersecting) {
+          if (!v.hasAttribute('data-lazy') || v.getAttribute('data-awake')) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); }
+        } else if (!v.paused) v.pause();
+      });
+    }, { root: track, rootMargin: '0px 25% 0px 25%' });
+    all.forEach(function (v) { vis.observe(v); });
   })();
 
   /* ------------------------------------------------------------------
@@ -413,7 +426,7 @@
        live: optional fn(ctx, w, h) that paints moving media (videos, GIFs)
              over the base each refresh, so the preview isn't frozen */
     var liveAt = 0;
-    var LIVE_GAP = 66;      // refresh moving media ~15 times a second
+    var LIVE_GAP = 90;      // refresh moving media ~11 times a second
 
     function compose(L) {
       var w = Math.round(W * dpr), h = Math.round(H * dpr), x = L.cx;
@@ -548,10 +561,11 @@
       for (var cy = 0; cy < rows; cy++) {
         var py = (cy + 0.5) * C;
         var ey = smoothstep(0, FALL, Math.min(py, H - py));
+        var eb = smoothstep(H * 0.05, H * 0.32, H - py);    // the page fades out well before the bottom
         var by = (cy & 3) << 2;
         for (var cx = 0; cx < cols; cx++) {
           var px = (cx + 0.5) * C;
-          var e = Math.min(ey, smoothstep(0, FALL, Math.min(px, W - px)));
+          var e = Math.min(ey, smoothstep(0, FALL, Math.min(px, W - px)), eb);
           var ci = cy * cols + cx;
           var useOld = tp < 2 && order[ci] >= tp;
           var cm = useOld ? old.mode : mode;
@@ -743,7 +757,7 @@
 
     var PS = 0.72;          // how far the page is zoomed out in the pane
     var MIN_LOAD = 1400;    // the loading animation always gets this long
-    var DISSOLVE = 1100;
+    var DISSOLVE = 2100;
     var CYCLE = 5200;       // cards with two animations swap this often
 
     var manifest = null;
@@ -883,9 +897,14 @@
       // animation carries straight on into the page instead of restarting
       var cardVid = box && box.querySelector('video.anims');
       var cardKey = cardVid ? animKey(cardVid.currentSrc || cardVid.getAttribute('src')) : null;
-      var items = (v.media || []).map(function (m) {
+      // only the media that's actually inside the pane, and the small phone
+      // copies of the clips (the pane shows them a few hundred px wide)
+      var shownH = v.w * (stage.clientHeight || 1) / (stage.clientWidth || 1);
+      var small = (stage.clientWidth || 0) < 700;
+      var items = (v.media || []).filter(function (m) { return m.r[1] < shownH; }).map(function (m) {
         var same = cardKey && animKey(m.src) === cardKey;
-        var it = { m: m, vid: same ? cardVid : makeVideo(m.src), still: null };
+        var src = small ? m.src.replace(/^assets\/web\/([^/]+\.mp4)$/, 'assets/web/sm/$1') : m.src;
+        var it = { m: m, vid: same ? cardVid : makeVideo(src), still: null };
         if (m.poster) loadImage(m.poster).then(function (im) { it.still = im; }, function () {});
         return it;
       });
@@ -917,11 +936,11 @@
     }
 
     /* a card's animation, centred and enlarged (black drops out) */
-    function cardLayer(box, el) {
+    function cardLayer(box, el, zoom) {
       el = el || box.querySelector('.anims');
       if (!el) return null;
       var isVideo = el.tagName === 'VIDEO';
-      var zoom = parseFloat(box.getAttribute('data-preview-zoom')) || 2.3;
+      zoom = zoom || parseFloat(box.getAttribute('data-preview-zoom')) || 2.3;
       return function paint(ctx, w, h) {
         var nw = isVideo ? el.videoWidth : el.naturalWidth, nh = isVideo ? el.videoHeight : el.naturalHeight;
         if (isVideo ? el.readyState < 2 : !el.complete) return;
@@ -935,20 +954,39 @@
       };
     }
 
-    /* two animations on one card (TUBAA): swap between them every few seconds */
+    /* two animations on one card (TUBAA). The card's own clip loops cleanly
+       and plays the whole time. The second clip has no clean loop point, so
+       it's never looped: each time it's shown it starts again just after its
+       wind-up (data-preview-alt-from), plays slower, and hands back to the
+       first before it reaches its end. */
     function alternate(box, first, altSrc, my) {
       var vid = makeVideo(altSrc);
-      var second = cardLayer(box, vid);
-      var onFirst = true;
-      (function next(delay) {
+      vid.loop = false;
+      var from = parseFloat(box.getAttribute('data-preview-alt-from')) || 0;
+      var rate = parseFloat(box.getAttribute('data-preview-alt-rate')) || 1;
+      var second = cardLayer(box, vid, parseFloat(box.getAttribute('data-preview-alt-zoom')) || 0);
+      var FADE = 1500;
+      function rewind() { vid.pause(); try { vid.currentTime = from; } catch (_) {} }
+      function toSecond() {
+        if (my !== token) return;
+        if (vid.readyState < 2 || vid.seeking || !vid.duration) { cycleTimer = setTimeout(toSecond, 200); return; }
+        vid.playbackRate = rate;
+        var pr = vid.play(); if (pr && pr.catch) pr.catch(function () {});
+        R.crossTo(null, 'content', second, { dur: FADE });
+        // back to the first clip so the fade finishes before this one ends
+        var show = ((vid.duration - from) / rate) * 1000 - FADE - 200;
+        cycleTimer = setTimeout(toFirst, Math.max(800, show));
+      }
+      function toFirst() {
+        if (my !== token) return;
+        R.crossTo(null, 'content', first, { dur: FADE });
         cycleTimer = setTimeout(function () {
-          if (my !== token) return;
-          if (onFirst && vid.readyState < 2) { next(400); return; }
-          onFirst = !onFirst;
-          R.crossTo(null, 'content', onFirst ? first : second, { dur: 1500 });
-          next(CYCLE);
-        }, delay);
-      })(CYCLE);
+          rewind();                                  // seek while it's off screen
+          cycleTimer = setTimeout(toSecond, CYCLE - FADE);
+        }, FADE + 50);
+      }
+      vid.addEventListener('loadeddata', rewind, { once: true });
+      cycleTimer = setTimeout(toSecond, CYCLE);
     }
 
     function show(box) {

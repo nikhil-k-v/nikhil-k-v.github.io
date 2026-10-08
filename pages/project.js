@@ -16,8 +16,15 @@
     v.preload = 'none';
   });
 
+  // phones get the 540 px copies in assets/web/sm/ (a fraction of the bytes)
+  var SMALL = window.matchMedia && window.matchMedia('(max-width: 700px)').matches;
+  function srcOf(v) {
+    var s = v.dataset.src;
+    return SMALL ? s.replace(/assets\/web\/([^\/]+\.mp4)$/, 'assets/web/sm/$1') : s;
+  }
+
   function play(v) {
-    if (v.dataset.src && !v.getAttribute('src')) v.src = v.dataset.src;
+    if (v.dataset.src && !v.getAttribute('src')) v.src = srcOf(v);
     var p = v.play();
     if (p && p.catch) p.catch(function () {});
   }
@@ -25,7 +32,7 @@
   /* start downloading well before a clip scrolls in (about a screen and a
      half ahead), so it's already playing by the time it's on screen */
   function load(v) {
-    if (v.dataset.src && !v.getAttribute('src')) { v.preload = 'auto'; v.src = v.dataset.src; }
+    if (v.dataset.src && !v.getAttribute('src')) { v.preload = 'auto'; v.src = srcOf(v); }
   }
 
   if ('IntersectionObserver' in window) {

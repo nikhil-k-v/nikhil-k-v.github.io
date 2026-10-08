@@ -82,80 +82,32 @@ def svg(w, h, body, label, x0=0, y0=0):
 # ---------------------------------------------------------------- steering wheels
 
 def outline(kind, c, s):
-    """rim centre-line of a wheel of size s, as a closed list of points (y down)"""
+    """outer edge of a steering wheel of size s, as a closed list of points (y down)"""
     pts = []
-    N = 160
+    N = 180
     for i in range(N):
         t = 2 * math.pi * i / N
-        ct, st = math.cos(t), math.sin(t)
-        if kind == 'round':
-            x, y = s * ct, s * st
-        elif kind == 'oval':
-            x, y = 1.14 * s * ct, 0.9 * s * st
-        elif kind == 'square':
-            e = 4.0
-            x = s * 0.98 * math.copysign(abs(ct) ** (2 / e), ct)
-            y = s * 0.92 * math.copysign(abs(st) ** (2 / e), st)
-        elif kind == 'flat':
-            x, y = 1.03 * s * ct, 1.03 * s * st
-            if y > 0.66 * s:                       # flat bottom
-                y = 0.66 * s + (y - 0.66 * s) * 0.08
+        x, y = s * math.cos(t), s * math.sin(t)
+        if kind == 'flat':                      # flat bottom (a "D")
+            if y > 0.7 * s:
+                y = 0.7 * s + (y - 0.7 * s) * 0.06
+        elif kind == 'flattb':                  # flat top and bottom
+            x *= 1.04
+            if y > 0.74 * s:
+                y = 0.74 * s + (y - 0.74 * s) * 0.06
+            if y < -0.78 * s:
+                y = -0.78 * s + (y + 0.78 * s) * 0.06
+        elif kind == 'small':
+            x, y = 0.82 * x, 0.82 * y
         pts.append((c[0] + x, c[1] + y))
     return pts
 
 
-def offset(pts, dist):
-    """shift a closed polygon along its normals (positive = outward for CCW-on-screen)"""
-    n = len(pts)
-    out = []
-    for i in range(n):
-        a, b = pts[i - 1], pts[(i + 1) % n]
-        dx, dy = b[0] - a[0], b[1] - a[1]
-        L = math.hypot(dx, dy) or 1
-        out.append((pts[i][0] + dy / L * dist, pts[i][1] - dx / L * dist))
-    return out
-
-
-def wheel(kind, c, s, rim=None):
-    """a filled steering wheel: grey rim, three spokes, hub"""
-    rim = rim or max(5.0, s * 0.16)
+def wheel(kind, c, s):
+    """a steering wheel as one block of grey inside its outline"""
     mid = outline(kind, c, s)
-    outer, inner = offset(mid, -rim / 2), offset(mid, rim / 2)
-    # make sure "outer" is the larger one
-    if sum(math.hypot(p[0] - c[0], p[1] - c[1]) for p in outer) < sum(math.hypot(p[0] - c[0], p[1] - c[1]) for p in inner):
-        outer, inner = inner, outer
-    sw = 1.3 + s * 0.012
-    body = []
-    # spokes (under the rim): left, right, bottom
-    hub = s * 0.3
-    for ang in (math.pi, 0.0, math.pi / 2):
-        ux, uy = math.cos(ang), math.sin(ang)
-        vx, vy = -uy, ux
-        hit = ray_hit(mid, c, ang)
-        far = math.hypot(hit[0] - c[0], hit[1] - c[1])
-        wn, wf = s * 0.17, s * 0.24 if ang != math.pi / 2 else s * 0.13
-        if ang == math.pi / 2:
-            wn = s * 0.12
-        q = [(c[0] + ux * hub * 0.6 + vx * wn, c[1] + uy * hub * 0.6 + vy * wn),
-             (c[0] + ux * far + vx * wf, c[1] + uy * far + vy * wf),
-             (c[0] + ux * far - vx * wf, c[1] + uy * far - vy * wf),
-             (c[0] + ux * hub * 0.6 - vx * wn, c[1] + uy * hub * 0.6 - vy * wn)]
-        dense = []
-        for i in range(4):
-            a, b = q[i], q[(i + 1) % 4]
-            for t in range(10):
-                dense.append((a[0] + (b[0] - a[0]) * t / 10, a[1] + (b[1] - a[1]) * t / 10))
-        body.append(path(d(wobble(dense, 0.4, True), True), fill=RIM, width=sw))
-    # rim as a ring (even-odd)
-    ring = d(wobble(outer, 0.5, True), True) + ' ' + d(wobble(inner[::-1], 0.5, True), True)
-    body.append('<path d="%s" fill="%s" fill-rule="evenodd" stroke="%s" stroke-width="%.1f" stroke-linejoin="round"/>' % (ring, RIM, INK, sw * 1.15))
-    # a darker band on the inside of the top of the rim, like the page's other sketches
-    band = [p for p in offset(mid, rim * 0.18) if p[1] < c[1] - s * 0.35]
-    if len(band) > 4:
-        body.append(path(d(wobble(band, 0.4)), stroke=RIM_DARK, width=rim * 0.35))
-    # hub
-    body.append(circle(c, hub, fill=RIM, width=sw))
-    body.append(circle(c, hub * 0.55, fill=RIM_DARK, stroke=INK, width=sw * 0.5))
+    sw = 1.4 + s * 0.012
+    body = [path(d(wobble(mid, 0.45, True), True), fill=RIM, width=sw * 1.2)]
     return body, mid
 
 
@@ -259,15 +211,15 @@ def shape_arms():
 
 def shape_examples():
     body = []
-    cells = [('oval', (70, 66)), ('square', (205, 66)), ('flat', (137, 182))]
+    cells = [('flat', (70, 66)), ('flattb', (205, 66)), ('small', (137, 182))]
     for kind, c in cells:
         s = 46.0
         b, mid = wheel(kind, c, s)
         body += b
         body += arms(mid, c, s, arc_span=1.15, big=False)
     return svg(275, 246, body,
-               'The same coupling on an oval wheel, a squarish wheel and a flat-bottomed wheel: in each, the lower clamps '
-               'stop where their arcs cross the rim.')
+               'The same coupling on a flat-bottomed wheel, a wheel flat on top and bottom, and a smaller round wheel: in each, '
+               'the lower clamps stop where their arcs cross the rim.')
 
 
 # ---------------------------------------------------------------- the clamp's four-bar
@@ -290,78 +242,38 @@ def circ_meet(A, rA, C, rC, near):
 
 
 def clamp_fourbar():
-    """The clamp's draw latch, drawn as the four-bar it is:
-         ground  O-C : the fixed jaw (hatched), carrying the handle pivot O and the hinge C
-         crank   O-A : the handle
-         coupler A-B : the hook (red)
-         rocker  C-B : the moving jaw, which swings shut around the rim
-       Shut is solid, open is dashed."""
-    R0, rr = (122.0, 128.0), 25.0                 # rim cross-section
-    O, C = (90.0, 82.0), (124.0, 170.0)
-    B = (151.0, 92.0)                             # hook's catch on the moving jaw (shut)
-    a = 21.0
-    ang_ob = math.atan2(B[1] - O[1], B[0] - O[0])
-    th_shut = ang_ob - math.radians(9)            # just past the line O-B
-    A = (O[0] + a * math.cos(th_shut), O[1] + a * math.sin(th_shut))
-    b = math.hypot(B[0] - A[0], B[1] - A[1])
-    cc = math.hypot(B[0] - C[0], B[1] - C[1])
-    th_open = th_shut - math.radians(64)
-    A_o = (O[0] + a * math.cos(th_open), O[1] + a * math.sin(th_open))
-    B_o = circ_meet(A_o, b, C, cc, B)
-    jaw_turn = math.atan2(B_o[1] - C[1], B_o[0] - C[0]) - math.atan2(B[1] - C[1], B[0] - C[0])
-
+    """A toggle clamp as a plain four-bar: ground (hatched), handle, link, clamp arm.
+       Pushing the handle over drives the link just past its line with the handle
+       pivot, which locks the arm down."""
     body = ['<defs><pattern id="h4" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">'
             '<line x1="0" y1="0" x2="0" y2="6" stroke="%s" stroke-width="1.1" stroke-opacity="0.7"/></pattern></defs>' % INK]
-
-    # fixed jaw: a hatched C around the left of the rim, from the handle pivot down to the hinge
-    inner = arc_pts(R0, rr + 3, math.radians(-118), math.radians(-262), 26)
-    outer = arc_pts(R0, rr + 17, math.radians(-262), math.radians(-118), 26)
-    shape = [O] + outer[::-1][:0] + inner + [C] + outer
-    fixed = [O, (O[0] - 2, O[1] + 6)] + inner + [(C[0] - 4, C[1] + 2), C, (C[0] - 12, C[1] + 4)] + outer[1:] + [(O[0] - 10, O[1] - 2)]
-    body.append(path(d(wobble(fixed, 0.45, True), True), fill='url(#h4)', width=2.3))
-
-    # the moving jaw (rocker): a claw from the hinge round the right of the rim to the catch
-    def claw(turn):
-        pts = [C]
-        for k in range(1, 22):
-            t = k / 22
-            ang = math.radians(100 - 205 * t)
-            r = rr + 5 + 6 * math.sin(math.pi * t)
-            pts.append((R0[0] + r * math.cos(ang), R0[1] + r * math.sin(ang)))
-        pts.append(B)
-        return [rot(p, C, turn) for p in pts]
-
-    def link(p, q, color, width, dashed):
-        st = ' stroke-dasharray="6 5" opacity="0.5"' if dashed else ''
-        return path(line(p, q, amp=0.35), stroke=color, width=width, extra=st)
-
-    def handle_tip(th):
-        return (O[0] + 88 * math.cos(th), O[1] + 88 * math.sin(th))
-
-    # rim
-    body.append(circle(R0, rr, fill=RIM, width=2.2))
-
-    # open (dashed)
-    body.append(path(d(wobble(claw(jaw_turn), 0.4)), stroke=ARM, width=6.5, extra=' stroke-dasharray="6 5" opacity="0.45"'))
-    body.append(link(A_o, B_o, RED, 3.2, True))
-    body.append(link(O, handle_tip(th_open), ARM, 6.5, True))
-
-    # shut (solid)
-    body.append(path(d(wobble(claw(0.0), 0.4)), stroke=ARM, width=6.5))
-    body.append(link(A, B, RED, 3.4, False))
-    body.append(link(O, handle_tip(th_shut), ARM, 6.5, False))
-
-    # the handle's swing
-    arc = arc_pts(O, 70, th_open + 0.14, th_shut - 0.1, 30)
-    body.append(path(d(wobble(arc, 0.5)), stroke=RED, width=2.2))
-    end = arc[-1]
-    body.append(arrowhead(end, math.atan2(end[1] - arc[-4][1], end[0] - arc[-4][0]), 8, RED))
-
-    for P in (O, C, A, B):
-        body.append('<circle cx="%.1f" cy="%.1f" r="4.2" fill="#ffffff" stroke="%s" stroke-width="2"/>' % (P[0], P[1], INK))
-    return svg(162, 210, body, x0=44, y0=-18, label=
-               'The clamp as a four-bar linkage: the fixed jaw (hatched), the handle, the hook (red) and the moving jaw. '
-               'Pulling the handle down draws the hook in and swings the moving jaw shut around the rim. Open is dashed.')
+    G = 150.0                                   # ground line
+    O = (52.0, 112.0)                           # clamp arm pivot
+    Q = (132.0, 134.0)                          # handle pivot, below the arm
+    T = (222.0, 112.0)                          # clamp arm tip
+    B = (86.0, 112.0)                           # where the link meets the arm
+    th = math.radians(-112)                     # handle direction (up and back)
+    H = (Q[0] + 60 * math.cos(th), Q[1] + 60 * math.sin(th))      # link pin on the handle
+    grip = (Q[0] + 104 * math.cos(th + 0.08), Q[1] + 104 * math.sin(th + 0.08))
+    # ground and the two pivot supports
+    body.append(path(d(wobble([(28, G), (238, G)], 0.3)), width=2.2))
+    body.append(path(d(wobble([(28, G), (238, G), (238, G + 10), (28, G + 10)], 0.3, True), True), fill='url(#h4)', stroke='none', width=0))
+    for P in (O, Q):
+        body.append(path(d(wobble([P, (P[0] + 13, G), (P[0] - 13, G)], 0.3, True), True), width=1.8, fill='#ffffff'))
+    # links
+    body.append(path(line(O, T, amp=0.35), stroke=ARM, width=7))                  # clamp arm
+    body.append(path(line((T[0] - 4, T[1]), (T[0] - 4, T[1] + 22), amp=0.2), stroke=ARM, width=7))   # pad
+    body.append(path(line(Q, grip, amp=0.35), stroke=ARM, width=7))               # handle
+    body.append(path(line(H, B, amp=0.3), stroke=RED, width=4))                   # link
+    for P in (O, Q, H, B):
+        body.append('<circle cx="%.1f" cy="%.1f" r="4.4" fill="#ffffff" stroke="%s" stroke-width="2"/>' % (P[0], P[1], INK))
+    # which way the handle goes
+    a = arc_pts(Q, 88, th + 0.28, th + 0.75, 20)
+    body.append(path(d(wobble(a, 0.4)), stroke=RED, width=2.2))
+    body.append(arrowhead(a[-1], math.atan2(a[-1][1] - a[-3][1], a[-1][0] - a[-3][0]), 8, RED))
+    return svg(250, 182, body, x0=6, y0=0, label=
+               'A toggle clamp drawn as a four-bar linkage: the hatched ground with two pivots, the handle, a short link (red) '
+               'and the clamp arm. Pushing the handle over drives the link past center and locks the arm down.')
 
 
 if __name__ == '__main__':

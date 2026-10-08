@@ -130,11 +130,11 @@
            The script at the bottom sizes them so the whole block is one clean rectangle. -->
       <div class="ga-hero">
         <div class="ga-hero-c1">
-          <video autoplay muted loop playsinline preload="metadata" poster="../assets/web/slowerSteeringDriver.jpg" aria-label="The robot steering a car slowly with a driver aboard"><source src="../assets/web/slowerSteeringDriver.mp4" type="video/mp4"></video>
-          <video autoplay muted loop playsinline preload="metadata" poster="../assets/web/fasterSteeringDriver.jpg" aria-label="The robot steering a car quickly with a driver aboard"><source src="../assets/web/fasterSteeringDriver.mp4" type="video/mp4"></video>
+          <video autoplay muted loop playsinline preload="metadata" poster="../assets/web/slowerSteeringDriver.jpg" aria-label="The robot steering a car slowly with a driver aboard"><source media="(max-width: 700px)" src="../assets/web/sm/slowerSteeringDriver.mp4" type="video/mp4"><source src="../assets/web/slowerSteeringDriver.mp4" type="video/mp4"></video>
+          <video autoplay muted loop playsinline preload="metadata" poster="../assets/web/fasterSteeringDriver.jpg" aria-label="The robot steering a car quickly with a driver aboard"><source media="(max-width: 700px)" src="../assets/web/sm/fasterSteeringDriver.mp4" type="video/mp4"><source src="../assets/web/fasterSteeringDriver.mp4" type="video/mp4"></video>
         </div>
         <div class="ga-hero-c2">
-          <video autoplay muted loop playsinline preload="metadata" poster="../assets/web/uTurnPlayback.jpg" aria-label="The robot replaying a recorded U-turn with nobody touching the steering wheel"><source src="../assets/web/uTurnPlayback.mp4" type="video/mp4"></video>
+          <video autoplay muted loop playsinline preload="metadata" poster="../assets/web/uTurnPlayback.jpg" aria-label="The robot replaying a recorded U-turn with nobody touching the steering wheel"><source media="(max-width: 700px)" src="../assets/web/sm/uTurnPlayback.mp4" type="video/mp4"><source src="../assets/web/uTurnPlayback.mp4" type="video/mp4"></video>
         </div>
         <div class="ga-hero-c3">
           <img class="top" src="../assets/GenAutoVids/unattachedFullAssembly2.webp" alt="The full assembly, off the car">
@@ -254,7 +254,7 @@
 
       <h3 class="ga-h3" id="playback">Recording and playback</h3>
       <div class="ga-rec">
-        <figure class="ga-fig ga-rec-diag"><img src="../assets/GenAutoVids/slides/block-diagram.jpg" alt="Block diagram: steering wheel, modular attachment system, and an actuation module with battery, motor, MCU, reaction torque mechanism, IMU and wireless transceiver"><figcaption>High-level system diagram.</figcaption></figure>
+        <figure class="ga-fig ga-rec-diag"><img data-zoom src="../assets/GenAutoVids/slides/control-loop.jpg" alt="High-level control system: desired angle minus the IMU angle feeds a PID controller that commands motor torque against the reaction torque mechanism and the external torque on the steering wheel"><figcaption>High-level control system: the torque loop.</figcaption></figure>
         <figure class="ga-fig ga-vertical"><video data-autoplay data-src="../assets/web/uTurnRecord8s.mp4" poster="../assets/web/uTurnRecord8s.jpg" aria-label="A U-turn driven by hand while the robot records it"></video><figcaption>Recording a U-turn.</figcaption></figure>
         <figure class="ga-fig ga-vertical"><video data-autoplay data-src="../assets/web/uTurnPlayback8s.mp4" poster="../assets/web/uTurnPlayback8s.jpg" aria-label="The robot playing the U-turn back with nobody touching the wheel"></video><figcaption>Playing it back.</figcaption></figure>
       </div>
@@ -365,9 +365,9 @@
         <div class="ga-strip ga-clamp-row" style="grid-area:2 / 3;">
           <figure class="ga-fig ga-incap-fig"><img data-zoom src="../assets/GenAutoVids/slides/clamp-parts.jpg" alt="An early printed clamp part next to the final one"><span class="ga-incap">Early vs. final iteration</span></figure>
           <figure class="ga-fig ga-incap-fig"><img data-zoom src="../assets/GenAutoVids/slides/clamp-render.jpg" alt="CAD render of my toggle clamp"><span class="ga-incap">My clamp design.</span></figure>
-          <figure class="ga-fig ga-incap-fig ga-sketchbox"><img data-zoom src="../assets/GenAutoVids/slides/clamp-fourbar.svg" alt="The clamp as a four-bar linkage: fixed jaw, handle, hook and moving jaw, open (dashed) and shut"><span class="ga-incap">The four-bar linkage.</span></figure>
+          <figure class="ga-fig ga-incap-fig ga-sketchbox"><img data-zoom src="../assets/GenAutoVids/slides/clamp-fourbar.svg" alt="A toggle clamp as a four-bar linkage: ground, handle, link and clamp arm"><span class="ga-incap">The four-bar linkage.</span></figure>
         </div>
-        <p style="grid-area:3 / 3">Each clamp is a toggle clamp: a four-bar linkage where pulling the handle draws a hook in and swings the moving jaw shut around the rim. It works across a range of sizes and shapes, and it's quick to open and close by hand. Changing the link lengths tunes the clamping force and how much the clamp deforms. They're printed in carbon fiber nylon.</p>
+        <p style="grid-area:3 / 3">Each clamp is a toggle clamp: a four-bar linkage that locks once the handle pushes the link just past center. It works across a range of sizes and shapes, and it's quick to open and close by hand. Changing the link lengths tunes the clamping force and how much the clamp deforms. They're printed in carbon fiber nylon.</p>
       </div>
       <div class="ga-strip" style="margin-top:1rem;">
         <figure class="ga-fig photo fill" style="--ar:16 / 9;width:min(100%, 880px);"><video data-autoplay data-src="../assets/web/toggleClamp.mp4" poster="../assets/web/toggleClamp.jpg"></video><figcaption>Closing the toggle clamp on a steering wheel.</figcaption></figure>
@@ -408,11 +408,11 @@
       <div class="ga-side ga-side-figs">
         <div class="ga-strip ga-shape-diags">
           <figure class="ga-fig"><img data-zoom src="../assets/GenAutoVids/slides/shape-solution.svg" alt="A round steering wheel with the coupling on it: a top arm to the top clamp, and two geared lower arms pivoting below the centre whose clamps sweep red arcs that cross the rim at one point"></figure>
-          <figure class="ga-fig"><img data-zoom src="../assets/GenAutoVids/slides/shape-examples.svg" alt="The same coupling on an oval, a squarish and a flat-bottomed steering wheel; each lower clamp stops where its arc crosses the rim"></figure>
+          <figure class="ga-fig"><img data-zoom src="../assets/GenAutoVids/slides/shape-examples.svg" alt="The same coupling on a flat-bottomed wheel, a wheel flat on top and bottom, and a smaller round wheel; each lower clamp stops where its arc crosses the rim"></figure>
         </div>
         <div>
           <p>Use two arms at the bottom instead of one, and let them swing out to the sides. They pivot about a point below the wheel's center, not at it, so the arc each arm's clamp sweeps (red) isn't concentric with the rim. It has to cross the rim, at one point along the arc.</p>
-          <p>Wherever that point is, the clamp meets the wheel there, whatever the diameter or shape: oval, squarish, or flat-bottomed.</p>
+          <p>Wherever that point is, the clamp meets the wheel there, whatever the diameter or shape: round, flat-bottomed, or flat on the top and bottom.</p>
         </div>
       </div>
       <div class="ga-strip ga-shape-cad">
@@ -570,7 +570,7 @@
     <section class="ga-sec" id="outcome">
       <h2 class="ga-h2"><span>Outcome</span></h2>
       <div class="ga-outcome-loop">
-        <figure class="ga-fig fill"><img data-zoom src="../assets/GenAutoVids/slides/control-loop.jpg" alt="Control loop: desired angle minus the IMU angle feeds a PID controller that commands motor torque against the reaction torque mechanism and external torque on the wheel"><figcaption>Control loop: steering angle from the IMU, PID on motor torque.</figcaption></figure>
+        <figure class="ga-fig fill"><img data-zoom src="../assets/GenAutoVids/slides/block-diagram.jpg" alt="Block diagram: steering wheel, modular attachment system, and an actuation module with battery, motor, MCU, reaction torque mechanism, IMU and wireless transceiver"><figcaption>System diagram.</figcaption></figure>
       </div>
       <div class="ga-fit" style="margin-top:1.4rem;">
         <ul>
