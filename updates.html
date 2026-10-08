@@ -10,9 +10,41 @@
 </script>
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
   <link rel="icon" type="image/x-icon" href="/assets/favicon2.png">
   <title>Nikhil Vijay</title>
+
+  <style>
+    /* two sections: videos on top, photos below */
+    .gal-sec { width: 90vw; margin: 0 auto; }
+    .gal-sec:first-of-type { margin-top: 12vh; }
+    .gal-sec + .gal-sec { margin-top: 2.5rem; }
+    .gal-sec .gallery { width: 100% !important; margin: 0 !important; margin-top: 0 !important; padding: 0 20px 20px 20px; box-sizing: border-box; }
+    .gal-h {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 0 20px 1rem 20px;
+      font-size: 0.85rem; font-weight: 600; letter-spacing: 0.14em;
+      color: var(--light-primary);
+    }
+    .gal-h::after { content: ""; flex: 1; height: 1.5px; background: currentColor; opacity: 0.3; }
+    .gal-sec .gallery.gal-videos { column-count: 4 !important; }
+    .gal-vid {
+      display: inline-block; width: 100%; height: auto;
+      margin-bottom: 18px; border-radius: 10px;
+      background: var(--dark-accent);
+      break-inside: avoid;
+    }
+    @media screen and (max-width: 1380px) {
+      .gal-sec { width: 92vw; }
+      .gal-sec:first-of-type { margin-top: 17vh; }
+      .gal-sec .gallery { padding: 0 0 12px 0; }
+      .gal-h { margin: 0 0 0.7rem 0; font-size: 0.72rem; }
+      .gal-sec .gallery.gal-videos { column-count: 2 !important; column-gap: 1vw !important; }
+      .gal-vid { margin-bottom: 1vw; border-radius: 6px; }
+    }
+  </style>
 </head>
 <body style="overflow-y: auto;">
 
@@ -50,60 +82,115 @@
     </div>
   </div>
 
-    <div class="gallery" style="z-index: -5;">
-      <img class="gallery-img" src="../assets/GenAutoVids/noMotor.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/GenAutoVids/clampCF.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/GenAutoVids/clampZoomed.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/GenAutoVids/gearStraight.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/GenAutoVids/gearUp.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/sliderTilted.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseAlmostDone.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseCompleteWide.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseHalfDone.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/assortedPartsWide.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/sliderAttached.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/sliderBottom.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseIsoView.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseStructure.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseStructureWide.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/sliderTop.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseTopView.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseConnectorWide.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/bipedPlatformWide.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm6.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm2.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm3.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm4.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm5.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm7.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/finalarm1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cont1.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cont2.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cont3.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cont4.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cont5.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/liq1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/liq2.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/liq3.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/liq4.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/liq5.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/sum1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/in1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/in2.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/DeBrujin.PNG" alt="Image 1">
-      <img class="gallery-img" src="/assets/img-gal/ba2.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/ba3.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/arm4.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/arm5.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy1.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy2.PNG" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy3.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy5.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/cy6.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/an1.jpg" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/an4.png" alt="Image 2">
-      <img class="gallery-img" src="/assets/img-gal/an5.png" alt="Image 2">
-    </div>
+    <section class="gal-sec" aria-labelledby="gal-videos">
+      <h2 class="gal-h" id="gal-videos">VIDEOS</h2>
+      <div class="gallery gal-videos">
+        <video class="gal-vid" data-src="/assets/web/slowerSteeringDriver.mp4" poster="/assets/web/slowerSteeringDriver.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="The steering robot steering a car with a driver aboard"></video>
+        <video class="gal-vid" data-src="/assets/web/uTurnPlayback.mp4" poster="/assets/web/uTurnPlayback.jpg" width="686" height="960" muted loop playsinline preload="none" aria-label="The robot replaying a recorded U-turn"></video>
+        <video class="gal-vid" data-src="/assets/web/mountedActuation.mp4" poster="/assets/web/mountedActuation.jpg" width="960" height="768" muted loop playsinline preload="none" aria-label="The robot mounted on a steering wheel, actuating"></video>
+        <video class="gal-vid" data-src="/assets/web/fasterSteeringDriver.mp4" poster="/assets/web/fasterSteeringDriver.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="The steering robot steering faster with a driver aboard"></video>
+        <video class="gal-vid" data-src="/assets/web/attachedMoving.mp4" poster="/assets/web/attachedMoving.jpg" width="912" height="960" muted loop playsinline preload="none" aria-label="The attached robot turning the wheel"></video>
+        <video class="gal-vid" data-src="/assets/web/motorController.mp4" poster="/assets/web/motorController.jpg" width="540" height="960" muted loop playsinline preload="none" aria-label="Tuning the motor controller with live plots"></video>
+        <video class="gal-vid" data-src="/assets/web/toggleClamp.mp4" poster="/assets/web/toggleClamp.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="The toggle clamp closing on the wheel rim"></video>
+        <video class="gal-vid" data-src="/assets/web/uTurnRecord.mp4" poster="/assets/web/uTurnRecord.jpg" width="686" height="960" muted loop playsinline preload="none" aria-label="Recording a U-turn for playback"></video>
+        <video class="gal-vid" data-src="/assets/web/attachedDemo.mp4" poster="/assets/web/attachedDemo.jpg" width="960" height="814" muted loop playsinline preload="none" aria-label="The robot attached to a steering wheel"></video>
+        <video class="gal-vid" data-src="/assets/web/gui.mp4" poster="/assets/web/gui.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="The control GUI next to the motor"></video>
+        <video class="gal-vid" data-src="/assets/web/manualSteeringTest.mp4" poster="/assets/web/manualSteeringTest.jpg" width="686" height="960" muted loop playsinline preload="none" aria-label="A manual steering test from the passenger seat"></video>
+        <video class="gal-vid" data-src="/assets/web/lidarWave.mp4" poster="/assets/web/lidarWave.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="LiDAR point cloud of a person waving"></video>
+        <video class="gal-vid" data-src="/assets/web/attachment.mp4" poster="/assets/web/attachment.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="Attaching the robot to a steering wheel"></video>
+        <video class="gal-vid" data-src="/assets/web/floorConstraint.mp4" poster="/assets/web/floorConstraint.jpg" width="686" height="960" muted loop playsinline preload="none" aria-label="Testing the floor reaction arm"></video>
+        <video class="gal-vid" data-src="/assets/web/mainViewRotation.mp4" poster="/assets/web/mainViewRotation.jpg" width="960" height="876" muted loop playsinline preload="none" aria-label="The robot turning the wheel, front view"></video>
+        <video class="gal-vid" data-src="/assets/web/recordMiscSteering.mp4" poster="/assets/web/recordMiscSteering.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="Recording steering data on a laptop"></video>
+        <video class="gal-vid" data-src="/assets/web/cfprints.mp4" poster="/assets/web/cfprints.jpg" width="960" height="844" muted loop playsinline preload="none" aria-label="Printed clamp parts"></video>
+        <video class="gal-vid" data-src="/assets/web/IMG_0466.mp4" poster="/assets/web/IMG_0466.jpg" width="960" height="814" muted loop playsinline preload="none" aria-label="The robot on a steering wheel, close up"></video>
+        <video class="gal-vid" data-src="/assets/web/attachmentVid.mp4" poster="/assets/web/attachmentVid.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="Attaching the robot by hand"></video>
+        <video class="gal-vid" data-src="/assets/web/lidarZoom.mp4" poster="/assets/web/lidarZoom.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="LiDAR point cloud on a big screen"></video>
+        <video class="gal-vid" data-src="/assets/web/8mbvideo-QVE-iTiyHNtz.mp4" poster="/assets/web/8mbvideo-QVE-iTiyHNtz.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="The motion platform tilting"></video>
+        <video class="gal-vid" data-src="/assets/web/platformRandomMove.mp4" poster="/assets/web/platformRandomMove.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="The motion platform moving through random poses"></video>
+        <video class="gal-vid" data-src="/assets/web/panAround.mp4" poster="/assets/web/panAround.jpg" width="960" height="960" muted loop playsinline preload="none" aria-label="Walking around the motion platform"></video>
+        <video class="gal-vid" data-src="/assets/web/platformBackForth.mp4" poster="/assets/web/platformBackForth.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="The motion platform tilting back and forth"></video>
+        <video class="gal-vid" data-src="/assets/web/solderVid.mp4" poster="/assets/web/solderVid.jpg" width="960" height="960" muted loop playsinline preload="none" aria-label="Pressing heat-set inserts into a printed bracket"></video>
+        <video class="gal-vid" data-src="/assets/web/platformNewAngle.mp4" poster="/assets/web/platformNewAngle.jpg" width="960" height="540" muted loop playsinline preload="none" aria-label="The motion platform from another angle"></video>
+        <video class="gal-vid" data-src="/assets/web/sliderVid.mp4" poster="/assets/web/sliderVid.jpg" width="960" height="960" muted loop playsinline preload="none" aria-label="A motion platform carriage on its rail"></video>
+        <video class="gal-vid" data-src="/assets/web/platformManual.mp4" poster="/assets/web/platformManual.jpg" width="960" height="960" muted loop playsinline preload="none" aria-label="Moving the motion platform by hand"></video>
+        <video class="gal-vid" data-src="/assets/web/Dynamics.mp4" poster="/assets/web/Dynamics.jpg" width="1600" height="906" muted loop playsinline preload="none" aria-label="Python simulation of the motion platform linkage"></video>
+        <video class="gal-vid" data-src="/assets/web/armGood.mp4" poster="/assets/web/armGood.jpg" width="720" height="720" muted loop playsinline preload="none" aria-label="The 6DOF arm moving through poses"></video>
+        <video class="gal-vid" data-src="/assets/web/cycloidMotor.mp4" poster="/assets/web/cycloidMotor.jpg" width="960" height="686" muted loop playsinline preload="none" aria-label="A cycloidal actuator on its motor"></video>
+        <video class="gal-vid" data-src="/assets/web/armInsta.mp4" poster="/assets/web/armInsta.jpg" width="720" height="720" muted loop playsinline preload="none" aria-label="The 6DOF arm running"></video>
+        <video class="gal-vid" data-src="/assets/web/cycloidHand.mp4" poster="/assets/web/cycloidHand.jpg" width="960" height="686" muted loop playsinline preload="none" aria-label="Turning a cycloidal reducer by hand"></video>
+        <video class="gal-vid" data-src="/assets/web/cycloidBLDC.mp4" poster="/assets/web/cycloidBLDC.jpg" width="772" height="552" muted loop playsinline preload="none" aria-label="A cycloidal stage on a brushless motor"></video>
+      </div>
+    </section>
+
+    <section class="gal-sec" aria-labelledby="gal-photos">
+      <h2 class="gal-h" id="gal-photos">PHOTOS</h2>
+      <div class="gallery">
+        <img class="gallery-img" src="/assets/web/img/standCCMAssembly.jpg" alt="stand CCMAssembly" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/unattachedFullAssembly2.jpg" alt="unattached Full Assembly 2" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/unattachedFullAssembly.jpg" alt="unattached Full Assembly" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/teamPhoto.jpg" alt="team Photo" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/newarkDemoDay.jpg" alt="newark Demo Day" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/taxiLidar.jpg" alt="taxi Lidar" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/taxiSign.jpg" alt="taxi Sign" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/lidarMount.jpg" alt="lidar Mount" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/autoCams.jpg" alt="auto Cams" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/clampSide.jpg" alt="clamp Side" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/clampComponentIteration.jpg" alt="clamp Component Iteration" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/gearSide.jpg" alt="gear Side" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/noMotor.jpg" alt="no Motor" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/clampCF.jpg" alt="clamp CF" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/clampZoomed.jpg" alt="clamp Zoomed" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/gearStraight.jpg" alt="gear Straight" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/gearUp.jpg" alt="gear Up" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/sliderTilted.jpg" alt="slider Tilted" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/baseAlmostDone.jpg" alt="base Almost Done" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/baseCompleteWide.jpg" alt="base Complete Wide" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/baseHalfDone.jpg" alt="base Half Done" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/assortedPartsWide.jpg" alt="assorted Parts Wide" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/sliderAttached.jpg" alt="slider Attached" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/sliderBottom.jpg" alt="slider Bottom" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/baseIsoView.jpg" alt="base Iso View" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/baseStructure.jpg" alt="base Structure" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/baseStructureWide.jpg" alt="base Structure Wide" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/sliderTop.jpg" alt="slider Top" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/baseTopView.jpg" alt="base Top View" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/baseConnectorWide.jpg" alt="base Connector Wide" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/bipedPlatformWide.jpg" alt="biped Platform Wide" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/finalarm6.jpg" alt="finalarm 6" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/finalarm2.jpg" alt="finalarm 2" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/finalarm3.jpg" alt="finalarm 3" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/finalarm4.jpg" alt="finalarm 4" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/finalarm5.jpg" alt="finalarm 5" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/finalarm7.jpg" alt="finalarm 7" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/finalarm1.jpg" alt="finalarm 1" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/cont1.jpg" alt="cont 1" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/cont2.jpg" alt="cont 2" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/cont3.jpg" alt="cont 3" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/cont4.jpg" alt="cont 4" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/cont5.jpg" alt="cont 5" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/liq1.png" alt="liq 1" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/liq2.png" alt="liq 2" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/liq3.png" alt="liq 3" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/liq4.png" alt="liq 4" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/liq5.png" alt="liq 5" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/sum1.png" alt="sum 1" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/in1.jpg" alt="in 1" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/in2.jpg" alt="in 2" loading="lazy">
+        <img class="gallery-img" src="/assets/DeBrujin.PNG" alt="De Brujin" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/ba2.png" alt="ba 2" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/ba3.png" alt="ba 3" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/arm4.jpg" alt="arm 4" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/arm5.jpg" alt="arm 5" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/cy1.jpg" alt="cy 1" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/cy2.jpg" alt="cy 2" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/cy3.jpg" alt="cy 3" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/cy5.jpg" alt="cy 5" loading="lazy">
+        <img class="gallery-img" src="/assets/web/img/cy6.jpg" alt="cy 6" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/an1.jpg" alt="an 1" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/an4.png" alt="an 4" loading="lazy">
+        <img class="gallery-img" src="/assets/img-gal/an5.png" alt="an 5" loading="lazy">
+      </div>
+    </section>
     
     <!-- Modal -->
     <div id="modal" class="modal">
@@ -115,5 +202,21 @@
     <!-- link this to the js file -->
 
 
+
+    <script>
+      /* videos load and play only while on screen */
+      (function () {
+        var vids = [].slice.call(document.querySelectorAll('.gal-vid'));
+        function play(v) {
+          if (!v.getAttribute('src')) v.src = v.dataset.src;
+          var p = v.play(); if (p && p.catch) p.catch(function () {});
+        }
+        if (!('IntersectionObserver' in window)) { vids.forEach(play); return; }
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) { if (e.isIntersecting) play(e.target); else e.target.pause(); });
+        }, { rootMargin: '150px 0px' });
+        vids.forEach(function (v) { v.muted = true; io.observe(v); });
+      })();
+    </script>
   </body>
   </html>

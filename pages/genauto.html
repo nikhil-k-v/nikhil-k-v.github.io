@@ -206,15 +206,15 @@
     <section class="ga-sec" id="simplification">
       <h2 class="ga-h2"><span>System simplification</span></h2>
       <div class="ga-simp" style="--h:190px;">
-        <figure class="ga-fig" style="grid-area:1 / 1"><img src="../assets/GenAutoVids/slides/simp-bare.jpg" alt="Sketch of a driver's seat, pedals and steering wheel"><figcaption>The driver's seat.</figcaption></figure>
-        <div class="ga-simp-text" style="grid-area:1 / 3">
-          <p>The robot only has to apply torque to the steering wheel. So the car splits into two bodies: the steering wheel, and everything else (the vehicle). An actuator between them turns the wheel by pushing against the vehicle.</p>
-          <p>That leaves three parts to design: the actuator, the wheel coupling, and the connection to the vehicle that takes the reaction torque.</p>
-        </div>
-        <span class="ga-arrow down" aria-hidden="true" style="grid-area:2 / 1"><svg viewBox="0 0 40 24"><path d="M4 12h18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M22 5l14 7-14 7z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg></span>
-        <figure class="ga-fig" style="grid-area:3 / 1"><img src="../assets/GenAutoVids/slides/simp-coupling.jpg" alt="The steering wheel highlighted as the wheel coupling and the rest of the car as the vehicle"><figcaption>Two bodies: the wheel coupling and the vehicle.</figcaption></figure>
-        <span class="ga-arrow" aria-hidden="true" style="grid-area:3 / 2"><svg viewBox="0 0 40 24"><path d="M4 12h18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M22 5l14 7-14 7z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg></span>
-        <figure class="ga-fig" style="grid-area:3 / 3"><img src="../assets/GenAutoVids/slides/simp-actuator.jpg" alt="An actuator between the wheel coupling and the vehicle"><figcaption>The actuator sits between them.</figcaption></figure>
+        <figure class="ga-fig"><img src="../assets/GenAutoVids/slides/simp-bare.jpg" alt="Sketch of a driver's seat, pedals and steering wheel"><figcaption>The driver's seat.</figcaption></figure>
+        <span class="ga-arrow" aria-hidden="true"><svg viewBox="0 0 40 24"><path d="M4 12h18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M22 5l14 7-14 7z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg></span>
+        <figure class="ga-fig"><img src="../assets/GenAutoVids/slides/simp-coupling.jpg" alt="The steering wheel highlighted as the wheel coupling and the rest of the car as the vehicle"><figcaption>Two bodies: the wheel coupling and the vehicle.</figcaption></figure>
+        <span class="ga-arrow" aria-hidden="true"><svg viewBox="0 0 40 24"><path d="M4 12h18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M22 5l14 7-14 7z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg></span>
+        <figure class="ga-fig"><img src="../assets/GenAutoVids/slides/simp-actuator.jpg" alt="An actuator between the wheel coupling and the vehicle"><figcaption>The actuator sits between them.</figcaption></figure>
+      </div>
+      <div class="ga-simp-text">
+        <p>The robot only has to apply torque to the steering wheel. So the car splits into two bodies: the steering wheel, and everything else (the vehicle). An actuator between them turns the wheel by pushing against the vehicle.</p>
+        <p>That leaves three parts to design: the actuator, the wheel coupling, and the connection to the vehicle that takes the reaction torque.</p>
       </div>
     </section>
 
@@ -384,7 +384,7 @@
       <div class="ga-cols top" style="--c: minmax(0,1fr) auto minmax(0,1fr); --g:1.6rem; align-items:start !important;">
         <div class="ga-stack" style="--g:1rem;">
           <span class="ga-label problem">Problem</span>
-          <div class="ga-stack center" style="--g:0.5rem;"><figure class="ga-fig" style="--h:95px"><img src="../assets/GenAutoVids/slides/diam-irregular.jpg" alt="Two steering wheels with the same width but different heights"></figure><figure class="ga-fig" style="--h:95px"><img src="../assets/GenAutoVids/slides/diam-irregular-bars.jpg" alt="A bar with a revolute joint at each end clamped across both wheels"></figure><figure class="ga-fig" style="--h:95px"><img src="../assets/GenAutoVids/slides/diam-irregular-fit.jpg" alt="The bar tilted out of parallel on the taller wheel"></figure></div>
+          <div class="ga-strip ga-row3" style="--g:0.7rem;"><figure class="ga-fig" style="--h:95px"><img src="../assets/GenAutoVids/slides/diam-irregular.jpg" alt="Two steering wheels with the same width but different heights"></figure><figure class="ga-fig" style="--h:95px"><img src="../assets/GenAutoVids/slides/diam-irregular-bars.jpg" alt="A bar with a revolute joint at each end clamped across both wheels"></figure><figure class="ga-fig" style="--h:95px"><img src="../assets/GenAutoVids/slides/diam-irregular-fit.jpg" alt="The bar tilted out of parallel on the taller wheel"></figure></div>
           <p>With one bar and a revolute joint at each end, the bar only stays parallel to the wheel face if the wheel is round. Steering wheels aren't circles: if the top-to-bottom length differs from the width, the joint angles differ and the bar tilts.</p>
           <figure class="ga-fig" style="--h:200px"><img src="../assets/GenAutoVids/slides/shape-spokes.jpg" alt="Four steering wheels with different spoke layouts"></figure>
           <p>The bottom of the wheel can't be a clamping point anyway: there's a spoke there, which blocks the toggle clamp from wrapping around the wheel. And the spoke layout is different on every steering wheel.</p>
@@ -488,7 +488,7 @@
         <p style="grid-area:4 / 2">A rigid frame from the floor holds the actuator. It can take high torque, but it is large, has to be fitted to each car, and usually needs permanent modifications.</p>
         <p class="ga-price" style="grid-area:5 / 2">Cost: <strong>$20,000–100,000+</strong></p>
       </div>
-      <p class="ga-price ga-mine">This robot: <strong>[your cost]</strong> in parts</p>
+      <p class="ga-price ga-mine">This robot: <strong>&lt; $500</strong> in parts</p>
 
       <h3 class="ga-h3">Our floor-constrained version</h3>
       <div class="ga-cols top" style="--c: minmax(0,1fr) auto minmax(0,1fr); --g:1.6rem; align-items:start !important;">

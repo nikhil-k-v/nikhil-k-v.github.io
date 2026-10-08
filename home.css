@@ -489,8 +489,6 @@ body.home {
     pointer-events: none;
   }
   .preview-stage.is-live::after { display: none; }
-  /* light pages from other sites (tubaa.dev): flip to dark, keep the hues */
-  .preview-frame.is-inverted { filter: invert(1) hue-rotate(180deg) brightness(0.92); }
 
   .preview-dither {
     position: absolute;

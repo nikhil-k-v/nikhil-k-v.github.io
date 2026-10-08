@@ -252,8 +252,8 @@
      level:  0 = normal, -1 = fully dissolved (used to swap sources)
      ------------------------------------------------------------------ */
   function createRenderer(canvas, stage) {
-    var C = 5;              // cell size, css px
-    var K = 5;              // sub-pixels per cell edge (1 css px each) → dot sizes 1..4
+    var C = 4;              // cell size, css px
+    var K = 4;              // sub-pixels per cell edge (1 css px each) → dot sizes 1..3
     var TH = 0.8;           // field value above which a cell becomes a block (kept rare)
     var SPEED = 1.8;        // overall animation speed
     // blobs: [x speed, phase, phase2, y speed, phase3, size]
@@ -879,12 +879,13 @@
       var el = box.querySelector('.anims');
       if (!el) return null;
       var isVideo = el.tagName === 'VIDEO';
+      var zoom = parseFloat(box.getAttribute('data-preview-zoom')) || 2.3;
       return function paint(ctx, w, h) {
         var nw = isVideo ? el.videoWidth : el.naturalWidth, nh = isVideo ? el.videoHeight : el.naturalHeight;
         if (isVideo ? el.readyState < 2 : !el.complete) return;
         if (!nw || !nh) return;
-        // the card animations have wide empty margins, so scale up past 'contain'
-        var k = Math.min(w / nw, h / nh) * 2.3;
+        // most card renders have wide empty margins, so scale up past 'contain'
+        var k = Math.min(w / nw, h / nh) * zoom;
         var dw = nw * k, dh = nh * k;
         ctx.globalCompositeOperation = 'lighten';     // black background drops out
         try { ctx.drawImage(el, (w - dw) / 2, (h - dh) / 2, dw, dh); } catch (_) {}
@@ -914,7 +915,11 @@
               return im.complete || im.getBoundingClientRect().top > vh;
             });
             var fontsReady = !doc.fonts || doc.fonts.status === 'loaded';
-            if ((imgsReady && fontsReady && since > 100) || since > 1200) { resolve(doc); return; }
+            // pages that draw part of themselves with JS (the scanline edges on
+            // the steering robot page) need that drawn before the snapshot
+            var edge = doc.querySelector('.ga-paper') ? doc.querySelector('.ga-edge') : null;
+            var drawnReady = !edge || !!edge.style.width;    // set once it has been drawn
+            if ((imgsReady && fontsReady && drawnReady && since > 100) || since > 1600) { resolve(doc); return; }
           }
           if (performance.now() - start > 12000) { reject(new Error('timeout')); return; }
           setTimeout(poll, here && doc.readyState === 'loading' ? 15 : 60);
@@ -936,6 +941,13 @@
           var vw = doc.documentElement.clientWidth || frame.clientWidth;
           var vh = doc.documentElement.clientHeight || frame.clientHeight;
           var win = frame.contentWindow;
+          var els = doc.body.getElementsByTagName('*');
+          for (var q = 0; q < els.length; q++) {
+            var ecs = win.getComputedStyle(els[q]);
+            if (ecs.isolation === 'isolate' && ecs.zIndex === 'auto') {
+              els[q].setAttribute('data-pv-iso', ecs.position === 'static' ? 'static' : '');
+            }
+          }
           win.__snapOpts = {
             backgroundColor: '#051220',
             x: 0, y: 0, scrollX: 0, scrollY: 0,
@@ -952,6 +964,15 @@
             onclone: function (cdoc) {
               var m = cdoc.querySelectorAll('img, video');
               for (var i = 0; i < m.length; i++) m[i].style.visibility = 'hidden';
+              // html2canvas ignores "isolation: isolate", so children with a
+              // negative z-index (the steering robot page's scanline edges)
+              // would be painted behind their parent's background. An explicit
+              // z-index gives the same layering in a way it understands.
+              var iso = cdoc.querySelectorAll('[data-pv-iso]');
+              for (var j = 0; j < iso.length; j++) {
+                if (iso[j].getAttribute('data-pv-iso') === 'static') iso[j].style.position = 'relative';
+                iso[j].style.zIndex = '0';
+              }
             },
             ignoreElements: function (el) {
               var tag = el.tagName;
@@ -977,7 +998,7 @@
     /* for projects without a page: the card's own animation on navy */
     /* snapshots survive reloads of the home page for the rest of the
        browser session (coming back from a project page is instant) */
-    var STORE_VER = 'pv3';   // bump when the snapshot format changes
+    var STORE_VER = 'pv4';   // bump when the snapshot format changes
     function storeKey(url) {
       var z = R.size();
       return STORE_VER + ':' + url + ':' + Math.round(z.w * z.dpr) + 'x' + Math.round(z.h * z.dpr);
@@ -1037,41 +1058,14 @@
 
       R.cover(function () {
         if (my !== token) return;
-        frame.classList.remove('is-inverted');
 
-        // nothing to load: the card's own animation, live
-        if (!p.href && !p.external) {
+        // no page of ours to show (coming soon, or hosted on another site):
+        // the card's own animation, live. The button still links out.
+        if (!p.href) {
           setLive(false);
           navigate('about:blank');
           var card = cardLayer(box);
           present(box, null, card ? 'content' : 'empty', my, card);
-          return;
-        }
-
-        // another site: its pixels can't be read, so it stays live under a
-        // navy cover with dot-shaped holes. tubaa.dev is a light page, so
-        // invert it (hue kept) to sit in the dark style
-        if (!p.href) {
-          R.setSource(null, 'mask');
-          setState('loading');
-          setLive(true);
-          frame.classList.add('is-inverted');
-          navigate(p.external);
-          var done = false;
-          var finish = function () {
-            if (done || my !== token) return;
-            done = true;
-            setState('frame');
-            R.reveal(0);
-          };
-          frame.addEventListener('load', function onLoad() {
-            var blank = false;
-            try { blank = frame.contentWindow.location.href === 'about:blank'; } catch (_) {}
-            if (blank) return;
-            frame.removeEventListener('load', onLoad);
-            setTimeout(finish, 300);
-          });
-          setTimeout(finish, 6000);
           return;
         }
 

@@ -1,0 +1,275 @@
+/* ===== project write-ups on the navy page =====
+   Same building blocks as the steering robot page (genauto.css: .ga-sec,
+   .ga-h2, .ga-fig, .ga-arrow, .ga-calc, .ga-nav ...), but without the white
+   sheet: everything sits on --dark-primary. Load after genauto.css. */
+
+.ga-night {
+  --ga-ink: var(--light-primary);
+  --ga-ink-soft: rgba(240, 240, 240, 0.58);
+  --ga-panel: var(--dark-accent);
+  --ga-rule: rgba(240, 240, 240, 0.12);
+  --ga-accent: var(--light-accent);
+  margin: 2.2rem 0 4rem 0;
+}
+
+/* page-styles.css sets overflow-x: hidden on every element; text never scrolls */
+.ga-night h2, .ga-night h3, .ga-night h4, .ga-night p, .ga-night li,
+.ga-night ul, .ga-night ol, .ga-night figcaption, .ga-night span,
+.ga-night strong, .ga-night em, .ga-night a, .ga-night figure { overflow: visible !important; }
+
+.ga-night > .ga-sec:first-child { margin-top: 0; }
+.ga-night .ga-sec { margin-top: 3.4rem; }
+
+.ga-night p,
+.ga-night li {
+  font-size: 0.98rem;
+  font-weight: 300 !important;
+  line-height: 1.7;
+  text-align: left;
+  color: rgba(240, 240, 240, 0.9);
+}
+.ga-night p { margin: 0 0 0.8rem 0; max-width: 72ch; }
+.ga-night p:last-child { margin-bottom: 0; }
+.ga-night strong { font-weight: 600 !important; color: var(--light-primary); }
+.ga-night em { font-style: italic; }
+.ga-night .ga-lead { font-size: 1.1rem !important; line-height: 1.6 !important; max-width: 70ch !important; color: var(--light-primary); }
+.ga-night ul { margin: 0 0 0.8rem 0; padding-left: 1.15rem; }
+.ga-night li { margin-bottom: 0.3rem; }
+
+.ga-night a { color: var(--light-primary); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+.ga-night a:hover { text-decoration-thickness: 2px; }
+
+.ga-night .ga-label.problem { color: var(--ga-accent); }
+.ga-night .ga-label.solution { color: var(--light-primary); }
+.ga-night .ga-h2 small { color: var(--ga-ink-soft); }
+
+/* the in-page section nav sits on the right like the steering robot page;
+   on the navy page it needs a slightly firmer backing */
+.ga-night ~ .ga-nav, .ga-nav { background: rgba(11, 33, 53, 0.8); }
+
+
+/* ---------- media ---------- */
+
+/* a grid of photos / videos. --cols sets the columns, each tile's --ar its shape */
+.pj-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: var(--g, 0.6rem);
+  margin: 1.2rem 0;
+}
+.pj-tile {
+  position: relative;
+  margin: 0;
+  min-width: 0;
+  overflow: hidden !important;
+  background: var(--dark-accent);
+  border-radius: 6px;
+}
+.pj-tile.span2 { grid-column: span 2; }
+.pj-tile.tall { grid-row: span 2; }
+.pj-tile > img,
+.pj-tile > video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: var(--ar, 4 / 3);
+  object-fit: cover;
+}
+.pj-tile.tall > img, .pj-tile.tall > video { aspect-ratio: auto; }
+.pj-tile > img[data-zoom] { cursor: zoom-in; }
+/* CAD renders on white: show the whole render on a white tile */
+.pj-tile.light { background: #ffffff; }
+.pj-tile.light > img { object-fit: contain; }
+.pj-tile figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  transform: none;
+  width: auto !important;
+  white-space: normal !important;
+  z-index: 1;
+  margin: 0;
+  padding: 1.4rem 0.7rem 0.5rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.35;
+  text-align: left;
+  color: rgba(240, 240, 240, 0.92);
+  background: linear-gradient(to bottom, rgba(5, 18, 32, 0), rgba(5, 18, 32, 0.85));
+  pointer-events: none;
+}
+
+/* a single wide figure with a caption below (simulations, diagrams) */
+.pj-wide { margin: 1.2rem 0; }
+.pj-wide > video, .pj-wide > img, .pj-wide > svg, .pj-wide > canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+.pj-wide figcaption, .ga-night .pj-cap {
+  position: static;
+  transform: none;
+  width: auto !important;
+  white-space: normal !important;
+  margin: 0.5rem auto 0 auto;
+  max-width: 70ch;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  text-align: center !important;
+  color: var(--ga-ink-soft);
+}
+
+/* text beside a figure */
+.pj-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: center;
+  margin: 1.2rem 0;
+}
+.pj-split.fig-wide { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+.pj-split > div > p:last-child { margin-bottom: 0; }
+
+/* a short list of facts (cost, time, materials) */
+.pj-facts {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 1.2rem 0;
+}
+.pj-fact {
+  padding: 0.9rem 1rem;
+  background: var(--dark-accent);
+  border-radius: 6px;
+}
+.pj-fact b {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600 !important;
+  line-height: 1.2;
+  color: var(--light-primary);
+}
+.pj-fact span {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--ga-ink-soft);
+}
+
+/* embedded site (Verso docs) */
+.pj-embed {
+  margin: 1.2rem 0;
+  border-radius: 8px;
+  overflow: hidden !important;
+  background: #fff;
+}
+.pj-embed iframe { display: block; width: 100%; height: 640px; border: 0; }
+.pj-embed-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0.9rem;
+  background: var(--dark-secondary);
+  font-size: 0.8rem;
+}
+.pj-embed-bar a { color: var(--light-primary); }
+
+/* links to related project pages */
+.pj-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 0 0; }
+.pj-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border: 1.5px solid rgba(240, 240, 240, 0.35);
+  border-radius: 5px;
+}
+.pj-links a:hover { border-color: var(--light-primary); background: var(--dark-secondary); }
+
+
+/* ---------- math on the navy page ---------- */
+.ga-night .ga-calc { border-left-color: rgba(240, 240, 240, 0.3); margin: 1.2rem 0; }
+.ga-night .ga-calc > div { overflow: visible !important; }
+.ga-night .ga-math, .ga-night .ga-math * { color: inherit; }
+.ga-night .ga-spec td { white-space: normal; vertical-align: top; }
+.ga-night .ga-spec td:first-child, .ga-night .ga-spec td:last-child { white-space: nowrap; }
+.ga-night .ga-spec td.ga-math { font-size: 1.1rem; }
+.ga-night .ga-box { width: 100%; }
+.ga-night .pj-split .ga-h3 { margin-top: 0; }
+
+/* the codepen embeds are dark themed */
+.pj-embed.dark { background: var(--dark-accent); }
+.pj-embed.dark iframe { height: 620px; }
+
+/* ---------- cycloidal drive simulation ---------- */
+.cyc-sim {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 1.6rem;
+  align-items: center;
+  margin: 1.4rem 0;
+  padding: 1.2rem;
+  background: var(--dark-accent);
+  border-radius: 8px;
+}
+.cyc-sim canvas { display: block; width: 100%; aspect-ratio: 1; }
+.cyc-panel { display: flex; flex-direction: column; gap: 0.55rem; overflow: visible !important; }
+.cyc-panel * { overflow: visible !important; }
+.cyc-row { display: grid; grid-template-columns: 7.5rem auto 1fr; align-items: baseline; gap: 0.6rem; font-size: 0.85rem; }
+.cyc-key { color: var(--ga-ink-soft); }
+.cyc-val { font-size: 1.25rem; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 4.5ch; }
+.cyc-unit { font-size: 0.78rem; color: var(--ga-ink-soft); }
+.cyc-ctl { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.6rem; font-size: 0.85rem; color: var(--ga-ink-soft); }
+.cyc-ctl b { color: var(--light-primary); font-weight: 600; }
+.cyc-ctl input { width: 100%; accent-color: var(--light-accent); }
+.cyc-panel button {
+  align-self: flex-start;
+  margin-top: 0.6rem;
+  padding: 0.45rem 1.1rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--light-primary);
+  background: transparent;
+  border: 1.5px solid rgba(240, 240, 240, 0.4);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.cyc-panel button:hover { border-color: var(--light-primary); background: var(--dark-secondary); }
+
+/* ---------- phones ---------- */
+
+@media (max-width: 1000px) {
+  .ga-night { margin: 0.6rem 0 2.5rem 0; }
+  .ga-night .ga-sec { margin-top: 2rem; }
+  .ga-night p, .ga-night li { font-size: 0.86rem !important; line-height: 1.6 !important; }
+  .ga-night p { margin: 0 0 0.6rem 0 !important; }
+  .ga-night .ga-lead { font-size: 0.93rem !important; }
+
+  .pj-grid { --cols: 2 !important; gap: 0.4rem; margin: 0.8rem 0; }
+  .pj-tile.span2 { grid-column: span 2; }
+  .pj-tile figcaption { font-size: 0.62rem !important; padding: 1rem 0.5rem 0.35rem 0.5rem; }
+  .pj-split, .pj-split.fig-wide { grid-template-columns: minmax(0, 1fr); gap: 0.8rem; }
+  .pj-facts { --cols: 2 !important; gap: 0.4rem; }
+  .pj-fact { padding: 0.7rem 0.75rem; }
+  .pj-fact b { font-size: 1.15rem; }
+  .pj-fact span { font-size: 0.68rem; }
+  .pj-wide figcaption, .ga-night .pj-cap { font-size: 0.68rem !important; }
+
+  .cyc-sim { grid-template-columns: minmax(0, 1fr); gap: 0.8rem; padding: 0.8rem; }
+  .cyc-row { grid-template-columns: 6rem auto 1fr; font-size: 0.78rem; }
+  .cyc-val { font-size: 1.05rem; }
+  .ga-night .ga-spec td.ga-math { font-size: 0.95rem; }
+  .pj-embed.dark iframe { height: 70svh; }
+
+  /* the docs embed gets the full screen width so the site isn't squeezed */
+  .pj-embed { width: 100vw; margin-left: calc(50% - 50vw); border-radius: 0; }
+  .pj-embed iframe { height: 78svh; }
+}

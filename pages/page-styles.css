@@ -410,7 +410,7 @@ p {
   
 .mdbody {
   text-align: left !important;
-  width: 1050px;
+  width: min(1050px, 94vw);
   margin: auto;
   margin-top: 6rem !important;
   text-align: justify !important;
@@ -476,7 +476,7 @@ p {
     margin: auto !important;
     /* width: 60%; */
     margin-bottom: 0 !important;
-    max-width: 40em !important;
+    max-width: min(40em, 100%) !important;
     width: auto;
   }
 
@@ -488,6 +488,9 @@ p {
   }
 
 /* ===== project meta strip (4 boxes) ===== */
+
+/* the braille page's layout adds a bottom margin to every div */
+.mdbody .project-meta div { margin-bottom: 0; }
 
 .project-meta {
   max-width: 63.5vw !important;
@@ -666,6 +669,13 @@ em {
       flex-direction: row !important;
       flex-wrap: nowrap !important;
     }
+
+    /* heroes with a caption along their bottom edge need the strip lower */
+    .project-meta.after-caption { margin-top: -62px !important; }
+
+    .mdbody { margin-top: 4.5rem !important; }
+    .mdbody .mdh1 { font-size: 1.5rem; }
+    .mdc { padding: 14px; }
 
     .meta-timeframe   { flex: 0 0 15%; }
     .meta-summary     { flex: 0 0 47%; }

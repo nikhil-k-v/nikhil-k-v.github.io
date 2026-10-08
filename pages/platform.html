@@ -2,34 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>MOTION PLATFORM</title>
   <link rel="canonical" href="https://nkve.dev/pages/platform.html" />
+  <meta name="description" content="A 3-DOF motion platform that tilts a treadmill for locomotion research at the RAM Lab, built around linear motors the lab already had.">
 
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="nkve.dev" />
-<meta property="og:title" content="Motion Platform" />
-<meta property="og:description" content="3-DOF motion platform / robotic testbed — RAM Lab." />
-<meta property="og:url" content="https://nkve.dev/pages/platform.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="nkve.dev" />
+  <meta property="og:title" content="Motion Platform" />
+  <meta property="og:description" content="3-DOF motion platform / robotic testbed — RAM Lab." />
+  <meta property="og:url" content="https://nkve.dev/pages/platform.html" />
+  <meta property="og:image" content="https://nkve.dev/assets/platform.gif" />
+  <meta property="og:image:secure_url" content="https://nkve.dev/assets/platform.gif" />
+  <meta property="og:image:type" content="image/gif" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Motion Platform" />
+  <meta name="twitter:description" content="3-DOF motion platform / robotic testbed — RAM Lab." />
+  <meta name="twitter:image" content="https://nkve.dev/assets/platform.gif" />
 
-<!-- Force the preview image -->
-<meta property="og:image" content="https://nkve.dev/assets/platform.gif" />
-<meta property="og:image:secure_url" content="https://nkve.dev/assets/platform.gif" />
-<meta property="og:image:type" content="image/gif" />
-
-<!-- Twitter/X (many clients use this too) -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Motion Platform" />
-<meta name="twitter:description" content="3-DOF motion platform / robotic testbed — RAM Lab." />
-<meta name="twitter:image" content="https://nkve.dev/assets/platform.gif" />
-<meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi">  <title>PLATFORM</title>
   <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
   <link rel="stylesheet" href="page-styles.css">
   <link rel="stylesheet" href="../about.css">
-  <!-- Splide CSS for video carousel -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"
-  >
+  <link rel="stylesheet" href="genauto.css">
+  <link rel="stylesheet" href="project.css">
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
@@ -41,20 +36,16 @@
 </script>
 
 <body>
-  <header>
-  </header>
+  <header></header>
 
   <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
 
   <main>
-
-    <!-- Animation box with centered title behind the GIF -->
     <div id="arm-anim-container" class="img-container" style="margin-top: 2rem !important;">
       <h1 class="page-title">MOTION PLATFORM</h1>
       <video style="top: 54%; filter: contrast(1.3) opacity(0.8);" class="anim" src="../assets/anim/platform.mp4" poster="../assets/anim/platform.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
     </div>
 
-    <!-- Project meta strip (timeframe, info, affiliation, status) -->
     <section class="project-meta">
       <div class="meta-box meta-timeframe">
         <span class="meta-label">Timeframe</span>
@@ -62,7 +53,7 @@
       </div>
       <div class="meta-box meta-summary">
         <span class="meta-label">Overview</span>
-        <span class="meta-value">3-DOF Motion Platform <em>/</em> Robotic Testbed <em>/</em> Academic Research <em>/</em> Novel Linkage Design <em>/</em> Python Kinematic Solver <em>/</em> MATLAB Simulation </span>
+        <span class="meta-value">3-DOF Motion Platform <em>/</em> Robotic Testbed <em>/</em> Academic Research <em>/</em> Novel Linkage Design <em>/</em> Python Kinematic Solver <em>/</em> MATLAB Simulation</span>
       </div>
       <div class="meta-box meta-affiliation">
         <span class="meta-label">Affiliation</span>
@@ -70,133 +61,140 @@
       </div>
       <div class="meta-box meta-status">
         <span class="meta-label">Status</span>
-        <span class="meta-value">In-use for locomotion papers</span>
+        <span class="meta-value">In use for locomotion papers</span>
       </div>
     </section>
 
+    <nav class="ga-nav" aria-label="Page sections">
+      <ol>
+        <li><a href="#overview"><span class="tick"></span><span class="label">Overview</span></a></li>
+        <li><a href="#goal"><span class="tick"></span><span class="label">Goal</span></a></li>
+        <li><a href="#constraint"><span class="tick"></span><span class="label">Constraint</span></a></li>
+        <li><a href="#mechanism"><span class="tick"></span><span class="label">Mechanism</span></a></li>
+        <li><a href="#verification"><span class="tick"></span><span class="label">Verification</span></a></li>
+        <li><a href="#build"><span class="tick"></span><span class="label">Build</span></a></li>
+        <li><a href="#outcome"><span class="tick"></span><span class="label">Outcome</span></a></li>
+      </ol>
+    </nav>
+
+    <div class="ga-night">
+
+      <!-- ================= OVERVIEW ================= -->
+      <section class="ga-sec" id="overview" data-open>
+        <h2 class="ga-h2"><span>A platform that tilts a treadmill</span></h2>
+
+        <div class="pj-grid" style="--cols:3;">
+          <figure class="pj-tile span2" style="--ar:16/9"><video data-autoplay data-src="../assets/web/8mbvideo-QVE-iTiyHNtz.mp4" poster="../assets/web/8mbvideo-QVE-iTiyHNtz.jpg" aria-label="The platform tilting its top frame"></video></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/bipedPlatform.jpg" alt="A biped robot walking on a treadmill mounted on the platform" loading="lazy"><figcaption>In use, with a treadmill and a biped on top</figcaption></figure>
+          <figure class="pj-tile" style="--ar:16/9"><video data-autoplay data-src="../assets/web/platformRandomMove.mp4" poster="../assets/web/platformRandomMove.jpg" aria-label="The platform moving through random poses"></video></figure>
+          <figure class="pj-tile" style="--ar:16/9"><video data-autoplay data-src="../assets/web/platformNewAngle.mp4" poster="../assets/web/platformNewAngle.jpg" aria-label="The platform from another angle"></video></figure>
+          <figure class="pj-tile" style="--ar:16/9"><video data-autoplay data-src="../assets/web/platformBackForth.mp4" poster="../assets/web/platformBackForth.jpg" aria-label="The platform tilting back and forth"></video></figure>
+        </div>
+
+        <p class="ga-lead">A motion platform I designed and built for the RAM (Robotics, Automation and Mechatronics) Lab at Rutgers. It holds a treadmill and moves it in multiple axes, so the lab can run locomotion experiments on ground that tilts.</p>
+        <p>It took about one semester, from the first linkage sketches through simulation, CAD, prototypes and assembly, and it's now being used for research in the lab.</p>
+      </section>
 
 
-    
-    <div class="splide" id="splide1"role="group" aria-label="Splide Basic HTML Example">
-      <div class="splide__track">
-        <ul class="splide__list">
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/platform-vids/8mbvideo-QVE-iTiyHNtz.mp4" type="video/mp4">
-            </video>          
-          </li>
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/platform-vids/platformNewAngle.mp4" type="video/mp4">
-            </video>          
-          </li>
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/platform-vids/platformRandomMove.mp4" type="video/mp4">
-            </video>   
-          </li>
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/platform-vids/platformBackForth.mp4" type="video/mp4">
-            </video>
-          </li>
-        </ul>
-      </div>
+      <!-- ================= GOAL ================= -->
+      <section class="ga-sec" id="goal">
+        <h2 class="ga-h2"><span>Goal</span></h2>
+        <p>The lab needed a way to manipulate a treadmill in multiple axes. There are only a few commercial systems that do this, and they cost five to six figures.</p>
+        <p>The goal was to get that capability without buying one.</p>
+      </section>
+
+
+      <!-- ================= CONSTRAINT ================= -->
+      <section class="ga-sec" id="constraint">
+        <h2 class="ga-h2"><span>Designing around what the lab had</span></h2>
+
+        <div class="pj-split fig-wide">
+          <div>
+            <p>Professor Yi told me the lab had a set of linear motors that had been sitting unused for nearly a decade.</p>
+            <p>That decided the design. Rather than pick actuators and build around them, I designed the whole system around turning the sliding of those linear motors into rotation of the platform.</p>
+          </div>
+          <figure class="pj-tile" style="--ar:1; margin:0;"><img data-zoom src="../assets/web/img/sliderAttached.jpg" alt="A slider carriage mounted on one of the lab's linear motors, with a link rising from its pivot" loading="lazy"><figcaption>A carriage on one of the lab's linear motors</figcaption></figure>
+        </div>
+      </section>
+
+
+      <!-- ================= MECHANISM ================= -->
+      <section class="ga-sec" id="mechanism">
+        <h2 class="ga-h2"><span>Linear to rotary</span></h2>
+        <p>I went through several joint configurations before settling on one. The core of it is essentially an offset crank-slider: each linear motor pushes a carriage, and a link from that carriage turns the platform about its axis.</p>
+
+        <div class="pj-grid" style="--cols:4;">
+          <figure class="pj-tile" style="--ar:1"><video data-autoplay data-src="../assets/web/sliderVid.mp4" poster="../assets/web/sliderVid.jpg" aria-label="A carriage sliding along its rail"></video><figcaption>Carriage on its rail</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/sliderTop.jpg" alt="Slider carriage plate, top" loading="lazy"><figcaption>Carriage plate</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/sliderBottom.jpg" alt="Slider carriage, underside with bearing blocks" loading="lazy"><figcaption>Underside</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><video data-autoplay data-src="../assets/web/sliderPart.mp4" poster="../assets/web/sliderPart.jpg" aria-label="The carriage pivot moving by hand"></video><figcaption>The pivot</figcaption></figure>
+        </div>
+      </section>
+
+
+      <!-- ================= VERIFICATION ================= -->
+      <section class="ga-sec" id="verification">
+        <h2 class="ga-h2"><span>Simulation and optimization</span></h2>
+        <p>Before building anything I had to check that the crank-slider could transmit the torque the platform needs, in both axes, at every point in its workspace.</p>
+
+        <figure class="pj-wide">
+          <video data-autoplay data-src="../assets/web/Dynamics.mp4" poster="../assets/web/Dynamics.jpg" aria-label="Python simulation of the pitch and roll slider-crank linkages with torque and slider-travel plots"></video>
+          <figcaption>The Python simulation for pitch (left) and roll (right). Top: the slider-crank through its range. Bottom: torque delivered against the requirement (dashed), and the slider travel needed, both over the tilt angle.</figcaption>
+        </figure>
+
+        <p>I wrote a Python simulation to do that. Adjusting the crank, slider and offset lengths by hand, I couldn't find a set that met the torque requirement everywhere, so I also wrote an optimizer. It finds the shortest link and offset lengths that still produce the required torque at every possible position.</p>
+
+        <div class="pj-facts" style="--cols:2;">
+          <div class="pj-fact"><b>98–215 N·m</b><span>available in pitch, over −25° to +5°, against about 60 N·m required</span></div>
+          <div class="pj-fact"><b>91–148 N·m</b><span>available in roll, over −20° to +10°, against about 12 N·m required</span></div>
+        </div>
+        <p class="pj-cap">Numbers from the simulation above. The torque never drops below the requirement anywhere in the range.</p>
+      </section>
+
+
+      <!-- ================= BUILD ================= -->
+      <section class="ga-sec" id="build">
+        <h2 class="ga-h2"><span>Build</span></h2>
+        <p>With the geometry validated, I did parts selection and the CAD, then went through prototypes and iterations before final assembly and testing.</p>
+
+        <div class="pj-grid" style="--cols:3;">
+          <figure class="pj-tile" style="--ar:16/9"><img data-zoom src="../assets/web/img/assortedPartsWide.jpg" alt="Printed brackets and connectors laid out on a table" loading="lazy"><figcaption>Printed brackets and connectors</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><video data-autoplay data-src="../assets/web/solderVid.mp4" poster="../assets/web/solderVid.jpg" aria-label="Pressing heat-set inserts into a printed bracket"></video><figcaption>Heat-set inserts</figcaption></figure>
+          <figure class="pj-tile" style="--ar:16/9"><img data-zoom src="../assets/web/img/baseConnectorWide.jpg" alt="A connector bracket on an aluminium extrusion" loading="lazy"><figcaption>Brackets on the extrusion</figcaption></figure>
+          <figure class="pj-tile" style="--ar:16/9"><img data-zoom src="../assets/web/img/baseHalfDone.jpg" alt="The base frame partly assembled from extrusion" loading="lazy"><figcaption>Base, partway</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/baseTopView.jpg" alt="The base frame from above" loading="lazy"><figcaption>Base from above</figcaption></figure>
+          <figure class="pj-tile" style="--ar:16/9"><img data-zoom src="../assets/web/img/baseStructureWide.jpg" alt="The base structure with its brackets" loading="lazy"><figcaption>Base structure</figcaption></figure>
+        </div>
+
+        <div class="pj-grid" style="--cols:2;">
+          <figure class="pj-tile" style="--ar:1"><video data-autoplay data-src="../assets/web/panAround.mp4" poster="../assets/web/panAround.jpg" aria-label="Walking around the assembled platform"></video><figcaption>Assembled</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><video data-autoplay data-src="../assets/web/platformManual.mp4" poster="../assets/web/platformManual.jpg" aria-label="Moving the platform by hand"></video><figcaption>Moving it by hand</figcaption></figure>
+        </div>
+      </section>
+
+
+      <!-- ================= OUTCOME ================= -->
+      <section class="ga-sec" id="outcome">
+        <h2 class="ga-h2"><span>Outcome</span></h2>
+        <div class="pj-split">
+          <div>
+            <p>The platform is in use at the RAM Lab, where it's being used for locomotion research and papers.</p>
+            <p>The lab got a multi-axis treadmill platform without buying a commercial system, and linear motors that had sat unused for a decade are back in use.</p>
+          </div>
+          <figure class="pj-tile" style="--ar:16/9; margin:0;"><img data-zoom src="../assets/web/img/bipedPlatformWide.jpg" alt="The platform with a treadmill and a biped robot on top" loading="lazy"></figure>
+        </div>
+      </section>
+
     </div>
-    
-
-        <div class="splide" id="splide3"role="group" aria-label="Splide Basic HTML Example">
-      <div class="splide__track">
-        <ul class="splide__list">
-
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/platform-vids/solderVid.mp4" type="video/mp4">
-            </video>          
-          </li>
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/platform-vids/sliderVid.mp4" type="video/mp4">
-            </video>
-          </li>
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/platform-vids/sliderPart.mp4" type="video/mp4">
-            </video>   
-          </li>
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/platform-vids/platformMan.mp4" type="video/mp4">
-            </video>   
-          </li>
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/platform-vids/panAround.mp4" type="video/mp4">
-            </video>   
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="p-container">
-        <p>I designed this to give researchers at the RAM lab a way to manipulate a treadmill in multiple axes without purchasing an expensive system (there are only a few commercially available solutions, and they are 5-6 figures).</p>
-        <p>Professor Yi told me we had the linear motors lying around in the lab, unused for nearly a decade, so I designed the system around converting the linear motors' sliding into useful rotation of the platform.</p>
-      </div>
-
-
-    <div id="dynamicsVid">
-      <video width="100%" height="100%" autoplay muted loop playsinline>
-        <source src="../assets/platform-vids/Dynamics.mp4" type="video/mp4">
-      </video>   
-    </div>
-        
-    <div class="p-container">
-        <p>After iterating through different ideas for joint configuration, I had to verify that the linear -> rotational motion mechanism (essentially an offset crank-slider) could transmit the required torque in both axes at any point in the workspace.
-          <p>I made a Python sim to do it, as you can see above. However, I couldn't figure out the crank/slider/offset link lengths that could satisfy the torque requirements while adjusting them myself, so I also wrote an optimizer which determines the shortest possible link and offset lengths that could generate the required torque at every possible position.</p>
-          <p>After validating the design, I did parts selection/CAD design, prototypes/iteration, and eventually assembly/testing. It is now being used for research in the lab. The project took around one semester.</p>
-    </div>
-
-
-    <div class="gallery" id="content-gallery">
-      <img class="gallery-img" src="../assets/platform-vids/sliderTilted.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseAlmostDone.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseCompleteWide.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseHalfDone.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/assortedPartsWide.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/sliderAttached.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/sliderBottom.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseIsoView.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseStructure.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseStructureWide.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/sliderTop.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/bipedPlatformWide.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseTopView.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/baseConnectorWide.jpg" alt="Image 2">
-      <img class="gallery-img" src="../assets/platform-vids/assortedParts2.jpg" alt="Image 2">
-    </div>
-
-
-
   </main>
 
-  <div class="gallery">
-
-  </div>
-
-  <!-- Modal -->
   <div id="modal" class="modal">
     <span class="close">&times;</span>
-    <img class="modal-content" id="modalImage"> 
+    <img class="modal-content" id="modalImage" alt="">
   </div>
 
-  <!-- GSAP for smooth fades -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" referrerpolicy="no-referrer"></script>
-  <!-- Macy.js for masonry-style media grid -->
-  <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
-  <!-- Splide JS for video carousel -->
-  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-  <!-- Project-pages-specific JS (no scroll hijacking) -->
-  <script src="pages.js"></script>
-
+  <script src="genauto-nav.js"></script>
+  <script src="genauto-layout.js"></script>
+  <script src="project.js"></script>
 </body>
 </html>

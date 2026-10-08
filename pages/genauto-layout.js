@@ -92,7 +92,7 @@
 /* Collapsible sections on phones.
    Every section heading becomes a button that shows/hides the section. On
    phones all sections start collapsed except Goals & requirements, which holds
-   the final videos. On desktop nothing is collapsed and the button is inert. */
+   the final videos, and any section marked data-open. On desktop nothing is collapsed and the button is inert. */
 (function () {
   var mq = window.matchMedia('(max-width: 1000px)');
   var sections = Array.prototype.slice.call(document.querySelectorAll('.ga-sec, .ga-dark'));
@@ -120,7 +120,7 @@
     h2.appendChild(btn);
 
     sec.classList.add('is-collapsible');
-    if (OPEN_BY_DEFAULT.indexOf(sec.id) === -1) sec.classList.add('is-collapsed');
+    if (OPEN_BY_DEFAULT.indexOf(sec.id) === -1 && !sec.hasAttribute('data-open')) sec.classList.add('is-collapsed');
 
     btn.addEventListener('click', function () {
       if (!mq.matches) return;

@@ -635,22 +635,24 @@
 .ga-paperref .ga-link:focus-visible { outline: 2px solid var(--ga-ink); outline-offset: 1px; }
 
 /* ---------- system simplification ----------
-   2x2: [sketch 1][text] / [sketch 2][sketch 3], with arrows in the gaps.
-   1fr rows and columns keep all four cells the same size. */
+   One row: [sketch] -> [sketch] -> [sketch], captions under each, and the
+   explanation underneath the whole row. Stays a row on phones too. */
 .ga-simp {
   display: grid;
-  max-width: 52rem;
-  margin: 0 auto;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  grid-template-rows: 1fr auto 1fr;
-  column-gap: 0.8rem;
-  row-gap: 0.4rem;
+  margin: 0.4rem auto 0 auto;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  column-gap: 0.9rem;
   align-items: center;
   justify-items: center;
 }
 .ga-simp > .ga-fig { width: 100%; }
-.ga-simp > .ga-fig img { width: 100%; height: auto; max-height: var(--h, 190px); object-fit: contain; }
-.ga-simp-text { align-self: center; justify-self: stretch; }
+.ga-simp > .ga-fig img { width: 100%; height: var(--h, 190px); object-fit: contain; }
+.ga-simp > .ga-fig figcaption { min-height: 2.8em; }
+.ga-simp-text { margin: 1.1rem auto 0 auto; max-width: 100ch; }
+
+/* three sketches side by side that should never wrap */
+.ga-row3 { flex-wrap: nowrap !important; }
+.ga-row3 > .ga-fig { flex: 0 1 auto; min-width: 0; }
 
 /* ---------- the "impossible" question ---------- */
 .ga-question {
@@ -689,10 +691,11 @@
   .ga-media > .ga-ph:first-child { grid-row: auto; }
   .ga-media > .ga-ph:not(:first-child) { aspect-ratio: 16 / 9; height: auto; }
 
-  .ga-simp { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; row-gap: 0.8rem; }
-  .ga-simp > * { grid-area: auto !important; }
-  .ga-simp > .ga-arrow { transform: rotate(90deg); }
-  .ga-simp > .ga-simp-text { order: 9; }
+  .ga-simp { column-gap: 0.35rem; }
+  .ga-simp > .ga-arrow { width: 18px; height: 12px; }
+  .ga-simp > .ga-fig img { height: calc(var(--h, 190px) * 0.45); }
+  .ga-simp > .ga-fig figcaption { font-size: 0.58rem; min-height: 0; }
+  .ga-simp-text { margin-top: 0.7rem; }
   .ga-h2 { gap: 0.8rem; }
 }
 
@@ -735,7 +738,6 @@
   .ga-goals li { font-size: 0.84rem !important; padding: 0.4rem 0; gap: 0.6rem; }
   .ga-arrow { width: 30px; height: 18px; }
   .ga-grid { row-gap: 0.4rem; }
-  .ga-simp > .ga-fig img { max-height: 150px; }
   .ga-industry .ga-fig.photo img { max-height: 200px; }
   .ga-sec.is-collapsible .ga-h2 { margin-bottom: 0.2rem; }
   .ga-sec.is-collapsed + .ga-sec, .ga-sec.is-collapsed { margin-top: 0.9rem; }

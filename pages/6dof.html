@@ -2,16 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>6DOF ARM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>6DOF DESKTOP ARM</title>
+  <meta name="description" content="A desktop 6DOF robotic arm with custom cycloidal actuators, designed almost entirely from scratch and released as open-source documentation.">
   <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
   <link rel="stylesheet" href="page-styles.css">
   <link rel="stylesheet" href="../about.css">
-  <!-- Splide CSS for video carousel -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css"
-  >
+  <link rel="stylesheet" href="genauto.css">
+  <link rel="stylesheet" href="project.css">
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
@@ -23,19 +21,16 @@
 </script>
 
 <body>
-  <header>
-  </header>
+  <header></header>
 
   <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
 
   <main>
-    <!-- Animation box with centered title behind the GIF -->
     <div id="arm-anim-container" class="img-container" style="margin-top: 2rem !important;">
       <h1 class="page-title">6DOF DESKTOP ARM</h1>
       <video style="max-height: 130%;" class="anim" src="../assets/anim/armanim-compressed.mp4" poster="../assets/anim/armanim-compressed.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
     </div>
 
-    <!-- Project meta strip (timeframe, info, affiliation, status) -->
     <section class="project-meta">
       <div class="meta-box meta-timeframe">
         <span class="meta-label">Timeframe</span>
@@ -51,146 +46,162 @@
       </div>
       <div class="meta-box meta-status">
         <span class="meta-label">Status</span>
-        <span class="meta-value">Released Open-sourced Docs</span>
+        <span class="meta-value">Released <em>/</em> Open-Source Docs</span>
       </div>
     </section>
 
-    <div class="p-container">
-      <p>We have created an open-source compilation of all of the work done by Sahil & I on this project, and released it here:</p>
-    </div>
+    <nav class="ga-nav" aria-label="Page sections">
+      <ol>
+        <li><a href="#overview"><span class="tick"></span><span class="label">Overview</span></a></li>
+        <li><a href="#framework"><span class="tick"></span><span class="label">Framework</span></a></li>
+        <li><a href="#actuators"><span class="tick"></span><span class="label">Actuators</span></a></li>
+        <li><a href="#controller"><span class="tick"></span><span class="label">Controller</span></a></li>
+        <li><a href="#build"><span class="tick"></span><span class="label">Build</span></a></li>
+        <li><a href="#docs"><span class="tick"></span><span class="label">Docs</span></a></li>
+        <li><a href="#photos"><span class="tick"></span><span class="label">Photos</span></a></li>
+      </ol>
+    </nav>
 
-    <div id="iframe-content">
-      <div class="iframe-post">
-        <div class="iframe-info">
-          <!-- <p class="blog-date">OPEN-SOURCE HARDWARE</p> -->
-          <h2 class="iframe-title"><a href="https://versorobotics.com/" target="_blank" style="text-decoration: none;
-">versorobotics.com⿻</a></h2>
+    <div class="ga-night">
+
+      <!-- ================= OVERVIEW ================= -->
+      <section class="ga-sec" id="overview" data-open>
+        <h2 class="ga-h2"><span>A desktop arm, from scratch</span></h2>
+
+        <div class="pj-grid" style="--cols:4;">
+          <figure class="pj-tile span2 tall"><video data-autoplay data-src="../assets/web/armGood.mp4" poster="../assets/web/armGood.jpg" aria-label="The finished arm moving through a sequence of poses"></video></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/finalarm6.jpg" alt="The finished white arm on its base" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/finalarm3.jpg" alt="The arm reaching forward" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><video data-autoplay data-src="../assets/web/armInsta.mp4" poster="../assets/web/armInsta.jpg" aria-label="The arm running in front of the code that drives it"></video></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/finalarm7.jpg" alt="The arm folded upright" loading="lazy"></figure>
         </div>
-        <iframe class="iframe-thumbnail" src="https://versorobotics.com/"></iframe>
-      </div>
+
+        <p class="ga-lead">A six-axis robotic arm that sits on a desk. Sahil and I designed almost all of it ourselves: every arm part, linkage and assembly, the cycloidal actuators and the equations that define their curves, the motor driver circuitry and PCB, the tele-op controllers, and most of the code.</p>
+        <p>The few things we couldn't build from scratch, like an inverse kinematics solver, we still studied. Either we plan to come back to them, or we have write-ups and tools we made to understand and use them. All of it is now released as open-source documentation under <a href="#docs">Verso Robotics</a>.</p>
+      </section>
+
+
+      <!-- ================= FRAMEWORK ================= -->
+      <section class="ga-sec" id="framework">
+        <h2 class="ga-h2"><span>One framework, different arms</span></h2>
+        <p>We didn't set out to make one arm. We made a framework for building 6DOF arms, and then each built our own with it. The two arms look very different from each other, but they're made from the same building blocks.</p>
+
+        <div class="pj-grid" style="--cols:3;">
+          <figure class="pj-tile light" style="--ar:4/3"><img data-zoom src="../assets/web/img/arm6.jpg" alt="CAD render of a joint module: stepper motor, pulley stage and cycloidal reducer" loading="lazy"><figcaption>Joint module in CAD</figcaption></figure>
+          <figure class="pj-tile light" style="--ar:4/3"><img data-zoom src="../assets/web/img/arm7.jpg" alt="CAD render of a joint module from the side" loading="lazy"><figcaption>Motor, pulley stage and cycloidal reducer in one link</figcaption></figure>
+          <figure class="pj-tile light" style="--ar:4/3"><img data-zoom src="../assets/web/img/arm2.jpg" alt="CAD render of a full arm link" loading="lazy"><figcaption>A full link</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/arm3.jpg" alt="A printed link prototype with a clear cycloidal stage" loading="lazy"><figcaption>Printed link prototype</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/arm4.jpg" alt="The printed link prototype from another angle" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/arm5.jpg" alt="A printed link with both joint openings" loading="lazy"></figure>
+        </div>
+
+        <p>My part of it was the <a href="desmos.html">cycloidal function generator</a> and the <a href="cycloid.html">actuators</a> it produced, the mechanics of my arm, and the <a href="controller.html">miniature tele-op controller</a>.</p>
+      </section>
+
+
+      <!-- ================= ACTUATORS ================= -->
+      <section class="ga-sec" id="actuators">
+        <h2 class="ga-h2"><span>Cycloidal actuators</span></h2>
+
+        <div class="pj-split fig-wide">
+          <div>
+            <p>The arm runs on NEMA stepper motors, which don't have nearly enough torque or precision on their own. Each joint needed a reducer.</p>
+            <p>Instead of buying gearboxes, I generated our own. I wrote a parametric cycloid generator with the Desmos API, and its x(t) and y(t) go straight into Fusion 360's Equation Driven Curve add-in, so a disc profile goes from sliders to CAD with no hand-drawing. Every actuator in the arm came out of it.</p>
+            <p>The result is a 28:1 cycloidal gearbox with nearly zero backlash, and it's still backdrivable.</p>
+          </div>
+          <figure class="pj-tile" style="--ar:960/686; margin:0;"><video data-autoplay data-src="../assets/web/cycloidMotor.mp4" poster="../assets/web/cycloidMotor.jpg" aria-label="A cycloidal actuator turning on its motor"></video></figure>
+        </div>
+
+        <div class="pj-grid" style="--cols:4;">
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/in1.jpg" alt="Cycloidal reducer mounted on a NEMA stepper motor" loading="lazy"><figcaption>Mounted on a NEMA stepper</figcaption></figure>
+          <figure class="pj-tile" style="--ar:3/4"><video data-autoplay data-src="../assets/web/cycloidHand.mp4" poster="../assets/web/cycloidHand.jpg" aria-label="Turning a cycloidal reducer by hand"></video><figcaption>Turned by hand</figcaption></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/cy5.jpg" alt="A finished cycloidal reducer held in a hand" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><video data-autoplay data-src="../assets/web/cycloidBLDC.mp4" poster="../assets/web/cycloidBLDC.jpg" aria-label="A cycloidal stage driven by a brushless motor"></video><figcaption>On a brushless motor</figcaption></figure>
+        </div>
+
+        <p>The discs and housings are laser-cut, which is also why everything in these photos is see-through: you can watch the disc wobble around the pins. If you don't have a laser cutter, the same parts can be 3D printed.</p>
+
+        <div class="pj-links">
+          <a href="desmos.html">Cycloid generator: the math</a>
+          <a href="cycloid.html">Cycloidal actuator</a>
+        </div>
+      </section>
+
+
+      <!-- ================= CONTROLLER ================= -->
+      <section class="ga-sec" id="controller">
+        <h2 class="ga-h2"><span>Tele-op controller</span></h2>
+
+        <div class="pj-split">
+          <div>
+            <p>The arm is driven with a miniature copy of itself. You move the controller's joints by hand and the arm follows. Since the controller has the same joints as the arm, this only needs forward kinematics.</p>
+            <p>Inverse kinematics, where you give the arm a target and it works out the joint angles, was one of the pieces we didn't build from scratch. We studied it and made tools to understand and use it, and it's something I want to come back to.</p>
+          </div>
+          <figure class="pj-tile" style="--ar:4/3; margin:0;"><img data-zoom src="../assets/web/img/cont5.jpg" alt="The miniature controller standing next to its printed case" loading="lazy"></figure>
+        </div>
+
+        <div class="pj-grid" style="--cols:3;">
+          <figure class="pj-tile" style="--ar:4/3"><img data-zoom src="../assets/web/img/cont1.jpg" alt="The controller packed in its printed case, labelled 6DOF Arm Controller Mk. I" loading="lazy"><figcaption>Mk. I, packed in its case</figcaption></figure>
+          <figure class="pj-tile" style="--ar:4/3"><img data-zoom src="../assets/web/img/cont2.jpg" alt="The open case with the controller seated in a fitted cutout" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:4/3"><img data-zoom src="../assets/web/img/cont4.jpg" alt="The case standing upright" loading="lazy"></figure>
+        </div>
+      </section>
+
+
+      <!-- ================= BUILD ================= -->
+      <section class="ga-sec" id="build">
+        <h2 class="ga-h2"><span>Cost and build</span></h2>
+
+        <div class="pj-facts" style="--cols:3;">
+          <div class="pj-fact"><b>≈ $300</b><span>for the whole arm, including fabrication and electronics</span></div>
+          <div class="pj-fact"><b>1 year</b><span>of planning, designing, testing, failing and replanning</span></div>
+          <div class="pj-fact"><b>100s of hours</b><span>each, for Sahil and me</span></div>
+        </div>
+
+        <p>Most of the arm is 3D printed. The cycloidal actuators and the covers are laser-cut, and those can be printed too if laser-cutting isn't an option.</p>
+        <p>It's by far the most time I've spent on any project.</p>
+      </section>
+
+
+      <!-- ================= DOCS ================= -->
+      <section class="ga-sec" id="docs" data-open>
+        <h2 class="ga-h2"><span>Open-source docs</span></h2>
+        <p>Everything Sahil and I made for this project is compiled and released at versorobotics.com.</p>
+
+        <div class="pj-embed">
+          <div class="pj-embed-bar"><span>versorobotics.com</span><a href="https://versorobotics.com/" target="_blank" rel="noopener">Open in a new tab</a></div>
+          <iframe src="https://versorobotics.com/" title="Verso Robotics documentation" loading="lazy"></iframe>
+        </div>
+
+        <p>If you have questions about any of it, email me at <a href="mailto:nikhilvijay.engineering@gmail.com">nikhilvijay.engineering@gmail.com</a>.</p>
+      </section>
+
+
+      <!-- ================= PHOTOS ================= -->
+      <section class="ga-sec" id="photos">
+        <h2 class="ga-h2"><span>Photos</span></h2>
+        <div class="pj-grid" style="--cols:4;">
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/finalarm2.jpg" alt="The arm from the side" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/finalarm4.jpg" alt="The arm with its elbow raised" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/finalarm5.jpg" alt="The arm reaching down" loading="lazy"></figure>
+          <figure class="pj-tile light" style="--ar:3/4"><img data-zoom src="../assets/web/img/finalarm1.jpg" alt="Render of the arm" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/in2.jpg" alt="Cycloidal reducer on a stepper, from above" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/cy3.jpg" alt="Cycloidal reducer held in a hand" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/cy6.jpg" alt="Cycloidal reducer with its output shaft" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/cont3.jpg" alt="The controller seated in its case" loading="lazy"></figure>
+        </div>
+      </section>
+
     </div>
-
-    <div class="p-container">
-      <p>We designed this arm almost completely from scratch - every arm part, linkage, & assembly, the cycloidal actuators and the equations which define their curves, the motor driver circuitry and PCB, the forward kinematics tele-op controllers, and much of the code.</p>
-      <p>The things we COULDNT do from scratch, like creating an inverse kinematics solver, were still studied and worked on - we either plan to do them in the future, 
-        or we have writeups & other tools we made to understand & use them.</p>
-    </div>
-
-        <div class="splide" id="splide2" role="group" aria-label="Splide Basic HTML Example">
-      <div class="splide__track">
-        <ul class="splide__list">
-
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/arm-vids/cycloidHand.mp4" type="video/mp4">
-            </video>
-          </li>
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/arm-vids/armInsta.mp4" type="video/mp4">
-            </video>          
-          </li>
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/arm-vids/cycloidMotor.mp4" type="video/mp4">
-            </video>   
-          </li>
-          
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/arm-vids/armGood.mov" type="video/mp4">
-            </video>   
-          </li>
-          <li class="splide__slide">
-            <video width="100%" height="100%" autoplay muted loop playsinline>
-              <source src="../assets/arm-vids/cycloidBLDC.mp4" type="video/mp4">
-            </video>   
-          </li>
-
-        </ul>
-      </div>
-    </div>
-
-    <div class="p-container">
-      <p>We made a framework for creating 6DOF robotic arms - our arms are very different from each other, but they use the same "things".</p>
-      <p>My main contributions towards the project were creating the <b><a href="https://nikhil-k-v.github.io/pages/desmos.html">cycloidal function generator</a></b> & designing the <b><a href="https://nikhil-k-v.github.io/pages/cycloid.html">actuators</a></b>, creating the mechanics for my arm, and 
-        creating the <b><a href="https://nikhil-k-v.github.io/pages/controller.html">miniature tele-op controller</a></b>.</p>
-    </div>
-
-    <div class="container">
-      <iframe height="700" width="1020" scrolling="no" title="desmos" src="https://codepen.io/nikhil-k-v/embed/YzOyYpx?default-tab=result&theme-id=dark" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
-        See the Pen <a href="https://codepen.io/nikhil-k-v/pen/YzOyYpx">
-        desmos</a> by nv (<a href="https://codepen.io/nikhil-k-v">@nikhil-k-v</a>)
-        on <a href="https://codepen.io">CodePen</a>.
-      </iframe>
-    </div>
-
-    <div class="p-container">
-      <p>We brought the price down to around $300 (and that includes fabrication, electronics, etc.). </p>
-      <p>The arm mostly 3-D printed, but it also uses laser cut parts for the cycloidal actuators & covers - those can be 3D printed if laser-cutting is not an option.</p>
-      <p>It is BY FAR the most time I have spent on any project - we spent hundreds of hours each creating this across a full year of planning, designing, testing, evaluating, failing, replanning, and so on.</p>
-    </div>
-
-    <div class="p-container">
-      <p>If you have any questions, PLEASE feel free to contact me at nikhilvijay.engineering@gmail.com</p>
-      <p>As you wait for the open-source documentation to go live, below is a compilation of my arm, and the cycloidal generator & actuators that I made.</p>
-    </div>
-
-    <!-- Video carousel (Splide) -->
-
-
-    
-
-
   </main>
 
-  <div class="gallery">
-    <img class="gallery-img" src="/assets/img-gal/finalarm6.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm2.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm3.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm4.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm5.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm7.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/finalarm1.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cont1.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cont2.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cont3.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cont4.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cont5.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/in1.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/in2.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/in3.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy1.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy2.PNG" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy3.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy4.jpg" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy5.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy6.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/cy7.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm6.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm7.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm9.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm3.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm4.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm5.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm1.png" alt="Image 2">
-    <img class="gallery-img" src="/assets/img-gal/arm2.png" alt="Image 2">
-  </div>
-
-  <!-- Modal -->
   <div id="modal" class="modal">
     <span class="close">&times;</span>
-    <img class="modal-content" id="modalImage"> 
+    <img class="modal-content" id="modalImage" alt="">
   </div>
 
-  <!-- GSAP for smooth fades -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" referrerpolicy="no-referrer"></script>
-  <!-- Macy.js for masonry-style media grid -->
-  <script src="https://cdn.jsdelivr.net/npm/macy@2"></script>
-  <!-- Splide JS for video carousel -->
-  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-  <!-- Project-pages-specific JS (no scroll hijacking) -->
-  <script src="pages.js"></script>
-
+  <script src="genauto-nav.js"></script>
+  <script src="genauto-layout.js"></script>
+  <script src="project.js"></script>
 </body>
 </html>
