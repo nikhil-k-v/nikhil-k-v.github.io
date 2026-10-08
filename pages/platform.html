@@ -68,12 +68,11 @@
     <nav class="ga-nav" aria-label="Page sections">
       <ol>
         <li><a href="#overview"><span class="tick"></span><span class="label">Overview</span></a></li>
-        <li><a href="#goal"><span class="tick"></span><span class="label">Goal</span></a></li>
-        <li><a href="#constraint"><span class="tick"></span><span class="label">Constraint</span></a></li>
+        <li><a href="#background"><span class="tick"></span><span class="label">Background</span></a></li>
         <li><a href="#mechanism"><span class="tick"></span><span class="label">Mechanism</span></a></li>
-        <li><a href="#verification"><span class="tick"></span><span class="label">Verification</span></a></li>
+        <li><a href="#verification"><span class="tick"></span><span class="label">Simulation</span></a></li>
         <li><a href="#build"><span class="tick"></span><span class="label">Build</span></a></li>
-        <li><a href="#outcome"><span class="tick"></span><span class="label">Outcome</span></a></li>
+        <li><a href="#outcome"><span class="tick"></span><span class="label">In use</span></a></li>
       </ol>
     </nav>
 
@@ -81,7 +80,7 @@
 
       <!-- ================= OVERVIEW ================= -->
       <section class="ga-sec" id="overview" data-open>
-        <h2 class="ga-h2"><span>A platform that tilts a treadmill</span></h2>
+        <h2 class="ga-h2"><span>Overview</span></h2>
 
         <div class="pj-grid" style="--cols:3;">
           <figure class="pj-tile span2" style="--ar:16/9"><video data-autoplay data-src="../assets/web/8mbvideo-QVE-iTiyHNtz.mp4" poster="../assets/web/8mbvideo-QVE-iTiyHNtz.jpg" aria-label="The platform tilting its top frame"></video></figure>
@@ -91,37 +90,28 @@
           <figure class="pj-tile" style="--ar:16/9"><video data-autoplay data-src="../assets/web/platformBackForth.mp4" poster="../assets/web/platformBackForth.jpg" aria-label="The platform tilting back and forth"></video></figure>
         </div>
 
-        <p class="ga-lead">A motion platform I designed and built for the RAM (Robotics, Automation and Mechatronics) Lab at Rutgers. It holds a treadmill and moves it in multiple axes, so the lab can run locomotion experiments on ground that tilts.</p>
-        <p>It took about one semester, from the first linkage sketches through simulation, CAD, prototypes and assembly, and it's now being used for research in the lab.</p>
+        <p>I designed and built this motion platform for the RAM (Robotics, Automation and Mechatronics) Lab at Rutgers. It holds a treadmill and can tilt it in multiple axes, and it's now being used for locomotion research in the lab. The whole project took around one semester.</p>
       </section>
 
 
-      <!-- ================= GOAL ================= -->
-      <section class="ga-sec" id="goal">
-        <h2 class="ga-h2"><span>Goal</span></h2>
-        <p>The lab needed a way to manipulate a treadmill in multiple axes. There are only a few commercial systems that do this, and they cost five to six figures.</p>
-        <p>The goal was to get that capability without buying one.</p>
-      </section>
-
-
-      <!-- ================= CONSTRAINT ================= -->
-      <section class="ga-sec" id="constraint">
-        <h2 class="ga-h2"><span>Designing around what the lab had</span></h2>
+      <!-- ================= BACKGROUND ================= -->
+      <section class="ga-sec" id="background">
+        <h2 class="ga-h2"><span>Background</span></h2>
 
         <div class="pj-split fig-wide">
           <div>
-            <p>Professor Yi told me the lab had a set of linear motors that had been sitting unused for nearly a decade.</p>
-            <p>That decided the design. Rather than pick actuators and build around them, I designed the whole system around turning the sliding of those linear motors into rotation of the platform.</p>
+            <p>I designed this to give researchers at the RAM lab a way to manipulate a treadmill in multiple axes without buying an expensive system. There are only a few commercially available ones, and they're 5–6 figures.</p>
+            <p>Professor Yi told me we had linear motors lying around in the lab that had gone unused for nearly a decade, so I designed the system around converting the linear motors' sliding into rotation of the platform.</p>
           </div>
-          <figure class="pj-tile" style="--ar:1; margin:0;"><img data-zoom src="../assets/web/img/sliderAttached.jpg" alt="A slider carriage mounted on one of the lab's linear motors, with a link rising from its pivot" loading="lazy"><figcaption>A carriage on one of the lab's linear motors</figcaption></figure>
+          <figure class="pj-tile" style="--ar:1; margin:0;"><img data-zoom src="../assets/web/img/sliderAttached.jpg" alt="A slider carriage mounted on one of the lab's linear motors, with a link rising from its pivot" loading="lazy"><figcaption>One of the lab's linear motors with its carriage</figcaption></figure>
         </div>
       </section>
 
 
       <!-- ================= MECHANISM ================= -->
       <section class="ga-sec" id="mechanism">
-        <h2 class="ga-h2"><span>Linear to rotary</span></h2>
-        <p>I went through several joint configurations before settling on one. The core of it is essentially an offset crank-slider: each linear motor pushes a carriage, and a link from that carriage turns the platform about its axis.</p>
+        <h2 class="ga-h2"><span>Mechanism</span></h2>
+        <p>After going through a few different joint configurations, I ended up with what's essentially an offset crank-slider: each linear motor moves a carriage, and a link from the carriage tilts the platform.</p>
 
         <div class="pj-grid" style="--cols:4;">
           <figure class="pj-tile" style="--ar:1"><video data-autoplay data-src="../assets/web/sliderVid.mp4" poster="../assets/web/sliderVid.jpg" aria-label="A carriage sliding along its rail"></video><figcaption>Carriage on its rail</figcaption></figure>
@@ -134,28 +124,22 @@
 
       <!-- ================= VERIFICATION ================= -->
       <section class="ga-sec" id="verification">
-        <h2 class="ga-h2"><span>Simulation and optimization</span></h2>
-        <p>Before building anything I had to check that the crank-slider could transmit the torque the platform needs, in both axes, at every point in its workspace.</p>
+        <h2 class="ga-h2"><span>Simulation</span></h2>
+        <p>Before building anything, I had to verify that the linear → rotational mechanism could transmit the required torque in both axes at any point in the workspace. I made a Python sim to check it:</p>
 
         <figure class="pj-wide">
           <video data-autoplay data-src="../assets/web/Dynamics.mp4" poster="../assets/web/Dynamics.jpg" aria-label="Python simulation of the pitch and roll slider-crank linkages with torque and slider-travel plots"></video>
-          <figcaption>The Python simulation for pitch (left) and roll (right). Top: the slider-crank through its range. Bottom: torque delivered against the requirement (dashed), and the slider travel needed, both over the tilt angle.</figcaption>
+<figcaption>Pitch on the left, roll on the right. The bottom plots are the torque the linkage can deliver over the tilt range, with the required torque dashed (about 60 Nm for pitch and 12 Nm for roll).</figcaption>
         </figure>
 
-        <p>I wrote a Python simulation to do that. Adjusting the crank, slider and offset lengths by hand, I couldn't find a set that met the torque requirement everywhere, so I also wrote an optimizer. It finds the shortest link and offset lengths that still produce the required torque at every possible position.</p>
-
-        <div class="pj-facts" style="--cols:2;">
-          <div class="pj-fact"><b>98–215 N·m</b><span>available in pitch, over −25° to +5°, against about 60 N·m required</span></div>
-          <div class="pj-fact"><b>91–148 N·m</b><span>available in roll, over −20° to +10°, against about 12 N·m required</span></div>
-        </div>
-        <p class="pj-cap">Numbers from the simulation above. The torque never drops below the requirement anywhere in the range.</p>
+        <p>I couldn't find crank, slider and offset lengths that satisfied the torque requirements by adjusting them myself, so I also wrote an optimizer that finds the shortest link and offset lengths that can still generate the required torque at every possible position.</p>
       </section>
 
 
       <!-- ================= BUILD ================= -->
       <section class="ga-sec" id="build">
         <h2 class="ga-h2"><span>Build</span></h2>
-        <p>With the geometry validated, I did parts selection and the CAD, then went through prototypes and iterations before final assembly and testing.</p>
+        <p>After validating the design I did parts selection and CAD, then prototyping and iteration, and eventually assembly and testing.</p>
 
         <div class="pj-grid" style="--cols:3;">
           <figure class="pj-tile" style="--ar:16/9"><img data-zoom src="../assets/web/img/assortedPartsWide.jpg" alt="Printed brackets and connectors laid out on a table" loading="lazy"><figcaption>Printed brackets and connectors</figcaption></figure>
@@ -175,11 +159,10 @@
 
       <!-- ================= OUTCOME ================= -->
       <section class="ga-sec" id="outcome">
-        <h2 class="ga-h2"><span>Outcome</span></h2>
+        <h2 class="ga-h2"><span>In use</span></h2>
         <div class="pj-split">
           <div>
-            <p>The platform is in use at the RAM Lab, where it's being used for locomotion research and papers.</p>
-            <p>The lab got a multi-axis treadmill platform without buying a commercial system, and linear motors that had sat unused for a decade are back in use.</p>
+            <p>It's now being used for research in the lab, including locomotion papers.</p>
           </div>
           <figure class="pj-tile" style="--ar:16/9; margin:0;"><img data-zoom src="../assets/web/img/bipedPlatformWide.jpg" alt="The platform with a treadmill and a biped robot on top" loading="lazy"></figure>
         </div>

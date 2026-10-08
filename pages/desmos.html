@@ -56,12 +56,10 @@
     <nav class="ga-nav" aria-label="Page sections">
       <ol>
         <li><a href="#overview"><span class="tick"></span><span class="label">Overview</span></a></li>
-        <li><a href="#curve"><span class="tick"></span><span class="label">The curve</span></a></li>
-        <li><a href="#pins"><span class="tick"></span><span class="label">Pins</span></a></li>
-        <li><a href="#limits"><span class="tick"></span><span class="label">Limits</span></a></li>
-        <li><a href="#reduction"><span class="tick"></span><span class="label">Reduction</span></a></li>
+        <li><a href="#math"><span class="tick"></span><span class="label">The math</span></a></li>
+        <li><a href="#reduction"><span class="tick"></span><span class="label">Gear ratio</span></a></li>
         <li><a href="#tool"><span class="tick"></span><span class="label">Try it</span></a></li>
-        <li><a href="#uses"><span class="tick"></span><span class="label">Uses</span></a></li>
+        <li><a href="#liquid-piston"><span class="tick"></span><span class="label">Liquid piston</span></a></li>
       </ol>
     </nav>
 
@@ -69,110 +67,64 @@
 
       <!-- ================= OVERVIEW ================= -->
       <section class="ga-sec" id="overview" data-open>
-        <h2 class="ga-h2"><span>Four numbers in, a gear out</span></h2>
-        <p class="ga-lead">A cycloidal gear generator I built on the Desmos API. You give it four numbers and it gives back the disc profile as a pair of parametric equations, x(t) and y(t), written in exactly the form Fusion 360's Equation Driven Curve add-in takes. I made it to design the actuators for my <a href="6dof.html">6DOF arm</a>, and every one of them came out of it.</p>
-
-        <div class="ga-box" style="margin-top:1.2rem;">
-          <table class="ga-spec">
-            <thead><tr><th>Input</th><th>What it is</th><th>Default</th></tr></thead>
-            <tbody>
-              <tr><td class="ga-math"><i>R</i></td><td>Radius of the pin circle: centre of the gearbox to the centre of each pin</td><td>1.8</td></tr>
-              <tr><td class="ga-math"><i>N</i></td><td>Number of pins (the disc ends up with <i>N</i> − 1 lobes)</td><td>28</td></tr>
-              <tr><td class="ga-math"><i>S</i></td><td>Radius of each pin</td><td>0.1</td></tr>
-              <tr><td class="ga-math"><i>E</i></td><td>Eccentricity: how far off-centre the disc runs</td><td><i>S</i> / 2</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p style="margin-top:1rem;">The rest of this page is the geometry behind those equations: where the curve comes from, why the pin radius shows up in it, where it stops working, and how a wobbling disc becomes a 27:1 gearbox.</p>
+        <h2 class="ga-h2"><span>Overview</span></h2>
+        <p>This is a cycloidal gear generator I made with the Desmos API. It generates an epitrochoid (basically a circle rolling around another circle) from four parameters: the overall radius <span class="ga-math"><i>R</i></span>, the number of pins <span class="ga-math"><i>N</i></span>, the pin radius <span class="ga-math"><i>S</i></span>, and the eccentricity <span class="ga-math"><i>E</i></span>.</p>
+        <p>It's built around two functions, x(t) and y(t), that use the same four variables, so you can copy them straight into the Equation Driven Curve add-in in Fusion 360 (with z(t) = 0). I used it to make all of the cycloidal actuators in my <a href="6dof.html">6DOF arm</a>, and they turned out with nearly zero backlash and are still backdrivable.</p>
       </section>
 
 
-      <!-- ================= THE CURVE ================= -->
-      <section class="ga-sec" id="curve">
-        <h2 class="ga-h2"><span>A circle rolling around a circle</span></h2>
+      <!-- ================= MATH ================= -->
+      <section class="ga-sec" id="math">
+        <h2 class="ga-h2"><span>The math</span></h2>
 
+        <h3 class="ga-h3">The base curve</h3>
         <div class="pj-split fig-wide">
           <div>
-            <p>Ignore the pins for a second. Roll a small circle of radius <span class="ga-math"><i>R</i>/<i>N</i></span> around the outside of a fixed circle of radius <span class="ga-math"><i>R</i>(<i>N</i> − 1)/<i>N</i></span>, and follow a point stuck to the small circle at distance <span class="ga-math"><i>E</i></span> from its centre. That point traces an epitrochoid.</p>
-            <p>The small circle's circumference fits around the fixed one exactly <span class="ga-math"><i>N</i> − 1</span> times, so the curve closes after <span class="ga-math"><i>N</i> − 1</span> lobes. Keeping <span class="ga-math"><i>E</i></span> smaller than the rolling radius keeps the point inside the small circle, and the lobes stay smooth.</p>
+            <p>Without the pins, the curve is an epitrochoid: a circle of radius <span class="ga-math"><i>R</i>/<i>N</i></span> rolling around a fixed circle of radius <span class="ga-math"><i>R</i>(<i>N</i> − 1)/<i>N</i></span>, traced by a point that's <span class="ga-math"><i>E</i></span> away from the rolling circle's center.</p>
+            <p>The small circle goes around the big one <span class="ga-math"><i>N</i> − 1</span> times, so the disc ends up with <span class="ga-math"><i>N</i> − 1</span> lobes, one less than the number of pins.</p>
+            <div class="ga-calc ga-math">
+              <div><i>x</i>₀(<i>t</i>) = <i>R</i> cos <i>t</i> − <i>E</i> cos(<i>Nt</i>)</div>
+              <div><i>y</i>₀(<i>t</i>) = −<i>R</i> sin <i>t</i> + <i>E</i> sin(<i>Nt</i>)</div>
+            </div>
           </div>
-          <figure class="pj-wide" style="margin:0;"><img src="../assets/cycloid/rolling.svg" alt="A small circle rolling around a fixed circle, with a point inside it tracing a curve with nine lobes" loading="lazy"><figcaption>Drawn with N = 10, so 9 lobes. The bright part is what's been traced so far.</figcaption></figure>
+          <figure class="pj-wide" style="margin:0;"><img src="../assets/cycloid/rolling.svg" alt="A small circle rolling around a fixed circle, with a point inside it tracing a curve with nine lobes" loading="lazy"><figcaption>N = 10, so 9 lobes.</figcaption></figure>
         </div>
 
-        <div class="ga-calc ga-math">
-          <div><i>x</i>₀(<i>t</i>) = <i>R</i> cos <i>t</i> − <i>E</i> cos(<i>Nt</i>)</div>
-          <div><i>y</i>₀(<i>t</i>) = −<i>R</i> sin <i>t</i> + <i>E</i> sin(<i>Nt</i>)</div>
-          <div class="note">The first term carries the rolling circle's centre around at radius <i>R</i>. The second spins the point around that centre <i>N</i> times as fast.</div>
-        </div>
-      </section>
-
-
-      <!-- ================= PINS ================= -->
-      <section class="ga-sec" id="pins">
-        <h2 class="ga-h2"><span>Making room for round pins</span></h2>
-
-        <p>That curve is where the centres of the pins need to be. The pins aren't points, though. They're cylinders of radius <span class="ga-math"><i>S</i></span>, so the disc has to follow the edge that every pin position touches: the curve moved inward by <span class="ga-math"><i>S</i></span>, perpendicular to itself at every point.</p>
-
-        <figure class="pj-wide"><img src="../assets/cycloid/offset.svg" alt="Pin circles placed all along the base curve; the disc profile is the inner edge they all touch" loading="lazy"><figcaption>Pin circles placed all along the base curve. The disc profile is the inner edge that all of them touch.</figcaption></figure>
-
-        <p>That's the extra term in the generator. <span class="ga-math"><i>b</i></span> is the angle of the curve's normal at <span class="ga-math"><i>t</i></span>, so the <span class="ga-math"><i>S</i></span> terms step each point inward by exactly the pin radius:</p>
+        <h3 class="ga-h3">Offsetting for the pins</h3>
+        <p>The pins aren't points, so the disc can't follow that curve directly. It has to be offset inward by the pin radius <span class="ga-math"><i>S</i></span>, perpendicular to the curve. <span class="ga-math"><i>b</i></span> is the angle of the curve's normal, which is where the <span class="ga-math"><i>S</i></span> cos(<span class="ga-math"><i>t</i> − <i>b</i></span>) terms come from. These are the equations the generator actually uses:</p>
 
         <div class="ga-calc ga-math">
           <div><i>x</i>(<i>t</i>) = <i>R</i> cos <i>t</i> − <i>S</i> cos(<i>t</i> − <i>b</i>) − <i>E</i> cos(<i>Nt</i>)</div>
           <div><i>y</i>(<i>t</i>) = −<i>R</i> sin <i>t</i> + <i>S</i> sin(<i>t</i> − <i>b</i>) + <i>E</i> sin(<i>Nt</i>)</div>
           <div><i>b</i>(<i>t</i>) = −arctan <span class="frac"><span>sin((1 − <i>N</i>)<i>t</i>)</span><span><i>R</i>/(<i>EN</i>) − cos((1 − <i>N</i>)<i>t</i>)</span></span></div>
-          <div class="note">Checked numerically against the generator's output: the step is <i>S</i> long to within rounding, and always perpendicular to the base curve.</div>
-        </div>
-      </section>
-
-
-      <!-- ================= LIMITS ================= -->
-      <section class="ga-sec" id="limits">
-        <h2 class="ga-h2"><span>Where it breaks</span></h2>
-        <p>Not every set of numbers gives you a disc you can cut. Two limits matter.</p>
-
-        <figure class="pj-wide"><img src="../assets/cycloid/eccentricity.svg" alt="Five disc profiles: shallow, rounded and tight-valleyed lobes, an undercut profile with a pin that is too large, and a base curve that loops over itself" loading="lazy"><figcaption>Dashed: base curve. Solid: disc profile. All drawn with N = 10 and R = 1.</figcaption></figure>
-
-        <div class="pj-split" style="align-items:start;">
-          <div>
-            <h3 class="ga-h3">Eccentricity: <span class="ga-math"><i>EN</i>/<i>R</i> &lt; 1</span></h3>
-            <p><span class="ga-math"><i>EN</i>/<i>R</i></span> is the eccentricity divided by the rolling circle's radius. As it climbs toward 1, the valleys between lobes get sharper. At exactly 1 they become cusps, and past 1 the curve loops over itself.</p>
-            <p>The arctan in <span class="ga-math"><i>b</i></span> knows this too. Its denominator, <span class="ga-math"><i>R</i>/(<i>EN</i>) − cos(…)</span>, can only reach zero or below once <span class="ga-math"><i>EN</i>/<i>R</i> ≥ 1</span>. The same condition that ruins the shape also breaks the equation.</p>
-          </div>
-          <div>
-            <h3 class="ga-h3">Pin size: <span class="ga-math"><i>S</i> &lt; ρ</span> at the lobe tips</h3>
-            <p>Moving the curve inward by <span class="ga-math"><i>S</i></span> only works if <span class="ga-math"><i>S</i></span> is smaller than the tightest radius of curvature on the lobe tips. Go past that and the offset folds over itself, which is undercut.</p>
-            <p>Deeper lobes have tighter tips. With N = 10, that limit is 0.32 <span class="ga-math"><i>R</i></span> at <span class="ga-math"><i>EN</i>/<i>R</i></span> = 0.65, but only 0.13 <span class="ga-math"><i>R</i></span> at 0.95.</p>
-          </div>
         </div>
 
-        <p>The generator's defaults sit well inside both: <span class="ga-math"><i>E</i> = <i>S</i>/2</span> works out to <span class="ga-math"><i>EN</i>/<i>R</i></span> ≈ 0.78, and the pin radius is about half of what would start to undercut.</p>
+        <figure class="pj-wide"><img src="../assets/cycloid/offset.svg" alt="Pin circles placed along the base curve; the disc profile is the inner edge they all touch" loading="lazy"><figcaption>The disc profile is the inner edge of all the pin positions.</figcaption></figure>
+
+        <h3 class="ga-h3">Picking parameters</h3>
+        <p>Not every combination works. If <span class="ga-math"><i>EN</i>/<i>R</i></span> reaches 1, the base curve gets cusps (and loops past that), and the arctan in <span class="ga-math"><i>b</i></span> breaks down at the same point. The other limit is the pin size: if <span class="ga-math"><i>S</i></span> is bigger than the radius of curvature at the tips of the lobes, the offset folds over itself and you get undercut.</p>
+        <p>The defaults (<span class="ga-math"><i>R</i></span> = 1.8, <span class="ga-math"><i>N</i></span> = 28, <span class="ga-math"><i>S</i></span> = 0.1, <span class="ga-math"><i>E</i> = <i>S</i>/2</span>) come out to <span class="ga-math"><i>EN</i>/<i>R</i></span> ≈ 0.78, with the pins at about half the size where undercut would start.</p>
+
+        <figure class="pj-wide"><img src="../assets/cycloid/eccentricity.svg" alt="Five disc profiles: shallow, rounded and tight-valleyed lobes, an undercut profile with a pin that is too large, and a base curve that loops over itself" loading="lazy"><figcaption>Dashed is the base curve, solid is the disc profile (N = 10, R = 1).</figcaption></figure>
       </section>
 
 
       <!-- ================= REDUCTION ================= -->
       <section class="ga-sec" id="reduction" data-open>
-        <h2 class="ga-h2"><span>Why it's a gearbox</span></h2>
-
-        <p>Put the disc inside a ring of <span class="ga-math"><i>N</i></span> pins and push its centre around a small circle of radius <span class="ga-math"><i>E</i></span>. That's the job of the eccentric on the input shaft. The disc can't spin freely because its lobes are sitting between the pins. It can only roll.</p>
-        <p>It has <span class="ga-math"><i>N</i> − 1</span> lobes in <span class="ga-math"><i>N</i></span> gaps, so each time the input goes around once, the disc comes back one lobe behind where it started. With the pins fixed, the disc turns once, the other way, for every <span class="ga-math"><i>N</i> − 1</span> turns of the input.</p>
+        <h2 class="ga-h2"><span>Gear ratio</span></h2>
+        <p>In the gearbox, the pins are fixed and the input shaft drives the disc's center around in a circle of radius <span class="ga-math"><i>E</i></span>. Each time the input goes around once, the disc moves over by one lobe, so it turns once in the opposite direction for every <span class="ga-math"><i>N</i> − 1</span> turns of the input. With the default 28 pins that's 27:1.</p>
+        <p>Here it is running on the generator's equations:</p>
 
         <div class="cyc-sim" id="cyc-sim">
           <canvas aria-label="A cycloidal disc rolling inside a ring of pins. The input crank is pink, a mark fixed to the disc is blue."></canvas>
           <div class="cyc-panel">
-            <div class="cyc-row"><span class="cyc-key" style="color:#ff6b81;">Input crank</span><span class="cyc-val" data-o="in">0.0</span><span class="cyc-unit">turns</span></div>
-            <div class="cyc-row"><span class="cyc-key" style="color:#8fc3f5;">Disc</span><span class="cyc-val" data-o="out">0.000</span><span class="cyc-unit">turns, other way</span></div>
-            <div class="cyc-row"><span class="cyc-key">Ratio</span><span class="cyc-val" data-o="ratio">27 : 1</span></div>
+            <div class="cyc-row"><span class="cyc-key" style="color:#ff6b81;">Input</span><span class="cyc-val" data-o="in">0.0</span><span class="cyc-unit">turns</span></div>
+            <div class="cyc-row"><span class="cyc-key" style="color:#8fc3f5;">Disc</span><span class="cyc-val" data-o="out">0.000</span><span class="cyc-unit">turns (opposite)</span></div>
+            <div class="cyc-row"><span class="cyc-key">Ratio</span><span class="cyc-val" data-o="ratio">11 : 1</span></div>
             <label class="cyc-ctl"><span>Pins, <i>N</i> = <b data-o="n">12</b></span><input type="range" min="6" max="30" step="1" value="12" data-k="n"></label>
             <label class="cyc-ctl"><span><span class="ga-math"><i>EN</i>/<i>R</i></span> = <b data-o="q">0.70</b></span><input type="range" min="0.2" max="0.95" step="0.01" value="0.7" data-k="q"></label>
             <button type="button" aria-pressed="false">Pause</button>
           </div>
-        </div>
-
-        <div class="ga-calc ga-math">
-          <div><i>i</i> = −(<i>N</i> − 1)</div>
-          <div class="note">The minus sign is the direction flip. With the default 28 pins that's 27:1 from a single stage. The simulation above runs on the generator's own equations, and in this ideal geometry every pin is touching the disc at every moment.</div>
         </div>
       </section>
 
@@ -180,35 +132,34 @@
       <!-- ================= TRY IT ================= -->
       <section class="ga-sec" id="tool" data-open>
         <h2 class="ga-h2"><span>Try it</span></h2>
-        <p>Here's the generator itself. Set the four sliders, then copy the x(t) and y(t) it shows into Fusion 360's Equation Driven Curve add-in, with z(t) = 0. You can also open a copy you can export from <a href="https://www.desmos.com/calculator/qfcupuubfp" target="_blank" rel="noopener">directly in Desmos</a>.</p>
+        <p>You can try the generator below, or get an exportable version <a href="https://www.desmos.com/calculator/qfcupuubfp" target="_blank" rel="noopener">here</a>. It can also animate the cycloid, and there's a slider for the number of pins.</p>
 
         <div class="pj-embed dark">
           <div class="pj-embed-bar"><span>Cycloid generator</span><a href="https://codepen.io/nikhil-k-v/pen/YzOyYpx" target="_blank" rel="noopener">Open in a new tab</a></div>
           <iframe src="https://codepen.io/nikhil-k-v/embed/YzOyYpx?default-tab=result&amp;theme-id=dark" title="Cycloid generator" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
         </div>
 
-        <p>It can animate the disc, and there's a slider for the pin count. There are also a lot of hidden functions in it. Those are leftovers from versions that worked but didn't drop into Fusion cleanly. I kept them, switched off, in case you want to see simpler ways to build an epitrochoid.</p>
+        <p>I had a lot of "remnant" functions from when I was building it, versions that would work but couldn't easily be used in Fusion 360. I kept them in the generator (turned off) in case you want to play around or see simpler ways to make epitrochoids.</p>
       </section>
 
 
-      <!-- ================= USES ================= -->
-      <section class="ga-sec" id="uses">
-        <h2 class="ga-h2"><span>What it's made</span></h2>
+      <!-- ================= LIQUID PISTON ================= -->
+      <section class="ga-sec" id="liquid-piston" data-open>
+        <h2 class="ga-h2"><span>Liquid piston engine</span></h2>
+        <p>I also used the generator to make the curves for my <a href="liq.html">pneumatic liquid piston engine</a>. All I had to do was play around with the parameters until I found something that would run smoothly. The parts got a few small changes in CAD afterwards for material tolerances, but the curves themselves worked out.</p>
+        <p>It's made from laser-cut 1/8" acrylic, both blue and clear, with MR106 bearings, M3 bolts and synthetic grease.</p>
 
-        <div class="pj-split fig-wide">
-          <div>
-            <h3 class="ga-h3">The 6DOF arm's actuators</h3>
-            <p>Every cycloidal actuator in my <a href="6dof.html">6DOF arm</a> was cut from a profile this generated. They came out with nearly zero backlash, and they're still backdrivable.</p>
-            <div class="pj-links"><a href="cycloid.html">Cycloidal actuator</a><a href="6dof.html">6DOF arm</a></div>
-          </div>
-          <div class="pj-grid" style="--cols:2; margin:0;">
-            <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/in1.jpg" alt="Cycloidal reducer on a NEMA stepper motor" loading="lazy"></figure>
-            <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/cy3.jpg" alt="A finished cycloidal reducer held in a hand" loading="lazy"></figure>
-          </div>
+        <div class="pj-grid" style="--cols:5;">
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/liq2.jpg" alt="The assembled liquid piston engine in blue and clear acrylic" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/liq3.jpg" alt="The engine standing on its edge" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/liq1.jpg" alt="The engine on top of its design sketches" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/liq5.jpg" alt="The engine from above" loading="lazy"></figure>
+          <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/liq4.jpg" alt="The engine's laser-cut parts, bolts and bearings laid out before assembly" loading="lazy"></figure>
         </div>
 
-        <h3 class="ga-h3">The liquid piston engine</h3>
-        <p>I also used it for the curves in my <a href="liq.html">pneumatic liquid piston engine</a>. They needed small changes in CAD afterward for material tolerances, but the curves themselves came out smooth.</p>
+        <!-- YOUTUBE -->
+
+        <p>The numbers I used are in this version of the generator:</p>
         <div class="pj-embed dark">
           <div class="pj-embed-bar"><span>Liquid piston curves</span><a href="https://codepen.io/nikhil-k-v/pen/rNQKBPp" target="_blank" rel="noopener">Open in a new tab</a></div>
           <iframe src="https://codepen.io/nikhil-k-v/embed/rNQKBPp?default-tab=result&amp;theme-id=dark" title="Liquid piston curves" loading="lazy" allowtransparency="true" allowfullscreen="true"></iframe>
