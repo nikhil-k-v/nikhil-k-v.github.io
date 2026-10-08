@@ -111,7 +111,17 @@
       <!-- ================= MECHANISM ================= -->
       <section class="ga-sec" id="mechanism">
         <h2 class="ga-h2"><span>Mechanism</span></h2>
-        <p>After going through a few different joint configurations, I ended up with what's essentially an offset crank-slider: each linear motor moves a carriage, and a link from the carriage tilts the platform.</p>
+        <p>The obvious way to tilt a platform is a rotary actuator on each axis, but at these loads (around 60 Nm in pitch) that means buying high-torque gearmotors for every axis, which starts to defeat the point of not buying a commercial system. Since the linear motors were already there, the problem became turning their push into rotation.</p>
+        <p>After trying a few joint configurations, I went with an offset crank-slider on each axis. The linear motor drives a carriage along its rail, a rod connects the carriage to a crank under the platform, and pushing the carriage rotates the platform about its pivot.</p>
+
+        <div class="pj-split fig-wide">
+          <div>
+            <p>The torque you get out of this isn't constant. If the motor pushes with force <span class="ga-math"><i>F</i></span>, energy in has to equal energy out, so the torque at the platform is the force times how far the carriage moves per radian of tilt:</p>
+            <div class="ga-calc ga-math"><div><i>τ</i>(<i>θ</i>) = <i>F</i> · <i>dx</i>/<i>dθ</i></div></div>
+            <p>Where the carriage has to move a lot for a small rotation, you get a lot of torque. Near dead center, where the rod and crank line up, <span class="ga-math"><i>dx</i>/<i>dθ</i></span> goes to zero and the motor can't turn the platform at all. The crank length, rod length and offset set the shape of that curve, so those are the numbers I had to choose.</p>
+          </div>
+          <figure class="pj-wide" style="margin:0;"><img src="../assets/web/crank-slider.svg" alt="Offset crank-slider: the linear motor pushes a carriage with force F, a rod connects it to a crank under the platform, and the platform turns about its pivot" loading="lazy"></figure>
+        </div>
 
         <div class="pj-grid" style="--cols:4;">
           <figure class="pj-tile" style="--ar:1"><video data-autoplay data-src="../assets/web/sliderVid.mp4" poster="../assets/web/sliderVid.jpg" aria-label="A carriage sliding along its rail"></video><figcaption>Carriage on its rail</figcaption></figure>
@@ -125,14 +135,15 @@
       <!-- ================= VERIFICATION ================= -->
       <section class="ga-sec" id="verification">
         <h2 class="ga-h2"><span>Simulation</span></h2>
-        <p>Before building anything, I had to verify that the linear → rotational mechanism could transmit the required torque in both axes at any point in the workspace. I made a Python sim to check it:</p>
+        <p>The torque each axis needs comes from the load on the platform: the weight of the treadmill and whatever's walking on it, acting at a distance from the tilt axis. Before building anything, I had to make sure the linkage could beat that in both axes at every point in the workspace, so I wrote a Python sim to check it.</p>
 
         <figure class="pj-wide">
           <video data-autoplay data-src="../assets/web/Dynamics.mp4" poster="../assets/web/Dynamics.jpg" aria-label="Python simulation of the pitch and roll slider-crank linkages with torque and slider-travel plots"></video>
-<figcaption>Pitch on the left, roll on the right. The bottom plots are the torque the linkage can deliver over the tilt range, with the required torque dashed (about 60 Nm for pitch and 12 Nm for roll).</figcaption>
+          <figcaption>Pitch on the left, roll on the right. Bottom: torque over the tilt range, with the required torque dashed (about 60 Nm for pitch, 12 Nm for roll), and the carriage travel Δx.</figcaption>
         </figure>
 
-        <p>I couldn't find crank, slider and offset lengths that satisfied the torque requirements by adjusting them myself, so I also wrote an optimizer that finds the shortest link and offset lengths that can still generate the required torque at every possible position.</p>
+        <p>The sim sweeps each axis through its range and plots the carriage travel <span class="ga-math">Δ<i>x</i>(<i>θ</i>)</span> next to the torque. The torque curve is just the motor force times the slope of the travel curve, which is why it drops off as the travel curve flattens toward the end of the range.</p>
+        <p>I couldn't find crank, rod and offset lengths that met the torque requirement everywhere by adjusting them myself, so I also wrote an optimizer that finds the shortest link and offset lengths that still generate the required torque at every possible position.</p>
       </section>
 
 

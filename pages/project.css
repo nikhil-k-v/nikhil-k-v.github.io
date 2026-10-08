@@ -197,8 +197,8 @@
 .pj-links a:hover { border-color: var(--light-primary); background: var(--dark-secondary); }
 
 
-/* ---------- math on the navy page ---------- */
-.ga-night .ga-calc { border-left-color: rgba(240, 240, 240, 0.3); margin: 1.2rem 0; }
+/* ---------- math on the navy page: plain equations, no panel ---------- */
+.ga-night .ga-calc { background: none; border-left: none; padding: 0 0 0 1.4rem; margin: 1rem 0; font-size: 1.08rem; }
 .ga-night .ga-calc > div { overflow: visible !important; }
 .ga-night .ga-math, .ga-night .ga-math * { color: inherit; }
 .ga-night .ga-spec td { white-space: normal; vertical-align: top; }

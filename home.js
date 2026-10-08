@@ -998,7 +998,7 @@
     /* for projects without a page: the card's own animation on navy */
     /* snapshots survive reloads of the home page for the rest of the
        browser session (coming back from a project page is instant) */
-    var STORE_VER = 'pv4';   // bump when the snapshot format changes
+    var STORE_VER = 'pv5';   // bump when the snapshot format changes
     function storeKey(url) {
       var z = R.size();
       return STORE_VER + ':' + url + ':' + Math.round(z.w * z.dpr) + 'x' + Math.round(z.h * z.dpr);

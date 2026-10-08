@@ -66,7 +66,7 @@
 
       <!-- ================= OVERVIEW ================= -->
       <section class="ga-sec" id="overview" data-open>
-        <h2 class="ga-h2"><span>A desktop arm, from scratch</span></h2>
+        <h2 class="ga-h2"><span>Overview</span></h2>
 
         <div class="pj-grid" style="--cols:4;">
           <figure class="pj-tile span2 tall"><video data-autoplay data-src="../assets/web/armGood.mp4" poster="../assets/web/armGood.jpg" aria-label="The finished arm moving through a sequence of poses"></video></figure>
@@ -76,15 +76,15 @@
           <figure class="pj-tile" style="--ar:3/4"><img data-zoom src="../assets/web/img/finalarm7.jpg" alt="The arm folded upright" loading="lazy"></figure>
         </div>
 
-        <p class="ga-lead">A six-axis robotic arm that sits on a desk. Sahil and I designed almost all of it ourselves: every arm part, linkage and assembly, the cycloidal actuators and the equations that define their curves, the motor driver circuitry and PCB, the tele-op controllers, and most of the code.</p>
-        <p>The few things we couldn't build from scratch, like an inverse kinematics solver, we still studied. Either we plan to come back to them, or we have write-ups and tools we made to understand and use them. All of it is now released as open-source documentation under <a href="#docs">Verso Robotics</a>.</p>
+        <p>Sahil and I designed this arm almost completely from scratch: every arm part, linkage and assembly, the cycloidal actuators and the equations that define their curves, the motor driver circuitry and PCB, the forward kinematics tele-op controllers, and much of the code.</p>
+        <p>The things we couldn't do from scratch, like an inverse kinematics solver, we still studied and worked on. We either plan to do them in the future, or we have write-ups and tools we made to understand and use them. We've released all of it as open-source documentation at <a href="#docs">versorobotics.com</a>.</p>
       </section>
 
 
       <!-- ================= FRAMEWORK ================= -->
       <section class="ga-sec" id="framework">
-        <h2 class="ga-h2"><span>One framework, different arms</span></h2>
-        <p>We didn't set out to make one arm. We made a framework for building 6DOF arms, and then each built our own with it. The two arms look very different from each other, but they're made from the same building blocks.</p>
+        <h2 class="ga-h2"><span>Framework</span></h2>
+        <p>What we actually made is a framework for building 6DOF arms. Our two arms are very different from each other, but they're built from the same parts and ideas.</p>
 
         <div class="pj-grid" style="--cols:3;">
           <figure class="pj-tile light" style="--ar:4/3"><img data-zoom src="../assets/web/img/arm6.jpg" alt="CAD render of a joint module: stepper motor, pulley stage and cycloidal reducer" loading="lazy"><figcaption>Joint module in CAD</figcaption></figure>
@@ -95,7 +95,7 @@
           <figure class="pj-tile" style="--ar:1"><img data-zoom src="../assets/web/img/arm5.jpg" alt="A printed link with both joint openings" loading="lazy"></figure>
         </div>
 
-        <p>My part of it was the <a href="desmos.html">cycloidal function generator</a> and the <a href="cycloid.html">actuators</a> it produced, the mechanics of my arm, and the <a href="controller.html">miniature tele-op controller</a>.</p>
+        <p>My main contributions were the <a href="desmos.html">cycloidal function generator</a>, designing the <a href="cycloid.html">actuators</a>, the mechanics for my arm, and the <a href="controller.html">miniature tele-op controller</a>.</p>
       </section>
 
 
@@ -105,9 +105,9 @@
 
         <div class="pj-split fig-wide">
           <div>
-            <p>The arm runs on NEMA stepper motors, which don't have nearly enough torque or precision on their own. Each joint needed a reducer.</p>
-            <p>Instead of buying gearboxes, I generated our own. I wrote a parametric cycloid generator with the Desmos API, and its x(t) and y(t) go straight into Fusion 360's Equation Driven Curve add-in, so a disc profile goes from sliders to CAD with no hand-drawing. Every actuator in the arm came out of it.</p>
-            <p>The result is a 28:1 cycloidal gearbox with nearly zero backlash, and it's still backdrivable.</p>
+            <p>We needed reducers to increase our NEMA stepper motors' torque output and precision. Rather than buy them, I generated them myself, partly to learn function driven modeling.</p>
+            <p>I made a parametric cycloidal gear generator with the Desmos API, set up so its equations can go straight into Fusion 360's Equation Driven Curve add-in. All of the actuators in the arm came from it (more on the math on the <a href="desmos.html">generator page</a>).</p>
+            <p>The result is a 28:1 cycloidal gearbox with nearly zero backlash that's still backdrivable.</p>
           </div>
           <figure class="pj-tile" style="--ar:960/686; margin:0;"><video data-autoplay data-src="../assets/web/cycloidMotor.mp4" poster="../assets/web/cycloidMotor.jpg" aria-label="A cycloidal actuator turning on its motor"></video></figure>
         </div>
@@ -119,12 +119,8 @@
           <figure class="pj-tile" style="--ar:3/4"><video data-autoplay data-src="../assets/web/cycloidBLDC.mp4" poster="../assets/web/cycloidBLDC.jpg" aria-label="A cycloidal stage driven by a brushless motor"></video><figcaption>On a brushless motor</figcaption></figure>
         </div>
 
-        <p>The discs and housings are laser-cut, which is also why everything in these photos is see-through: you can watch the disc wobble around the pins. If you don't have a laser cutter, the same parts can be 3D printed.</p>
+        <p>The actuator parts are laser cut, which is why everything in these photos is see-through. They can be 3D printed instead if laser cutting isn't an option.</p>
 
-        <div class="pj-links">
-          <a href="desmos.html">Cycloid generator: the math</a>
-          <a href="cycloid.html">Cycloidal actuator</a>
-        </div>
       </section>
 
 
@@ -134,8 +130,8 @@
 
         <div class="pj-split">
           <div>
-            <p>The arm is driven with a miniature copy of itself. You move the controller's joints by hand and the arm follows. Since the controller has the same joints as the arm, this only needs forward kinematics.</p>
-            <p>Inverse kinematics, where you give the arm a target and it works out the joint angles, was one of the pieces we didn't build from scratch. We studied it and made tools to understand and use it, and it's something I want to come back to.</p>
+            <p>The controller is a miniature version of the arm. You move its joints by hand and the arm copies them, which only needs forward kinematics since the joints match one to one.</p>
+            <p>Inverse kinematics (giving the arm a target and solving for the joint angles) is one of the things we didn't build from scratch, but it's something I want to come back to.</p>
           </div>
           <figure class="pj-tile" style="--ar:4/3; margin:0;"><img data-zoom src="../assets/web/img/cont5.jpg" alt="The miniature controller standing next to its printed case" loading="lazy"></figure>
         </div>
@@ -150,30 +146,25 @@
 
       <!-- ================= BUILD ================= -->
       <section class="ga-sec" id="build">
-        <h2 class="ga-h2"><span>Cost and build</span></h2>
+        <h2 class="ga-h2"><span>Build</span></h2>
 
-        <div class="pj-facts" style="--cols:3;">
-          <div class="pj-fact"><b>≈ $300</b><span>for the whole arm, including fabrication and electronics</span></div>
-          <div class="pj-fact"><b>1 year</b><span>of planning, designing, testing, failing and replanning</span></div>
-          <div class="pj-fact"><b>100s of hours</b><span>each, for Sahil and me</span></div>
-        </div>
 
-        <p>Most of the arm is 3D printed. The cycloidal actuators and the covers are laser-cut, and those can be printed too if laser-cutting isn't an option.</p>
-        <p>It's by far the most time I've spent on any project.</p>
+        <p>We brought the price down to around $300, including fabrication and electronics. The arm is mostly 3D printed, with laser cut parts for the cycloidal actuators and covers.</p>
+        <p>It's by far the most time I've spent on any project. We each spent hundreds of hours on it across a full year of planning, designing, testing, failing and replanning.</p>
       </section>
 
 
       <!-- ================= DOCS ================= -->
       <section class="ga-sec" id="docs" data-open>
         <h2 class="ga-h2"><span>Open-source docs</span></h2>
-        <p>Everything Sahil and I made for this project is compiled and released at versorobotics.com.</p>
+        <p>We compiled everything from the project into open-source documentation:</p>
 
         <div class="pj-embed">
           <div class="pj-embed-bar"><span>versorobotics.com</span><a href="https://versorobotics.com/" target="_blank" rel="noopener">Open in a new tab</a></div>
           <iframe src="https://versorobotics.com/" title="Verso Robotics documentation" loading="lazy"></iframe>
         </div>
 
-        <p>If you have questions about any of it, email me at <a href="mailto:nikhilvijay.engineering@gmail.com">nikhilvijay.engineering@gmail.com</a>.</p>
+        <p>If you have any questions, feel free to email me at <a href="mailto:nikhilvijay.engineering@gmail.com">nikhilvijay.engineering@gmail.com</a>.</p>
       </section>
 
 
