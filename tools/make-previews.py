@@ -163,7 +163,11 @@ def main():
             for v in VARIANTS:
                 ctx = browser.new_context(viewport={'width': v['w'], 'height': v['vh']}, device_scale_factor=2)
                 ctx.route('**/*', route)
-                ctx.add_init_script("document.documentElement.classList.add('is-preview');")
+                # the init script can run before <html> exists, so the flag goes
+                # on window too (loader.js checks both; otherwise the loading
+                # screen ends up in the picture)
+                ctx.add_init_script("window.__nvPreview = true; (function f(){ var r = document.documentElement; "
+                                    "if (r) r.classList.add('is-preview'); else setTimeout(f, 0); })();")
                 page = ctx.new_page()
                 page.goto(BASE + href, wait_until='load')
                 page.add_style_tag(content=HIDE_CSS)

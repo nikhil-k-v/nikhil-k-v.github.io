@@ -16,7 +16,8 @@
   var COMPACT_MQ = window.matchMedia('(max-width: 1380px), (max-height: 640px)');
   var REDUCED_MQ = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  var WHEEL_GAIN = 0.4;   // same feel as the old window.scrollBy(deltaY * 0.4)
+  var WHEEL_GAIN = 0.4;
+  var PREVIEW_DELAY = 1000;   // ms into the home loading screen that the preview starts   // same feel as the old window.scrollBy(deltaY * 0.4)
 
   function isSplit() { return SPLIT_MQ.matches; }
   function isCompact() { return COMPACT_MQ.matches; }
@@ -40,7 +41,7 @@
 
   function openProject(box) {
     var p = projectOf(box);
-    if (p.href) window.location.href = p.href;
+    if (p.href) { if (window.nvGo) window.nvGo(p.href); else window.location.href = p.href; }
     else if (p.external) window.open(p.external, '_blank', 'noopener');
   }
 
@@ -291,7 +292,7 @@
   function createRenderer(canvas, stage) {
     var C = 4;              // cell size, css px
     var K = 4;              // sub-pixels per cell edge (1 css px each) → dot sizes 1..3
-    var TH = 0.8;           // field value above which a cell becomes a block (kept rare)
+    var TH = 0.9;           // field value above which a cell becomes a block (kept rare)
     var SPEED = 1.8;        // overall animation speed
     // blobs: [x speed, phase, phase2, y speed, phase3, size]
     var BLOBS = [
@@ -758,6 +759,8 @@
     var PS = 0.72;          // how far the page is zoomed out in the pane
     var MIN_LOAD = 1400;    // the loading animation always gets this long
     var DISSOLVE = 2100;
+    var UNSCRAMBLE = 1600;  // VIEW PROJECT settles a little before the dissolve ends
+    var TICK = 95;          // ms between scrambled-letter changes
 
     var manifest = null;
     var manifestP = fetch('assets/preview/previews.json', { cache: 'no-cache' })
@@ -841,15 +844,21 @@
       clearInterval(labelTimer);
       if (!ms || REDUCED_MQ.matches) { ctaEl.textContent = text; return; }
       var n = text.length, t0 = performance.now();
-      // letters settle one after another, the last one exactly at ms
+      // letters settle one after another, the last one exactly at ms;
+      // the unsettled ones change every TICK
+      var shownTick = -1, shownFixed = -1, tail = '';
       labelTimer = setInterval(function () {
-        var p = (performance.now() - t0) / ms;
+        var el = performance.now() - t0, p = el / ms, tk = Math.floor(el / TICK);
         var fixed = Math.min(n, Math.floor(p * n));
-        var out = text.substring(0, fixed);
-        for (var k = fixed; k < n; k++) out += text.charAt(k) === ' ' ? ' ' : GLYPHS.charAt(Math.floor(Math.random() * GLYPHS.length));
-        ctaEl.textContent = out;
+        if (p < 1 && tk === shownTick && fixed === shownFixed) return;
+        if (tk !== shownTick || !tail) {              // new random letters only once per tick
+          tail = '';
+          for (var k = 0; k < n; k++) tail += text.charAt(k) === ' ' ? ' ' : GLYPHS.charAt(Math.floor(Math.random() * GLYPHS.length));
+        }
+        shownTick = tk; shownFixed = fixed;
+        ctaEl.textContent = text.substring(0, fixed) + tail.substring(fixed);
         if (p >= 1) { clearInterval(labelTimer); ctaEl.textContent = text; }
-      }, 45);
+      }, 30);
     }
 
     /* the pre-rendered width closest to how wide the page is in this pane */
@@ -989,8 +998,8 @@
           loadTimer = setTimeout(function () {
             if (my !== token) return;
             setState('frame');
-            // the label unscrambles over exactly the time the page dithers in
-            label('VIEW PROJECT', DISSOLVE);
+            // the label unscrambles while the page dithers in, done just before it
+            label('VIEW PROJECT', UNSCRAMBLE);
             R.crossTo(base, 'content', live, { dur: DISSOLVE, ease: 'linear' });
           }, Math.max(0, MIN_LOAD - (performance.now() - t0)));
         });
@@ -1038,10 +1047,12 @@
     if (isSplit()) {
       var box = activeBox() || boxes[0];
       setActive(box);
-      // on first load the preview starts once the loading screen has gone,
-      // so its loading animation is actually seen
+      // on first load the preview starts a second into the loading screen:
+      // late enough that its loading animation is still showing when the
+      // screen dithers away, early enough that the page dissolves in soon after
       if (window.__nvLoading && !window.__nvLoaded) {
-        window.addEventListener('nv:loaded', function () { if (isSplit() && activeBox() === box) Preview.show(box); }, { once: true });
+        var wait = PREVIEW_DELAY - (performance.now() - (window.__nvLoadStart || 0));
+        setTimeout(function () { if (isSplit() && activeBox() === box) Preview.show(box); }, Math.max(0, wait));
       } else {
         Preview.show(box);
       }

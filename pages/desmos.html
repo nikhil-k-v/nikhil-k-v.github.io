@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="page-styles.css">
   <link rel="stylesheet" href="../about.css">
   <link rel="stylesheet" href="genauto.css">
-  <link rel="stylesheet" href="project.css">
+  <link rel="stylesheet" href="project.css?v=2">
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCC960TZ2"></script>
@@ -24,7 +24,7 @@
 </script>
 
 <body>
-  <script src="../loader.js" data-mode="page"></script>
+  <script src="../loader.js?v=8" data-mode="page"></script>
   <header></header>
 
   <button id="back-to-home" onclick="window.location.href='/index.html'; event.stopPropagation();">BACK</button>
@@ -109,9 +109,8 @@
       <!-- ================= REDUCTION ================= -->
       <section class="ga-sec" id="reduction" data-open>
         <h2 class="ga-h2"><span>Gear ratio</span></h2>
-        <div class="pj-grid" style="--cols:2;">
+        <div class="pj-grid one">
           <figure class="pj-tile" style="--ar:960/686"><video data-autoplay data-src="../assets/web/cycloidHand.mp4" poster="../assets/web/cycloidHand.jpg" aria-label="Turning a cycloidal reducer by hand"></video><figcaption>Turned by hand</figcaption></figure>
-          <figure class="pj-tile" style="--ar:960/686"><video data-autoplay data-src="../assets/web/cycloidBLDC.mp4" poster="../assets/web/cycloidBLDC.jpg" aria-label="A cycloidal stage driven by a brushless motor"></video><figcaption>On a brushless motor</figcaption></figure>
         </div>
 
         <div class="cyc-sim" id="cyc-sim">
