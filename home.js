@@ -157,6 +157,30 @@
   });
 
   /* ------------------------------------------------------------------
+     Card animations further along the strip (data-lazy) only start
+     downloading once they come close to the visible part of the track,
+     so the first cards get the bandwidth
+     ------------------------------------------------------------------ */
+  function wake(v) {
+    if (!v || v.getAttribute('data-awake')) return;
+    v.setAttribute('data-awake', '1');
+    v.preload = 'auto';
+    v.autoplay = true;
+    var pr = v.play();
+    if (pr && pr.catch) pr.catch(function () {});
+  }
+  (function () {
+    var lazy = Array.prototype.slice.call(track.querySelectorAll('video[data-lazy]'));
+    if (!('IntersectionObserver' in window)) { lazy.forEach(wake); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { wake(e.target); io.unobserve(e.target); }
+      });
+    }, { root: track, rootMargin: '0px 75% 0px 75%' });
+    lazy.forEach(function (v) { io.observe(v); });
+  })();
+
+  /* ------------------------------------------------------------------
      Wheel → horizontal scroll (track scrolls itself, never the page)
      ------------------------------------------------------------------ */
   document.addEventListener('wheel', function (e) {
@@ -277,12 +301,20 @@
     var mask = document.createElement('canvas'), mctx = mask.getContext('2d');
 
     var W = 0, H = 0, dpr = 1, cols = 0, rows = 0, dImg = null, mImg = null;
-    // cross-dissolve: the previous picture, frozen, and the order cells switch in
-    var old = null, trans = null, order = null;
-    var oldCv = document.createElement('canvas'), oldCtx = oldCv.getContext('2d');
+    // cross-dissolve: cells switch from the previous picture to the new one in
+    // this order. Both pictures keep playing their media while it happens.
+    var trans = null, order = null;
     var mask2 = document.createElement('canvas'), m2ctx = mask2.getContext('2d'), m2Img = null;
     var blk = document.createElement('canvas'), blkCtx = blk.getContext('2d');
-    var src = null, mode = 'empty', rgb = null, lum = null;
+
+    /* a picture: a still base, optional live media painted over it, and the
+       per-cell colour/ink sampled from the result. cur is on screen; prev is
+       the one being dissolved away (only meaningful while trans is set) */
+    function makeLayer() {
+      var cv = document.createElement('canvas');
+      return { cv: cv, cx: cv.getContext('2d'), base: null, live: null, mode: 'empty', src: null, rgb: null, lum: null, level: 0 };
+    }
+    var cur = makeLayer(), prev = makeLayer();
     var level = -1, tween = null, waiters = [];
     var raf = 0, running = false, last = 0, clock = 0, prevNow = 0;
 
@@ -313,9 +345,9 @@
         var ou = (ox + 0.5) / cols - 0.5, ov = (oy + 0.5) / rows - 0.5;
         order[oy * cols + ox] = Math.min(0.999, 0.6 * hsh + 0.55 * Math.sqrt(ou * ou + ov * ov) * 1.4);
       }
-      old = null; trans = null;
-      if (live) compose();
-      sample();
+      trans = null;
+      if (cur.live) compose(cur);
+      sample(cur);
       if (!running) draw(prevNow || performance.now());
     }
 
@@ -324,8 +356,8 @@
        the cell drives the dot size and flat fills (a big white sheet, a soft
        glow) are toned down, so the page's features carry the picture. */
     var sampCv = document.createElement('canvas'), sampCtx = sampCv.getContext('2d', { willReadFrequently: true });
-    function sample() {
-      if (!src || !cols) { rgb = lum = null; return; }
+    function sample(L) {
+      if (!L.src || !cols) { L.rgb = L.lum = null; return; }
       var S = 3, sw = cols * S, sh = rows * S;
       if (sampCv.width !== sw || sampCv.height !== sh) { sampCv.width = sw; sampCv.height = sh; }
       var t = sampCtx;
@@ -333,11 +365,12 @@
       t.imageSmoothingQuality = 'high';
       t.fillStyle = 'rgb(' + BG + ')';
       t.fillRect(0, 0, sw, sh);
-      t.drawImage(src, 0, 0, W * S / C, H * S / C);
+      t.drawImage(L.src, 0, 0, W * S / C, H * S / C);
       var d;
-      try { d = t.getImageData(0, 0, sw, sh).data; } catch (_) { rgb = lum = null; return; }
+      try { d = t.getImageData(0, 0, sw, sh).data; } catch (_) { L.rgb = L.lum = null; return; }
       var n = cols * rows;
-      if (!rgb || rgb.length !== n * 3) { rgb = new Uint8ClampedArray(n * 3); lum = new Float32Array(n); }
+      if (!L.rgb || L.rgb.length !== n * 3) { L.rgb = new Uint8ClampedArray(n * 3); L.lum = new Float32Array(n); }
+      var rgb = L.rgb, lum = L.lum;
 
       function bright(r, g, b) {
         var y = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
@@ -379,56 +412,53 @@
     /* base: a still picture of the page (or null for plain navy)
        live: optional fn(ctx, w, h) that paints moving media (videos, GIFs)
              over the base each refresh, so the preview isn't frozen */
-    var base = null, live = null, liveAt = 0;
-    var work = document.createElement('canvas'), workCtx = work.getContext('2d');
+    var liveAt = 0;
     var LIVE_GAP = 66;      // refresh moving media ~15 times a second
 
-    function compose() {
-      var w = Math.round(W * dpr), h = Math.round(H * dpr);
-      if (work.width !== w || work.height !== h) { work.width = w; work.height = h; }
-      workCtx.globalCompositeOperation = 'source-over';
-      workCtx.globalAlpha = 1;
-      workCtx.filter = 'none';
-      workCtx.fillStyle = 'rgb(' + BG + ')';
-      workCtx.fillRect(0, 0, w, h);
-      if (base) workCtx.drawImage(base, 0, 0, w, h);
-      try { live(workCtx, w, h); } catch (_) {}
-      workCtx.filter = 'none';
-      workCtx.globalAlpha = 1;
-      src = work;
+    function compose(L) {
+      var w = Math.round(W * dpr), h = Math.round(H * dpr), x = L.cx;
+      if (L.cv.width !== w || L.cv.height !== h) { L.cv.width = w; L.cv.height = h; }
+      x.globalCompositeOperation = 'source-over';
+      x.globalAlpha = 1;
+      x.filter = 'none';
+      x.fillStyle = 'rgb(' + BG + ')';
+      x.fillRect(0, 0, w, h);
+      if (L.base) x.drawImage(L.base, 0, 0, w, h);
+      try { L.live(x, w, h); } catch (_) {}
+      x.filter = 'none';
+      x.globalAlpha = 1;
+      x.globalCompositeOperation = 'source-over';
+      L.src = L.cv;
     }
 
     function setSource(canvasOrNull, m, liveFn) {
-      base = canvasOrNull;
-      live = liveFn || null;
-      mode = m;
-      if (live && W) compose(); else src = base;
-      sample();
-      if (mode === 'content' && !rgb) mode = 'empty';   // tainted or empty source
+      cur.base = canvasOrNull;
+      cur.live = liveFn || null;
+      cur.mode = m;
+      if (cur.live && W) compose(cur); else cur.src = cur.base;
+      sample(cur);
+      if (cur.mode === 'content' && !cur.rgb) cur.mode = 'empty';   // tainted or empty source
     }
 
     function setLive(liveFn) {
-      live = liveFn || null;
-      if (mode !== 'content') return;
-      if (live && W) compose(); else src = base;
-      sample();
+      cur.live = liveFn || null;
+      if (cur.mode !== 'content') return;
+      if (cur.live && W) compose(cur); else cur.src = cur.base;
+      sample(cur);
     }
 
     /* swap to a new picture through a dither dissolve: cell by cell, the old
-       picture (frozen at this moment) gives way to the new one */
+       picture gives way to the new one. The old picture keeps playing its
+       media until its last cell is gone, so nothing freezes mid-dissolve. */
     function crossTo(canvasOrNull, m, liveFn, opts) {
       opts = opts || {};
       var dur = REDUCED_MQ.matches ? 1 : (opts.dur || 900);
       var to = opts.level === undefined ? 0 : opts.level;
-      if (level > -0.95 && W && (mode !== 'content' || rgb)) {
-        if (mode === 'content') {
-          if (oldCv.width !== src.width || oldCv.height !== src.height) { oldCv.width = src.width; oldCv.height = src.height; }
-          oldCtx.clearRect(0, 0, oldCv.width, oldCv.height);
-          oldCtx.drawImage(src, 0, 0);
-          old = { mode: 'content', rgb: rgb.slice(), lum: lum.slice(), level: level };
-        } else {
-          old = { mode: mode === 'mask' ? 'empty' : mode, level: level };
-        }
+      if (level > -0.95 && W && (cur.mode !== 'content' || cur.rgb)) {
+        var t = prev; prev = cur; cur = t;            // the old layer keeps its canvas
+        prev.level = level;
+        if (prev.mode === 'mask') prev.mode = 'empty';
+        cur.base = null; cur.live = null; cur.src = null;
         trans = { t0: performance.now(), dur: dur };
         tween = null;
         level = to;
@@ -436,7 +466,7 @@
         kick();
         if (!running) draw(performance.now() + dur);
       } else {
-        old = null; trans = null;
+        trans = null;
         setSource(canvasOrNull, m, liveFn);
         animate(to, dur, easeOut);
       }
@@ -467,27 +497,33 @@
         }
       }
 
-      if (live && mode === 'content' && !busy && now - liveAt >= LIVE_GAP) {
-        liveAt = now;
-        compose();
-        sample();
-        if (!rgb) { mode = 'empty'; live = null; }
+      if (trans && now - trans.t0 >= trans.dur) { trans = null; prev.live = null; prev.base = null; }
+
+      if (!busy && now - liveAt >= LIVE_GAP) {
+        var refreshed = false;
+        if (cur.live && cur.mode === 'content') {
+          compose(cur); sample(cur); refreshed = true;
+          if (!cur.rgb) { cur.mode = 'empty'; cur.live = null; }
+        }
+        if (trans && prev.live && prev.mode === 'content') {
+          compose(prev); sample(prev); refreshed = true;
+          if (!prev.rgb) prev.mode = 'empty';
+        }
+        if (refreshed) liveAt = now;
       }
 
+      var mode = cur.mode, rgb = cur.rgb, lum = cur.lum, src = cur.src;
       var vis = level < -1 ? 0 : level > 0 ? 1 : 1 + level;
       var d = dImg.data, m = mImg.data, m2 = m2Img.data, DW = cols * K;
       d.fill(0);
       m.fill(0);
-      var tp = 2, oldVis = 0, oldLevel = 0;
+      var tp = 2, oldVis = 0, oldLevel = 0, old = null;
       if (trans) {
-        tp = (now - trans.t0) / trans.dur;
-        if (tp >= 1) { trans = null; old = null; tp = 2; }
-        else {
-          tp = easeInOut(tp);
-          m2.fill(0);
-          oldLevel = old.level;
-          oldVis = oldLevel < -1 ? 0 : oldLevel > 0 ? 1 : 1 + oldLevel;
-        }
+        tp = easeInOut((now - trans.t0) / trans.dur);
+        m2.fill(0);
+        old = prev;
+        oldLevel = old.level;
+        oldVis = oldLevel < -1 ? 0 : oldLevel > 0 ? 1 : 1 + oldLevel;
       }
 
       // whole pane drifts between "a few solid clumps" and "all dots"
@@ -592,7 +628,7 @@
       ctx.clearRect(0, 0, cw, ch);
       ctx.imageSmoothingEnabled = false;
 
-      var oldBlocks = tp < 2 && old.mode === 'content';
+      var oldBlocks = tp < 2 && old.mode === 'content' && old.src;
       if (oldBlocks) {
         // old blocks go through a scratch canvas so the new ones can follow
         if (blk.width !== cw || blk.height !== ch) { blk.width = cw; blk.height = ch; }
@@ -603,7 +639,7 @@
         blkCtx.drawImage(mask2, 0, 0, gw, gh);
         blkCtx.globalCompositeOperation = 'source-in';
         blkCtx.imageSmoothingEnabled = true;
-        blkCtx.drawImage(oldCv, 0, 0, W * dpr, H * dpr);
+        blkCtx.drawImage(old.src, 0, 0, W * dpr, H * dpr);
         blkCtx.globalCompositeOperation = 'source-over';
       }
       if (mode === 'content' && src) {
@@ -667,7 +703,7 @@
       animate(to === undefined ? 0 : to, 900, easeOut);
     }
 
-    function hold() { tween = null; trans = null; old = null; waiters = []; level = -1; draw(performance.now()); }
+    function hold() { tween = null; trans = null; prev.live = null; waiters = []; level = -1; draw(performance.now()); }
 
     if ('ResizeObserver' in window) new ResizeObserver(resize).observe(stage);
     window.addEventListener('resize', resize);
@@ -769,19 +805,44 @@
       if (p.href) {
         link.setAttribute('href', p.href);
         link.setAttribute('aria-label', 'Open ' + p.title);
-        ctaEl.textContent = 'VIEW PROJECT';
+        label('LOADING');            // becomes VIEW PROJECT when the page is in
       } else if (p.external) {
         link.setAttribute('href', p.external);
         link.setAttribute('target', '_blank');
         link.setAttribute('rel', 'noopener');
         link.setAttribute('aria-label', 'Open ' + p.title + ' in a new tab');
-        ctaEl.textContent = 'VISIT ' + new URL(p.external).host.toUpperCase();
+        label('VISIT ' + new URL(p.external).host.toUpperCase());
       } else {
         link.removeAttribute('href');
         link.setAttribute('aria-disabled', 'true');
         link.setAttribute('aria-label', p.title + ', coming soon');
-        ctaEl.textContent = 'COMING SOON';
+        label('COMING SOON');
       }
+    }
+
+    /* the label in the middle of the pane. With scramble, the new text
+       resolves left to right out of random characters. */
+    var labelTimer = 0;
+    var GLYPHS = '!@#$%^&*()_+?><:{}[]';
+    function label(text, scramble) {
+      clearInterval(labelTimer);
+      if (!scramble || REDUCED_MQ.matches) { ctaEl.textContent = text; return; }
+      var from = ctaEl.textContent, n = Math.max(text.length, from.length);
+      var STEP = 45, settle = 3, i = 0;            // each letter settles 3 ticks after the one before
+      labelTimer = setInterval(function () {
+        var out = '', done = true;
+        for (var k = 0; k < n; k++) {
+          var at = k + settle;                       // tick when letter k lands
+          if (i >= at) out += text.charAt(k);
+          else {
+            done = false;
+            out += (text.charAt(k) === ' ' && i > at - 2) ? ' ' : GLYPHS.charAt(Math.floor(Math.random() * GLYPHS.length));
+          }
+        }
+        ctaEl.textContent = out.replace(/\s+$/, '');
+        i++;
+        if (done) { clearInterval(labelTimer); ctaEl.textContent = text; }
+      }, STEP);
     }
 
     /* the pre-rendered width closest to how wide the page is in this pane */
@@ -811,9 +872,20 @@
 
     /* paints the page's videos (or their stills, until they play) where
        they sit on the page */
-    function pageLayer(v) {
+    /* 'assets/anim/steeringAnim-960.mp4' -> 'steeringAnim' */
+    function animKey(url) {
+      return String(url || '').split('?')[0].split('/').pop().replace(/(-960|-1280)?\.(mp4|webm)$/i, '');
+    }
+
+    function pageLayer(v, box) {
+      // the page's header animation is the same clip as the card's, so the
+      // card's own (already playing) video is drawn there: the loading
+      // animation carries straight on into the page instead of restarting
+      var cardVid = box && box.querySelector('video.anims');
+      var cardKey = cardVid ? animKey(cardVid.currentSrc || cardVid.getAttribute('src')) : null;
       var items = (v.media || []).map(function (m) {
-        var it = { m: m, vid: makeVideo(m.src), still: null };
+        var same = cardKey && animKey(m.src) === cardKey;
+        var it = { m: m, vid: same ? cardVid : makeVideo(m.src), still: null };
         if (m.poster) loadImage(m.poster).then(function (im) { it.still = im; }, function () {});
         return it;
       });
@@ -890,6 +962,7 @@
       link.classList.remove('nudge');
       R.start();
 
+      wake(box.querySelector('video[data-lazy]'));
       var card = cardLayer(box);
 
       // no page of ours: the card's own animation, live
@@ -915,16 +988,18 @@
         return loadImage(v.img).then(function (img) {
           if (my !== token) return;
           var base = crop(img);
-          var live = pageLayer(v);      // videos start now, so they're ready for the reveal
+          var live = pageLayer(v, box); // videos start now, so they're ready for the reveal
           loadTimer = setTimeout(function () {
             if (my !== token) return;
             setState('frame');
+            label('VIEW PROJECT', true);
             R.crossTo(base, 'content', live, { dur: DISSOLVE });
           }, Math.max(0, MIN_LOAD - (performance.now() - t0)));
         });
       }).catch(function () {
         if (my !== token) return;
         setState('static');
+        label('VIEW PROJECT', true);
         R.reveal(0);
       });
     }

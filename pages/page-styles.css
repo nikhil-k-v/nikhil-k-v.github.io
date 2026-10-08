@@ -171,7 +171,10 @@ figcaption {
 /* base anim rule (kept for other pages if needed) */
 /* hero animations are looping videos encoded on black; "lighten" drops the
    black out over the hero background, like the transparent GIFs they replace */
-video.anim { mix-blend-mode: lighten; }
+video.anim, canvas.anim { mix-blend-mode: lighten; }   /* canvas: blend.js's copy on Safari */
+/* pinned to the 1920 px the clips were rendered at, so the 960 / 1280 px web
+   copies lay out the same; max-width / max-height scale it down from there */
+video.anim, canvas.anim { width: 1920px; height: auto; }
 
 .anim {
   position: absolute;

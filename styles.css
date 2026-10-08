@@ -166,19 +166,24 @@ h1 {
 }
 
 #loaderText {
-  font-size: 2em; /* Adjust this as needed */
+  order: 2;
+  font-size: 2em;
   font-weight: 600;
-  margin-bottom: 1em; /* Space between text and gif */
+  letter-spacing: 0.06em;
+  margin-top: 0.4em;
 }
 
-#loader::before {
-  content: "";
+#loaderAnim {
+  order: 1;
   display: block;
-  background: url('assets/desmosAnim1.gif') no-repeat center center / contain;
-  width: 25%;
-  height: 25%;
-  min-width: 100px;
-  min-height: 100px;
+  width: min(25vw, 25vh);
+  min-width: 120px;
+  aspect-ratio: 1;
+}
+
+@media (max-width: 700px) {
+  #loaderText { font-size: 1.15em; letter-spacing: 0.12em; }
+  #loaderAnim { width: min(62vw, 300px); }
 }
 
 #blocker {

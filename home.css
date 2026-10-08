@@ -26,6 +26,7 @@ html:has(body.home) { overflow: hidden; }
 body.home {
   margin: 0;
   height: 100vh;
+  height: 100svh;
   height: 100dvh;
   overflow: hidden;
   overscroll-behavior: none;
@@ -123,8 +124,13 @@ body.home {
 }
 
 /* card animations are looping videos encoded on black; "lighten" drops the
-   black out over the card, the same as the transparent GIFs they replace */
-.box video.anims { mix-blend-mode: lighten; }
+   black out over the card, the same as the transparent GIFs they replace.
+   (canvas.anims is the copy blend.js draws on Safari, where video can't blend.)
+   The width is pinned to the 1920 px the clips were rendered at, so the
+   smaller web copies (960 / 1280 px) are laid out exactly the same; the
+   max-width / max-height on each card scale it down from there. */
+.box video.anims, .box canvas.anims { mix-blend-mode: lighten; }
+.box .anims { width: 1920px; height: auto; }
 
 .anims {
   position: absolute;
@@ -451,7 +457,7 @@ body.home {
     flex-direction: column;
     min-height: 0;
     box-sizing: border-box;
-    padding: 0 4vw max(14px, env(safe-area-inset-bottom));
+    padding: 0 4vw max(18px, calc(env(safe-area-inset-bottom) + 8px));
   }
 
   .preview-stage {
@@ -462,6 +468,17 @@ body.home {
     isolation: isolate;
     background-color: var(--dark-primary);
     border-radius: 12px;
+  }
+  /* a thin frame like the cards', so the pane reads as one closed panel
+     rather than a page running off the bottom of the screen */
+  .preview-stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 2px var(--dark-accent);
+    pointer-events: none;
   }
 
   /* videos for the preview play in here, under a navy cover; the canvas
@@ -493,24 +510,6 @@ body.home {
     pointer-events: none;
   }
 
-
-  .preview-loading {
-    position: absolute;
-    top: calc(50% + 34px);
-    left: 50%;
-    z-index: 2;
-    transform: translateX(-50%);
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-  }
-  .preview[data-state="loading"] .preview-loading {
-    opacity: 0.55;
-    animation: preview-blink 1.1s ease-in-out infinite;
-  }
 
   .preview-open {
     position: absolute;
@@ -560,13 +559,15 @@ body.home {
   .preview-open[aria-disabled="true"] { cursor: default; }
   .preview-open[aria-disabled="true"] .preview-cta { opacity: 0.6; }
 
+  .preview[data-state="loading"] .preview-cta { animation: preview-blink 1.1s ease-in-out infinite; }
+
   .preview-open.nudge .preview-cta {
     animation: preview-nudge 0.5s var(--ease-out-2);
   }
 }
 
 @keyframes preview-blink {
-  50% { opacity: 0.25; }
+  50% { opacity: 0.4; }
 }
 @keyframes preview-nudge {
   30% { transform: scale(1.08); }
@@ -578,5 +579,5 @@ body.home {
    --------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .track { --dur: 0.01s; }
-  .preview[data-state="loading"] .preview-loading { animation: none; }
+  .preview[data-state="loading"] .preview-cta { animation: none; }
 }
