@@ -320,3 +320,9 @@
 /* page-styles.css forces Montserrat on everything with !important */
 .pf-sketch text { font-family: Caveat, cursive !important; }
 .pf-sketch text[style*="italic"] { font-family: "STIX Two Text", Georgia, serif !important; font-style: italic; }
+
+/* the sim's three numbers side by side */
+.cyc-readout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; overflow: visible !important; }
+.cyc-readout .cyc-row { display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem; }
+.cyc-readout .cyc-val { min-width: 0; }
+@media (max-width: 1000px) { .cyc-readout { gap: 0.5rem; } .cyc-readout .cyc-val { font-size: 0.95rem; } }

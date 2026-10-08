@@ -20,7 +20,8 @@ Pushing straight to `master` is the normal workflow for this repo.
 | `pages/project.js` | Lazy-plays `video[data-autoplay][data-src]` in view; `img[data-zoom]` opens the modal. |
 | `pages/paper-edges.js` | Draws the scanline edges of the steering robot's white sheet. |
 | `pages/toggle-clamp.js`, `pages/cycloid-sim.js` | Small animated diagrams (four-bar toggle clamp; cycloidal disc sim). |
-| `assets/anim/` | Card/hero animations rendered on black. Pages use the web copies `X-960.mp4` (≤1100 px screens) and `X-1280.mp4` via `<source media>`, poster `X-960.jpg`; width is pinned to 1920 px in CSS so layout matches the original renders. TUBAA uses trimmed seamless loops (`tubaa-loop`, `tubaa-6blade-loop`). |
+| `assets/anim/` | Card/hero animations rendered on black. Pages use the web copies `X-960.mp4` (≤1100 px screens) and `X-1280.mp4` via `<source media>`, poster `X-960.jpg`; width is pinned to 1920 px in CSS so layout matches the original renders. The TUBAA card keeps its original `tubaa.mp4`; its preview plays `tubaa-preview.mp4`, one seamless loop with both propellers (each trimmed to a blade period, joined with crossfades). |
+| `loader.js` | The loading screen, all in one canvas. Home pages: `<script src="loader.js">` (dithers out top to bottom, fires `nv:loaded`, which starts the home preview). Project pages: `<script src="../loader.js" data-mode="page">` right after `<body>` (short; dithers in and out from the bottom). Skipped under `html.is-preview`. |
 | `blend.js` | Safari/iOS only: copies `video.anims` / `video.anim` into a canvas that does the `lighten` blend (WebKit doesn't blend video). `?blendfix` forces it on for testing. |
 | `assets/web/` | Web copies of videos (≈960 px wide H.264, faststart) + JPG posters; `assets/web/img/` 1400 px photos; hand-made SVG diagrams. |
 | `assets/GenAutoVids/`, `old-media/` | Originals. Large; don't link them from pages — make a web copy. |
@@ -49,8 +50,9 @@ PREVIEW_FONTS=/path/to/folder/with/Montserrat.ttf python3 tools/make-previews.py
 Typekit is unreachable offline, so pass a folder with Montserrat (Google Fonts'
 `Montserrat[wght].ttf` renamed `Montserrat.ttf`) or the pictures use a fallback font.
 
-Cards with no page (TUBAA → tubaa.dev, coming-soon) show their card animation;
-`data-preview-alt` adds a second animation that alternates every ~5 s.
+Cards with no page (TUBAA → tubaa.dev, coming-soon) show their card animation, or
+`data-preview-src` if set. The label unscrambles to VIEW PROJECT over exactly the
+dissolve's length (2.1 s, linear).
 
 ## Conventions
 

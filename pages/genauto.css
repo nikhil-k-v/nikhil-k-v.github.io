@@ -997,3 +997,7 @@
   .ga-side > .ga-fig img { max-width: 250px; }
   .ga-outcome-loop + .ga-fit .ga-fig.fit video { max-height: 46svh; }
 }
+.ga-shape-arms img { height: 230px !important; width: auto; }
+.ga-shape-row4 { margin: 0.4rem 0 0.6rem 0; }
+.ga-shape-row4 img { width: 100%; height: auto; max-width: 900px; cursor: zoom-in; }
+@media (max-width: 1000px) { .ga-shape-arms img { height: auto !important; width: 100%; max-width: 280px; } }

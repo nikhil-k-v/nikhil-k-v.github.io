@@ -199,30 +199,156 @@ def arms(mid, c, s, side_scale=1.0, arc_span=0.95, big=True):
     return body
 
 
+# ------------------------------------------------- the coupling on different wheels
+# Straight-on wheels that share the top half (same radius, centre and top
+# cut-out) and differ only below the centre. The lower arms pivot at the
+# same two points on every wheel and are always the same length, so each
+# clamp moves on the same red arc; where that arc meets a wheel's edge sets
+# the arm's angle on that wheel.
+
+from shapely.geometry import Polygon, Point, box as sbox
+from shapely.ops import unary_union
+
+WR, RIM, HUB = 60.0, 11.0, 19.0             # top radius, rim width, hub radius
+PIV_G, PIV_DY = 7.0, 21.0                   # lower-arm pivots: +-x and below the centre
+ARM_L = 41.0                                # lower arm length (pivot to clamp)
+
+
+def wheel_outline(kind, c):
+    pts = []
+    for k in range(0, 91):                  # top half: always the same semicircle
+        t = math.pi + math.pi * k / 90
+        pts.append((c[0] + WR * math.cos(t), c[1] + WR * math.sin(t)))
+    for k in range(1, 90):                  # bottom half: the part that changes
+        t = math.pi * k / 90
+        ct, st = math.cos(t), math.sin(t)
+        if kind == 'round':
+            x, y = WR * ct, WR * st
+        elif kind == 'squarer':
+            x = WR * math.copysign(abs(ct) ** 0.72, ct)
+            y = WR * 0.9 * st ** 0.72
+        elif kind == 'flat':
+            x, y = WR * ct, min(WR * st, WR * 0.72)
+        elif kind == 'long':
+            x, y = WR * 0.97 * ct, WR * 1.14 * st
+        pts.append((c[0] + x, c[1] + y))
+    return pts
+
+
+def wheel_parts(kind, c):
+    outer = Polygon(wheel_outline(kind, c)).buffer(0)
+    inner = outer.buffer(-RIM, join_style=1)
+    hub = Point(c).buffer(HUB, 48)
+    top_hole = inner.intersection(sbox(c[0] - 200, c[1] - 200, c[0] + 200, c[1] - 11)).difference(hub)
+    bottom = inner.intersection(sbox(c[0] - 200, c[1] + 11, c[0] + 200, c[1] + 200))
+    bottom = bottom.difference(sbox(c[0] - 8.5, c[1] - 200, c[0] + 8.5, c[1] + 200)).difference(hub)
+    holes = [top_hole] + (list(bottom.geoms) if hasattr(bottom, 'geoms') else [bottom])
+    return outer, [h for h in holes if not h.is_empty and h.area > 4]
+
+
+def ring(poly):
+    return list(poly.exterior.coords)[:-1]
+
+
+def draw_wheel(kind, c, body):
+    outer, holes = wheel_parts(kind, c)
+    body.append(path(d(wobble(ring(outer), 0.4, True), True), fill=RIM_C, width=2.2))
+    for h in holes:
+        body.append(path(d(wobble(ring(h), 0.35, True), True), fill='#ffffff', width=1.8))
+    return outer
+
+
+RIM_C = RIM if False else '#7b7c7e'
+
+
+def arc_span(P, side):
+    """the arc each clamp can move on (the same for every wheel), as screen
+    angles from the pivot; the right arm's is the mirror image"""
+    a0, a1 = math.radians(104), math.radians(196)
+    if side > 0:
+        a0, a1 = math.pi - a1, math.pi - a0
+    return a0, a1
+
+
+def arm_hit(outer, P, side):
+    """swing the clamp along its arc from the inside end until it leaves the
+    wheel: that is where the arc meets this wheel's edge"""
+    a0, a1 = arc_span(P, side)
+    start, end = (a1, a0) if side < 0 else (a0, a1)
+    for k in range(0, 1001):
+        a = start + (end - start) * k / 1000
+        q = (P[0] + ARM_L * math.cos(a), P[1] + ARM_L * math.sin(a))
+        if not outer.contains(Point(q)):
+            return a
+    return end
+
+
+def arms_on(c, outer, body, angles=None, solid=True, width=4.6, dot=4.2, top=True):
+    PL, PR = (c[0] - PIV_G, c[1] + PIV_DY), (c[0] + PIV_G, c[1] + PIV_DY)
+    st = '' if solid else ' stroke-dasharray="4 4" opacity="0.6"'
+    tips = []
+    for P, side in ((PL, -1), (PR, 1)):
+        a = angles[0 if side < 0 else 1] if angles else arm_hit(outer, P, side)
+        tip = (P[0] + ARM_L * math.cos(a), P[1] + ARM_L * math.sin(a))
+        body.append(path(line(P, tip, amp=0.25), stroke=ARM, width=width if solid else width * 0.45, extra=st))
+        tips.append(tip)
+    if solid:
+        for tip in tips:
+            body.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s" stroke="%s" stroke-width="1.1"/>' % (tip[0], tip[1], dot, RED, INK))
+    return tips
+
+
+def red_arcs(c, body):
+    for P, side in (((c[0] - PIV_G, c[1] + PIV_DY), -1), ((c[0] + PIV_G, c[1] + PIV_DY), 1)):
+        a0, a1 = arc_span(P, side)
+        body.append(path(d(wobble(arc_pts(P, ARM_L, a0, a1, 40), 0.5)), stroke=RED, width=2.4))
+
+
+def hub_and_top(c, body, width=4.6):
+    topP = (c[0], c[1] - WR)
+    body.append(path(line(c, topP, amp=0.25), stroke=ARM, width=width))
+    body.append('<circle cx="%.1f" cy="%.1f" r="4.2" fill="%s" stroke="%s" stroke-width="1.1"/>' % (topP[0], topP[1], RED, INK))
+    for P in ((c[0] - PIV_G, c[1] + PIV_DY), (c[0] + PIV_G, c[1] + PIV_DY)):
+        body.append(circle(P, PIV_G * 0.95, fill=RIM_DARK, stroke=ARM, width=1.2))
+    body.append('<circle cx="%.1f" cy="%.1f" r="3.4" fill="%s"/>' % (c[0], c[1], INK))
+
+
 def shape_arms():
-    c, s = (120.0, 122.0), 86.0
-    body, mid = wheel('round', c, s)
-    body += arms(mid, c, s, arc_span=1.1)
-    return svg(240, 236, body,
-               'A round steering wheel with the coupling on it: a top arm up to the top clamp, and two geared lower arms '
-               'that pivot below the centre. Each lower clamp sweeps a red arc about its own pivot, which is not '
-               'concentric with the rim, so it crosses the rim at one point.')
+    """no wheel: the arms at a few angles along their arcs, one pair solid"""
+    c = (110.0, 92.0)
+    body = []
+    red_arcs(c, body)
+    PL = (c[0] - PIV_G, c[1] + PIV_DY)
+    a0, a1 = arc_span(PL, -1)
+    for i, f in enumerate((0.16, 0.39, 0.62, 0.85)):
+        aL = a1 - (a1 - a0) * f
+        aR = math.pi - aL                       # mirror image
+        arms_on(c, None, body, angles=(aL, aR), solid=(i == 1))
+    hub_and_top(c, body)
+    return svg(220, 176, body,
+               'The coupling without a wheel: a top arm from the centre up to the top clamp, and two geared lower arms. '
+               'Each lower clamp can only move along its red arc; the arms are drawn at four positions along it.')
 
 
 def shape_examples():
     body = []
-    cells = [('flat', (70, 66)), ('flattb', (205, 66)), ('small', (137, 182))]
-    for kind, c in cells:
-        s = 46.0
-        b, mid = wheel(kind, c, s)
-        body += b
-        body += arms(mid, c, s, arc_span=1.15, big=False)
-    return svg(275, 246, body,
-               'The same coupling on a flat-bottomed wheel, a wheel flat on top and bottom, and a smaller round wheel: in each, '
-               'the lower clamps stop where their arcs cross the rim.')
+    kinds = ('round', 'squarer', 'flat', 'long')
+    xs = [72 + 150 * k for k in range(4)]
+    cy = 82.0
+    # the top point and the centre line up across all four
+    body.append(path(line((10, cy - WR), (xs[-1] + 78, cy - WR), amp=0.2), stroke=INK, width=1.2, extra=' stroke-dasharray="5 5" opacity="0.55"'))
+    body.append(path(line((10, cy), (xs[-1] + 78, cy), amp=0.2), stroke=INK, width=1.2, extra=' stroke-dasharray="5 5" opacity="0.55"'))
+    for kind, x in zip(kinds, xs):
+        c = (float(x), cy)
+        outer = draw_wheel(kind, c, body)
+        red_arcs(c, body)
+        arms_on(c, outer, body)
+        hub_and_top(c, body)
+    return svg(600, 168, body,
+               'Four steering wheels straight on, all with the same top half and centre, different below. The top arm is '
+               'the same on all of them. The lower clamps move on the same red arcs every time, and each arm stops where '
+               'its arc meets that wheel\'s edge.')
 
-
-# ---------------------------------------------------------------- the clamp's four-bar
 
 def rot(p, c, a):
     x, y = p[0] - c[0], p[1] - c[1]

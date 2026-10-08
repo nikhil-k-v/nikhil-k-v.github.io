@@ -472,7 +472,7 @@
         prev.level = level;
         if (prev.mode === 'mask') prev.mode = 'empty';
         cur.base = null; cur.live = null; cur.src = null;
-        trans = { t0: performance.now(), dur: dur };
+        trans = { t0: performance.now(), dur: dur, ease: opts.ease === 'linear' ? function (v) { return v; } : easeInOut };
         tween = null;
         level = to;
         setSource(canvasOrNull, m, liveFn);
@@ -532,7 +532,7 @@
       m.fill(0);
       var tp = 2, oldVis = 0, oldLevel = 0, old = null;
       if (trans) {
-        tp = easeInOut((now - trans.t0) / trans.dur);
+        tp = trans.ease((now - trans.t0) / trans.dur);
         m2.fill(0);
         old = prev;
         oldLevel = old.level;
@@ -758,7 +758,6 @@
     var PS = 0.72;          // how far the page is zoomed out in the pane
     var MIN_LOAD = 1400;    // the loading animation always gets this long
     var DISSOLVE = 2100;
-    var CYCLE = 5200;       // cards with two animations swap this often
 
     var manifest = null;
     var manifestP = fetch('assets/preview/previews.json', { cache: 'no-cache' })
@@ -838,25 +837,19 @@
        resolves left to right out of random characters. */
     var labelTimer = 0;
     var GLYPHS = '!@#$%^&*()_+?><:{}[]';
-    function label(text, scramble) {
+    function label(text, ms) {
       clearInterval(labelTimer);
-      if (!scramble || REDUCED_MQ.matches) { ctaEl.textContent = text; return; }
-      var from = ctaEl.textContent, n = Math.max(text.length, from.length);
-      var STEP = 45, settle = 3, i = 0;            // each letter settles 3 ticks after the one before
+      if (!ms || REDUCED_MQ.matches) { ctaEl.textContent = text; return; }
+      var n = text.length, t0 = performance.now();
+      // letters settle one after another, the last one exactly at ms
       labelTimer = setInterval(function () {
-        var out = '', done = true;
-        for (var k = 0; k < n; k++) {
-          var at = k + settle;                       // tick when letter k lands
-          if (i >= at) out += text.charAt(k);
-          else {
-            done = false;
-            out += (text.charAt(k) === ' ' && i > at - 2) ? ' ' : GLYPHS.charAt(Math.floor(Math.random() * GLYPHS.length));
-          }
-        }
-        ctaEl.textContent = out.replace(/\s+$/, '');
-        i++;
-        if (done) { clearInterval(labelTimer); ctaEl.textContent = text; }
-      }, STEP);
+        var p = (performance.now() - t0) / ms;
+        var fixed = Math.min(n, Math.floor(p * n));
+        var out = text.substring(0, fixed);
+        for (var k = fixed; k < n; k++) out += text.charAt(k) === ' ' ? ' ' : GLYPHS.charAt(Math.floor(Math.random() * GLYPHS.length));
+        ctaEl.textContent = out;
+        if (p >= 1) { clearInterval(labelTimer); ctaEl.textContent = text; }
+      }, 45);
     }
 
     /* the pre-rendered width closest to how wide the page is in this pane */
@@ -954,41 +947,6 @@
       };
     }
 
-    /* two animations on one card (TUBAA). The card's own clip loops cleanly
-       and plays the whole time. The second clip has no clean loop point, so
-       it's never looped: each time it's shown it starts again just after its
-       wind-up (data-preview-alt-from), plays slower, and hands back to the
-       first before it reaches its end. */
-    function alternate(box, first, altSrc, my) {
-      var vid = makeVideo(altSrc);
-      vid.loop = false;
-      var from = parseFloat(box.getAttribute('data-preview-alt-from')) || 0;
-      var rate = parseFloat(box.getAttribute('data-preview-alt-rate')) || 1;
-      var second = cardLayer(box, vid, parseFloat(box.getAttribute('data-preview-alt-zoom')) || 0);
-      var FADE = 1500;
-      function rewind() { vid.pause(); try { vid.currentTime = from; } catch (_) {} }
-      function toSecond() {
-        if (my !== token) return;
-        if (vid.readyState < 2 || vid.seeking || !vid.duration) { cycleTimer = setTimeout(toSecond, 200); return; }
-        vid.playbackRate = rate;
-        var pr = vid.play(); if (pr && pr.catch) pr.catch(function () {});
-        R.crossTo(null, 'content', second, { dur: FADE });
-        // back to the first clip so the fade finishes before this one ends
-        var show = ((vid.duration - from) / rate) * 1000 - FADE - 200;
-        cycleTimer = setTimeout(toFirst, Math.max(800, show));
-      }
-      function toFirst() {
-        if (my !== token) return;
-        R.crossTo(null, 'content', first, { dur: FADE });
-        cycleTimer = setTimeout(function () {
-          rewind();                                  // seek while it's off screen
-          cycleTimer = setTimeout(toSecond, CYCLE - FADE);
-        }, FADE + 50);
-      }
-      vid.addEventListener('loadeddata', rewind, { once: true });
-      cycleTimer = setTimeout(toSecond, CYCLE);
-    }
-
     function show(box) {
       var p = projectOf(box);
       var my = ++token;
@@ -1003,12 +961,13 @@
       wake(box.querySelector('video[data-lazy]'));
       var card = cardLayer(box);
 
-      // no page of ours: the card's own animation, live
+      // no page of ours: the card's own animation, live, or a longer clip
+      // made just for the preview (TUBAA: both propellers in one loop)
       if (!p.href) {
         setState('static');
+        var own = box.getAttribute('data-preview-src');
+        if (own) card = cardLayer(box, makeVideo(own));
         R.crossTo(null, card ? 'content' : 'empty', card, { dur: DISSOLVE });
-        var alt = box.getAttribute('data-preview-alt');
-        if (alt && card) alternate(box, card, alt, my);
         return;
       }
 
@@ -1030,14 +989,15 @@
           loadTimer = setTimeout(function () {
             if (my !== token) return;
             setState('frame');
-            label('VIEW PROJECT', true);
-            R.crossTo(base, 'content', live, { dur: DISSOLVE });
+            // the label unscrambles over exactly the time the page dithers in
+            label('VIEW PROJECT', DISSOLVE);
+            R.crossTo(base, 'content', live, { dur: DISSOLVE, ease: 'linear' });
           }, Math.max(0, MIN_LOAD - (performance.now() - t0)));
         });
       }).catch(function () {
         if (my !== token) return;
         setState('static');
-        label('VIEW PROJECT', true);
+        label('VIEW PROJECT', 600);
         R.reveal(0);
       });
     }
@@ -1078,7 +1038,13 @@
     if (isSplit()) {
       var box = activeBox() || boxes[0];
       setActive(box);
-      Preview.show(box);
+      // on first load the preview starts once the loading screen has gone,
+      // so its loading animation is actually seen
+      if (window.__nvLoading && !window.__nvLoaded) {
+        window.addEventListener('nv:loaded', function () { if (isSplit() && activeBox() === box) Preview.show(box); }, { once: true });
+      } else {
+        Preview.show(box);
+      }
       // centre without animating on first paint
       track.scrollLeft = clamp(box.offsetLeft + box.offsetWidth / 2 - track.clientWidth / 2, 0, maxScroll());
     } else {
