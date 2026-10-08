@@ -285,3 +285,8 @@
   .pj-embed { width: 100vw; margin-left: calc(50% - 50vw); border-radius: 0; }
   .pj-embed iframe { height: 78svh; }
 }
+
+/* media right under the meta strip, before the first section */
+.pj-top { width: var(--ga-col); margin: 1.6rem auto 0 auto; }
+.pj-top .pj-grid { margin: 0; }
+@media (max-width: 1000px) { .pj-top { margin-top: 0.9rem; } }
