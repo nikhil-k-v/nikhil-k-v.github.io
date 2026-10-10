@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash",
+      "Edit",
+      "Write",
+      "WebSearch",
+      "WebFetch(domain:*)"
+    ],
+    "deny": [
+      "Bash(git push --force *)",
+      "Bash(git push -f *)",
+      "Bash(git push origin --force *)",
+      "Bash(git push origin -f *)",
+      "Bash(git push --delete *)",
+      "Bash(git reset --hard origin *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/tools/session-setup.sh",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}

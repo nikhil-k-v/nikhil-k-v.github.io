@@ -24,7 +24,14 @@ OUT = os.path.join(ROOT, 'assets', 'preview')
 PORT = 8799
 BASE = 'http://localhost:%d/' % PORT
 CHROME = os.environ.get('CHROME', '/opt/pw-browsers/chromium-1194/chrome-linux/chrome')
-FONT_DIR = os.environ.get('PREVIEW_FONTS', '')   # folder with Montserrat.ttf (Typekit is unreachable offline)
+if not os.path.exists(CHROME):
+    CHROME = None                      # let Playwright find its own Chromium
+# folder with Montserrat.ttf (Typekit is unreachable from the sandbox); tools/session-setup.sh
+# downloads it to ~/.cache/nkve-fonts
+FONT_DIR = os.environ.get('PREVIEW_FONTS') or (os.path.expanduser('~/.cache/nkve-fonts')
+                                               if os.path.exists(os.path.expanduser('~/.cache/nkve-fonts/Montserrat.ttf')) else '')
+if not FONT_DIR:
+    print('warning: no Montserrat folder (run tools/session-setup.sh); previews will use a fallback font', file=sys.stderr)
 
 # viewport the page is laid out at, and how much of it is kept
 VARIANTS = [

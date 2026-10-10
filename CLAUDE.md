@@ -7,6 +7,20 @@ Pushing straight to `master` is the normal workflow for this repo.
 `nkve.dev` stays the main domain (resumes and links use it). `nkv.dev` is a second
 domain that redirects to it through Cloudflare, outside this repo: don't change `CNAME`.
 
+## Session setup, tools and skills
+
+- `.claude/settings.json` pre-approves edits, shell, web search and fetch (force
+  pushes and remote deletes are denied). It also runs `tools/session-setup.sh` at
+  session start, which installs `shapely`, downloads Montserrat to
+  `~/.cache/nkve-fonts` and says whether origin/master has moved.
+- `tools/site-check.py`: `shots PAGE…` (phone + desktop screenshots, scrollWidth
+  check), `overflow` (every page at 390 px), `record PAGE` (MP4 screen recording
+  with the loading screen, to send Nikhil for anything that moves).
+- Skills in `.claude/skills/`: `check-site`, `record`, `previews`, `project-page`
+  (build or rebuild a project page), `add-media` (web copies of photos, videos and
+  PDF figures), `ship` (rebase, bump versions, check, commit, push, report). Use
+  them; they hold the details this file only points at.
+
 ## Workflow
 
 - More than one Claude session works on this repo, sometimes at the same time.
@@ -70,15 +84,9 @@ opacity with a radial vignette (CSS mask) down to 50 % at the corners.
 PREVIEW_FONTS=/path/to/folder/with/Montserrat.ttf python3 tools/make-previews.py
 ```
 
-Typekit is unreachable from the sandbox, so pass a folder with Montserrat or the
-pictures use a fallback font. GitHub is reachable, so:
-
-```
-mkdir -p fonts && curl -sL -o fonts/Montserrat.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/montserrat/Montserrat%5Bwght%5D.ttf"
-curl -sL -o fonts/Montserrat-Italic.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/montserrat/Montserrat-Italic%5Bwght%5D.ttf"
-```
-
-Keep that folder outside the repo (e.g. the session scratchpad).
+Typekit is unreachable from the sandbox, so the script needs a local Montserrat.
+It uses `~/.cache/nkve-fonts` (filled by `tools/session-setup.sh`) unless
+`PREVIEW_FONTS` points somewhere else.
 
 Cards with no page (TUBAA → tubaa.dev, coming-soon) show their card animation, or
 `data-preview-src` if set. The label unscrambles to VIEW PROJECT over 1.6 s, finishing
@@ -150,20 +158,24 @@ Black-ink sketches (like the braille figures) go on `.pj-white` panels. Tables u
 - Splide (carousels) and GSAP load from CDNs.
 - A global `figcaption` rule caused 1600 px overflow before — check scrollWidth after
   adding captions.
+- `blog.html`, `pages/dynamicGif.html` and `pages/platformGif.html` aren't linked
+  anywhere and scroll sideways on phones (no proper viewport). `site-check.py overflow`
+  always lists them.
 
 ## Testing locally
 
 ```
 python3 -m http.server 8765        # from the repo root
 ```
-Then Playwright/Chromium (`/opt/pw-browsers`, don't run `playwright install`) at
-390×844 (mobile, dpr 2) and 1440×900. Screenshot the sections you touched on both
-sizes before pushing, and check `scrollWidth`.
+Usually you don't need this: `tools/site-check.py` serves the repo itself and
+handles everything below. Playwright's Chromium is in `/opt/pw-browsers` (don't run
+`playwright install`). Check 390×844 (mobile, dpr 2) and 1440×900, and
+`scrollWidth`. Notes for writing your own Playwright script:
 
-- Route `use.typekit.net` CSS to an `@font-face` pointing at the local Montserrat
-  above, abort other off-site requests (CDNs are blocked; stub GSAP).
+- Route `use.typekit.net` CSS to an `@font-face` pointing at the local Montserrat,
+  abort other off-site requests (CDNs are blocked; stub GSAP).
 - `add_init_script("window.__nvPreview = true")` skips the loading screen for page
-  screenshots. To see the loader itself, poll `performance.now() -
+  screenshots. To see the loader itself, record video or poll `performance.now() -
   window.__nvLoadStart` and screenshot in real time (Playwright's fake clock doesn't
   drive its rAF timestamps).
 - On phones, `genauto-layout.js` collapses sections: remove `.is-collapsed` and
