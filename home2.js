@@ -3,9 +3,9 @@
    A fork of home.js. Portrait phones/tablets behave exactly as on the
    home page (split view, preview pane under the strip). On desktop and
    compact layouts the open card holds the preview itself: the card's
-   animation and title move into its upper half, its face fades out
-   around the middle (home2.css), and a dithered picture of the project
-   page plays in the lower half. The preview is a child of the card, so
+   animation moves into its upper half, its face fades out around the
+   middle (home2.css), and a dithered picture of the project page plays
+   in the lower half, under the title and VIEW PROJECT button. The preview is a child of the card, so
    it scrolls with the strip. Two preview panes take turns, so the old
    card's preview can dither away while the new one comes in.
    Layout breakpoints must match home.css / home2.css.
@@ -158,6 +158,16 @@
         if (boxes[i]) { boxes[i].focus({ preventScroll: false }); }
       }
     });
+
+    var btn = box.querySelector('.see-more');
+    if (btn) {
+      var linked = !!(p.href || p.external);
+      if (!linked) btn.setAttribute('aria-disabled', 'true');
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (linked && box.classList.contains('active')) openProject(box);
+      });
+    }
   });
 
   /* ------------------------------------------------------------------
@@ -1093,7 +1103,7 @@
       el.innerHTML =
         '<div class="bpv-stage">' +
           '<canvas class="bpv-dither" aria-hidden="true"></canvas>' +
-          '<a class="bpv-open" href="#"><span class="bpv-cta">LOADING</span></a>' +
+          '<a class="bpv-open" href="#" tabindex="-1" aria-hidden="true"><span class="bpv-cta">LOADING</span></a>' +
         '</div>';
       var s = { el: el, box: null, leaving: false, timer: 0, P: null };
       s.P = makePreview(el, { inBox: true });
