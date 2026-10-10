@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="nav.css">
   <link rel="stylesheet" href="phonestyles.css">
   <link rel="stylesheet" href="home.css?v=8">
-  <link rel="stylesheet" href="home2.css?v=5">
+  <link rel="stylesheet" href="home2.css?v=6">
 </head>
 
 <body class="home home2">
@@ -36,6 +36,24 @@
       <li class="last"><a href="/about.html">ABOUT ME</a></li>
     </ul>
   </header>
+
+  <!-- desktop/compact: the card animations sit in front of the preview, so
+       instead of blending (lighten) their black is turned into transparency
+       (alpha from brightness) and a soft dark halo is put under them to set
+       them off from the preview's dots. Used by .anim-wrap in home2.css. -->
+  <svg class="fx-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="anim-key" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+      <feColorMatrix in="SourceGraphic" type="matrix" result="keyed"
+        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  1.6 1.6 1.6 0 -0.06"/>
+      <feGaussianBlur in="keyed" stdDeviation="7" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" result="halo"
+        values="0 0 0 0 0.02  0 0 0 0 0.07  0 0 0 0 0.125  0 0 0 0.9 0"/>
+      <feMerge>
+        <feMergeNode in="halo"/>
+        <feMergeNode in="keyed"/>
+      </feMerge>
+    </filter>
+  </svg>
 
   <div id="blocker"></div>
 
@@ -57,7 +75,9 @@
 
         <div class="box active" data-href="pages/genauto.html">
           <div class="card">
-            <video style="left: 44%; top: 52%; max-width: 300%; filter: brightness(1.75);" class="anims" poster="assets/anim/steeringAnim-960.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/steeringAnim-960.mp4" type="video/mp4"><source src="assets/anim/steeringAnim-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video style="left: 44%; top: 52%; max-width: 300%; filter: brightness(1.75);" class="anims" poster="assets/anim/steeringAnim-960.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/steeringAnim-960.mp4" type="video/mp4"><source src="assets/anim/steeringAnim-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">STEERING ROBOT</span>
           <p class="index-label">I</p>
@@ -67,7 +87,9 @@
 
         <div class="box" data-href="pages/platform.html">
           <div class="card">
-            <video style="left: 53%; top: 50%; max-width: 170%; filter: contrast(1.3) brightness(1);" class="anims" poster="assets/anim/platform-960.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/platform-960.mp4" type="video/mp4"><source src="assets/anim/platform-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video style="left: 53%; top: 50%; max-width: 170%; filter: contrast(1.3) brightness(1);" class="anims" poster="assets/anim/platform-960.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/platform-960.mp4" type="video/mp4"><source src="assets/anim/platform-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">MOTION PLATFORM</span>
           <p class="index-label">II</p>
@@ -77,7 +99,9 @@
 
         <div class="box" data-href="pages/6dof.html">
           <div class="card">
-            <video style="left: 50%; top: 50%; max-width: 190%; filter: brightness(1.25);" class="anims" poster="assets/anim/armanim-compressed-960.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/armanim-compressed-960.mp4" type="video/mp4"><source src="assets/anim/armanim-compressed-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video style="left: 50%; top: 50%; max-width: 190%; filter: brightness(1.25);" class="anims" poster="assets/anim/armanim-compressed-960.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/armanim-compressed-960.mp4" type="video/mp4"><source src="assets/anim/armanim-compressed-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">6DOF DESKTOP ARM</span>
           <p class="index-label">III</p>
@@ -87,7 +111,9 @@
 
         <div class="box">
           <div class="card">
-            <video style="left: 58%; top: 53%; max-width: 300%; filter: brightness(1.45);" class="anims" poster="assets/anim/cufflinkanim-960.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/cufflinkanim-960.mp4" type="video/mp4"><source src="assets/anim/cufflinkanim-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video style="left: 58%; top: 53%; max-width: 300%; filter: brightness(1.45);" class="anims" poster="assets/anim/cufflinkanim-960.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/cufflinkanim-960.mp4" type="video/mp4"><source src="assets/anim/cufflinkanim-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">CUFF-LINK</span>
           <p class="index-label">IV</p>
@@ -97,7 +123,9 @@
 
         <div class="box" data-external="https://tubaa.dev" data-preview-zoom="1.15" data-preview-src="assets/anim/tubaa-preview.mp4?v=2">
           <div class="card">
-            <video style="right: 0%; top: 50%; max-width: 115%; opacity: 95%; mix-blend-mode: lighten;" class="anims" src="assets/anim/tubaa.mp4" poster="assets/anim/tubaa.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+            <div class="anim-wrap">
+              <video style="right: 0%; top: 50%; max-width: 115%; opacity: 95%; mix-blend-mode: lighten;" class="anims" src="assets/anim/tubaa.mp4" poster="assets/anim/tubaa.jpg" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+            </div>
           </div>
           <span class="s-title">PROPELLER RESEARCH</span>
           <p class="index-label">V</p>
@@ -109,7 +137,9 @@
 
         <div class="box" data-href="pages/desmos.html">
           <div class="card">
-            <video style="left: 56%; top: 49%; max-height: 140%;" class="anims" poster="assets/anim/desmosAnim1-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/desmosAnim1-960.mp4" type="video/mp4"><source src="assets/anim/desmosAnim1-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video style="left: 56%; top: 49%; max-height: 140%;" class="anims" poster="assets/anim/desmosAnim1-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/desmosAnim1-960.mp4" type="video/mp4"><source src="assets/anim/desmosAnim1-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">CYCLOID GENERATOR</span>
           <p class="index-label">VI</p>
@@ -118,7 +148,9 @@
 
         <div class="box" data-href="pages/braille.html">
           <div class="card">
-            <video style="left: 56%; max-width: 180%;" class="anims" poster="assets/anim/BraileAnim-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/BraileAnim-960.mp4" type="video/mp4"><source src="assets/anim/BraileAnim-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video style="left: 56%; max-width: 180%;" class="anims" poster="assets/anim/BraileAnim-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/BraileAnim-960.mp4" type="video/mp4"><source src="assets/anim/BraileAnim-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">BRAILLE DISPLAY</span>
           <p class="index-label">VII</p>
@@ -127,7 +159,9 @@
 
         <div class="box" data-href="pages/cycloid.html">
           <div class="card">
-            <video class="anims" poster="assets/anim/CycloidAnim-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/CycloidAnim-960.mp4" type="video/mp4"><source src="assets/anim/CycloidAnim-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video class="anims" poster="assets/anim/CycloidAnim-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/CycloidAnim-960.mp4" type="video/mp4"><source src="assets/anim/CycloidAnim-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">CYCLOIDAL ACTUATOR</span>
           <p class="index-label">VIII</p>
@@ -136,7 +170,9 @@
 
         <div class="box" data-href="pages/controller.html">
           <div class="card">
-            <video style="left: 56%; top: 50%; max-height: 130%;" class="anims" poster="assets/anim/armcont-compressed-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/armcont-compressed-960.mp4" type="video/mp4"><source src="assets/anim/armcont-compressed-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video style="left: 56%; top: 50%; max-height: 130%;" class="anims" poster="assets/anim/armcont-compressed-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/armcont-compressed-960.mp4" type="video/mp4"><source src="assets/anim/armcont-compressed-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">6DOF ARM CONTROLLER</span>
           <p class="index-label">IX</p>
@@ -145,7 +181,9 @@
 
         <div class="box" data-href="pages/liq.html">
           <div class="card">
-            <video style="left: 54%;" class="anims" poster="assets/anim/liq-compressed-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/liq-compressed-960.mp4" type="video/mp4"><source src="assets/anim/liq-compressed-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video style="left: 54%;" class="anims" poster="assets/anim/liq-compressed-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/liq-compressed-960.mp4" type="video/mp4"><source src="assets/anim/liq-compressed-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">LIQUID PISTON</span>
           <p class="index-label">X</p>
@@ -154,7 +192,9 @@
 
         <div class="box" data-href="pages/sumo.html">
           <div class="card">
-            <video style="left: 56%; top: 50%; max-height: 110%;" class="anims" poster="assets/anim/sumo-anim-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/sumo-anim-960.mp4" type="video/mp4"><source src="assets/anim/sumo-anim-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video style="left: 56%; top: 50%; max-height: 110%;" class="anims" poster="assets/anim/sumo-anim-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/sumo-anim-960.mp4" type="video/mp4"><source src="assets/anim/sumo-anim-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">SUMO CONTROLLER</span>
           <p class="index-label">XI</p>
@@ -163,7 +203,9 @@
 
         <div class="box">
           <div class="card">
-            <video style="left: 54%; top: 49%; max-width: 130%; max-height: 100%;" class="anims" poster="assets/anim/anodanim-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/anodanim-960.mp4" type="video/mp4"><source src="assets/anim/anodanim-1280.mp4" type="video/mp4"></video>
+            <div class="anim-wrap">
+              <video style="left: 54%; top: 49%; max-width: 130%; max-height: 100%;" class="anims" poster="assets/anim/anodanim-960.jpg" muted loop playsinline preload="none" data-lazy aria-hidden="true"><source media="(max-width: 1100px)" src="assets/anim/anodanim-960.mp4" type="video/mp4"><source src="assets/anim/anodanim-1280.mp4" type="video/mp4"></video>
+            </div>
           </div>
           <span class="s-title">METAL ANODIZER</span>
           <p class="index-label">XII</p>
@@ -196,7 +238,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.3/gsap.min.js"></script>
   <script src="app.js?v=6"></script>
-  <script src="home2.js?v=5"></script>
+  <script src="home2.js?v=6"></script>
   <script src="blend2.js?v=1"></script>
 </body>
 </html>

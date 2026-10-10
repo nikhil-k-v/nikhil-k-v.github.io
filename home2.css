@@ -6,10 +6,11 @@
    selected card becomes the top of its project page:
 
      animation    stays centred and grows, as on index.html
-     around 1/3   the card face fades into the page background
-     lower 2/3    the dithered preview of the page (.bpv, placed and
+     around 1/4   the card face fades into the page background
+     lower part   the dithered preview of the page (.bpv, placed and
                   run by home2.js), down to the bottom of the card;
-                  clicking it opens the project
+                  clicking it opens the project. The animation is
+                  drawn in front of it (keyed, with a dark halo)
      bottom       the title and VIEW PROJECT button, as on index.html,
                   drawn over the faded-out bottom of the preview
 
@@ -60,6 +61,16 @@ body.home2 .card {
 }
 body.home2 .box.active .card { background-color: var(--dark-secondary); }
 
+.fx-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* the animation's own layer inside the card (in the split view it's just
+   a plain box and the clip blends onto the card as on index.html) */
+body.home2 .anim-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 /* title, labels and button stay above the preview */
 body.home2 .s-title,
 body.home2 .see-more { z-index: 4; }
@@ -73,7 +84,21 @@ body.home2 .see-more { z-index: 4; }
   /* face fades to the page colour over 21-47 % (centred on a third).
      The animation isn't moved or masked: it grows with the card and stays
      centred, as on index.html, and runs down behind the preview */
-  body.home2 .box.active .card { --fc: 21%; }
+  body.home2 .box.active .card { --fc: 12%; }   /* fades over 12-38 %: light quarter, dark three quarters */
+
+  /* the animation goes in front of the preview. The card can't be its own
+     layer for that (it would trap the clip under the preview), and the clip
+     can't use lighten in front (the preview's dots would show through it),
+     so #anim-key (index2.html) turns its black into transparency and puts a
+     soft dark halo under it to set it off from the dots */
+  body.home2 .card { z-index: auto; }
+  body.home2 .anim-wrap {
+    z-index: 3;
+    -webkit-filter: url(#anim-key);
+    filter: url(#anim-key);
+  }
+  body.home2 .anim-wrap .anims { mix-blend-mode: normal; }
+  body.home2 .box .index-label { z-index: 4; }
 
   /* open cards about 20 % narrower than on index.html */
   body.home2 .track { --card-w-active: 32vw; }
@@ -83,11 +108,9 @@ body.home2 .see-more { z-index: 4; }
   .bpv {
     position: absolute;
     left: 50%;
-    /* the bottom two thirds, moved down by twice the gap above the
-       animation (10 % of the card height): its bottom runs past the card's
-       edge and is cut off there, where it has faded out anyway */
-    bottom: calc(var(--card-h) * -0.05);
-    z-index: 3;
+    /* the lower two thirds or so, down to the card's bottom edge */
+    bottom: 0;
+    z-index: 2;
     /* sized for the open card so it never resizes while the card grows or
        shrinks; the card's edges simply uncover / cover it */
     width: var(--card-w-active);
@@ -116,7 +139,7 @@ body.home2 .see-more { z-index: 4; }
   .bpv-media {
     position: absolute;
     left: calc(50% - 32px);
-    bottom: calc(var(--card-h) * 0.05 + 3px);   /* inside the card */
+    bottom: 3px;
     width: 64px;
     height: 36px;
     overflow: hidden;
@@ -127,7 +150,7 @@ body.home2 .see-more { z-index: 4; }
     content: "";
     position: absolute;
     left: calc(50% - 36px);
-    bottom: calc(var(--card-h) * 0.05);
+    bottom: 0;
     width: 72px;
     height: 42px;
     background-color: var(--dark-primary);
