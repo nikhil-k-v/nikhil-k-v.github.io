@@ -83,8 +83,9 @@ body.home2 .see-more { z-index: 4; }
 @media not all and (orientation: portrait) and (max-width: 1100px) {
 
   /* face fades over 21-47 % (centred on a third); the animation ends
-     above 37 % (home2.js) and the card is masked away below 40 % */
-  body.home2 .box.active .card { --fc: 21%; --cut: 40%; }
+     above 39.5 % (home2.js), over the fade, and the card is masked away
+     below 43 % */
+  body.home2 .box.active .card { --fc: 21%; --cut: 43%; }
 
   /* open cards about 20 % narrower than on index.html */
   body.home2 .track { --card-w-active: 32vw; }
@@ -119,12 +120,15 @@ body.home2 .see-more { z-index: 4; }
   .bpv {
     position: absolute;
     left: 50%;
-    bottom: 0;
+    /* the bottom two thirds, moved down by twice the gap above the
+       animation (10 % of the card height): its bottom runs past the card's
+       edge and is cut off there, where it has faded out anyway */
+    bottom: calc(var(--card-h) * -0.05);
     z-index: 3;
     /* sized for the open card so it never resizes while the card grows or
        shrinks; the card's edges simply uncover / cover it */
     width: var(--card-w-active);
-    height: calc(var(--card-h) * 0.67);   /* the bottom two thirds, down to the bottom edge */
+    height: calc(var(--card-h) * 0.67);
     transform: translateX(-50%);
     opacity: 0;
     pointer-events: none;
@@ -149,7 +153,7 @@ body.home2 .see-more { z-index: 4; }
   .bpv-media {
     position: absolute;
     left: calc(50% - 32px);
-    bottom: 3px;
+    bottom: calc(var(--card-h) * 0.05 + 3px);   /* inside the card */
     width: 64px;
     height: 36px;
     overflow: hidden;
@@ -160,7 +164,7 @@ body.home2 .see-more { z-index: 4; }
     content: "";
     position: absolute;
     left: calc(50% - 36px);
-    bottom: 0;
+    bottom: calc(var(--card-h) * 0.05);
     width: 72px;
     height: 42px;
     background-color: var(--dark-primary);

@@ -102,8 +102,8 @@
      card's top edge and its bottom stays above where the card fades.
      home2.css uses them in .box.active.
      ------------------------------------------------------------------ */
-  var ANIM_PAD = 0.025;     // gap above the model, share of the card height
-  var ANIM_FIT = 0.37;      // the model ends above this share of the card height (the top third, about)
+  var ANIM_PAD = 0.05;      // gap above the model, share of the card height
+  var ANIM_FIT = 0.395;     // the model ends above this share of the card height (same size as with a 0.025 gap)
 
   function openWidth() {
     var probe = document.createElement('div');
