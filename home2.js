@@ -2,10 +2,10 @@
    HOME 2 (prototype, index2.html) — carousel + previews
    A fork of home.js. Portrait phones/tablets behave exactly as on the
    home page (split view, preview pane under the strip). On desktop and
-   compact layouts the open card holds the preview itself: the card's
-   animation moves into its upper half, its face fades out around the
-   middle (home2.css), and a dithered picture of the project page plays
-   in the lower half, under the title and VIEW PROJECT button. The preview is a child of the card, so
+   compact layouts the open card holds the preview itself: its face fades
+   out around a third of the way down (home2.css), and a dithered picture
+   of the project page plays in the lower part, under the title and VIEW
+   PROJECT button. The card animation grows and stays centred as before. The preview is a child of the card, so
    it scrolls with the strip. Two preview panes take turns, so the old
    card's preview can dither away while the new one comes in.
    Layout breakpoints must match home.css / home2.css.
@@ -90,59 +90,6 @@
     if (old) InBox.release(old);
     InBox.mount(box);
     followActive(box);
-  }
-
-  /* ------------------------------------------------------------------
-     Where each animation goes in an open card (desktop / compact)
-     Each clip has data-box="left top right bottom": the part of the
-     frame its model ever reaches over the whole loop, as fractions of
-     the frame (measured from the clip). From that and the open card's
-     size, each card gets --ay (how far to move the clip up) and --ak
-     (how much to shrink it) so the model's top sits just under the
-     card's top edge and its bottom stays above where the card fades.
-     home2.css uses them in .box.active.
-     ------------------------------------------------------------------ */
-  var ANIM_PAD = 0.05;      // gap above the model, share of the card height
-  var ANIM_FIT = 0.395;     // the model ends above this share of the card height (same size as with a 0.025 gap)
-
-  function openWidth() {
-    var probe = document.createElement('div');
-    probe.style.cssText = 'position:absolute;visibility:hidden;height:0;width:var(--card-w-active)';
-    track.appendChild(probe);
-    var w = probe.getBoundingClientRect().width;
-    track.removeChild(probe);
-    return w;
-  }
-
-  function fitAnims() {
-    if (isSplit()) return;
-    var cw = openWidth() + 4;                 // the card face covers the 2px padding
-    var kMax = parseFloat(getComputedStyle(track).getPropertyValue('--anim-k')) || 0.6;
-    boxes.forEach(function (box) {
-      var card = box.querySelector('.card');
-      var v = card && card.querySelector('video.anims');
-      var bx = v && (v.getAttribute('data-box') || '').split(' ').map(parseFloat);
-      if (!bx || bx.length !== 4 || isNaN(bx[1])) return;
-      var ch = card.clientHeight;
-      var cs = getComputedStyle(v);
-      var ar = parseFloat(v.getAttribute('data-ar')) || 0.5625;
-      // the clip's size in an open card: 1920 px wide, capped by max-width
-      // (share of the card's width) and max-height (share of its height)
-      function cap(val, base) {
-        if (!val || val === 'none') return Infinity;
-        return val.indexOf('%') > -1 ? parseFloat(val) / 100 * base : parseFloat(val);
-      }
-      var k0 = Math.min(1, cap(v.style.maxWidth || cs.maxWidth, cw) / 1920, cap(v.style.maxHeight || cs.maxHeight, ch) / (1920 * ar));
-      var h = 1920 * ar * k0;
-      var top = parseFloat(cs.top) || ch / 2;
-      var span = (bx[3] - bx[1]) * h;
-      var k = Math.min(kMax, (ANIM_FIT - ANIM_PAD) * ch / Math.max(span, 1));
-      // the clip is scaled about (-1.5%, -5%) of its box (see home2.css), so
-      // the model's top lands at  top - 0.05h + k h (t - 0.5)  before moving it
-      var at = top - 0.05 * h + k * h * (bx[1] - 0.5);
-      card.style.setProperty('--ak', k.toFixed(3));
-      card.style.setProperty('--ay', (ANIM_PAD * ch - at).toFixed(1) + 'px');
-    });
   }
 
   /* ------------------------------------------------------------------
@@ -1251,7 +1198,6 @@
       track.scrollLeft = clamp(box.offsetLeft + box.offsetWidth / 2 - track.clientWidth / 2, 0, maxScroll());
     } else {
       Preview.unload();
-      fitAnims();
       var open = activeBox();
       if (open) {
         var first = window.__nvLoading && !window.__nvLoaded;
@@ -1262,7 +1208,6 @@
   }
 
   function onMQChange() { cancelFollow(); enterLayout(); }
-  window.addEventListener('resize', fitAnims);
   if (SPLIT_MQ.addEventListener) SPLIT_MQ.addEventListener('change', onMQChange);
   else if (SPLIT_MQ.addListener) SPLIT_MQ.addListener(onMQChange);
 
