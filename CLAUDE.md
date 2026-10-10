@@ -4,6 +4,27 @@ Static site on GitHub Pages. Branch `master` is live at https://nkve.dev (see `C
 a minute or two after a push. No build step, no framework: plain HTML, CSS and JS.
 Pushing straight to `master` is the normal workflow for this repo.
 
+`nkve.dev` stays the main domain (resumes and links use it). `nkv.dev` is a second
+domain that redirects to it through Cloudflare, outside this repo: don't change `CNAME`.
+
+## Workflow
+
+- More than one Claude session works on this repo, sometimes at the same time.
+  `git pull --rebase origin master` before starting and again right before pushing.
+- **Cache busting:** shared files are linked with `?v=N` (`loader.js`, `home.js`,
+  `home.css`, `app.js`, `styles.css`, `pages/project.css`, the steering shape SVGs,
+  `tubaa-preview.mp4`). Bump N everywhere a file is linked whenever you change it, or
+  phones keep the old copy (`grep -rn "loader.js?v=" --include=*.html .`).
+- Big lists of changes: do all of them, push once, then report briefly what changed
+  and what was assumed. Ask first when a change needs a fact that isn't on the site
+  or from Nikhil (see "Unconfirmed" below).
+- Source material for page content lives in the claude.ai Project, not the repo:
+  `MIT_Maker_Documentation.pdf` (braille display, cycloid actuators/arm, toroidal
+  propellers, ionic thruster), `Portfolio.pdf` (motion platform, arm, propellers),
+  `BrailleVideo.mp4`, `ArmYtVideo.mp4`. Snip text and images from them rather than
+  writing new claims. YouTube: `pa9qdXy_RqI` (cycloidal actuators video),
+  `NxsyXVb6r7Q` (2023 maker portfolio video).
+
 ## Map
 
 | Path | What it is |
@@ -12,7 +33,7 @@ Pushing straight to `master` is the normal workflow for this repo.
 | `index2.html`, `home2.js`, `home2.css`, `blend2.js` | Prototype home (not linked, `noindex`). Same as the home page on portrait phones. On desktop/landscape the open card (32vw, 20 % narrower than on index) becomes the top of its page: the animation grows and stays centred as on index but is drawn in front of the preview (its `.anim-wrap` uses the `#anim-key` SVG filter in index2.html: black keyed to transparent plus a soft dark halo, instead of the lighten blend), the card face fades to the page colour around a quarter (`--fc`, an `@property` in home2.css), and a dithered page preview (`.bpv`, also a link) fills the lower part down to the bottom edge, under the title and VIEW PROJECT button, which stay at the bottom as on index. The preview shows the middle 700 px of the 1100 px render (the content column) edge to edge. The preview is a child of the card, so it scrolls with the strip; two panes take turns so the old one can dither away while the new one comes in. `home2.js` is a fork of `home.js`; `blend2.js` is `blend.js` reading the colour from `.card`. Uses the same `assets/preview/` (the 1100 px render, middle 820 px). |
 | `about.html`, `about-page.css` | About page. |
 | `updates.html` | Gallery: Videos section (lazy-played) then Photos. |
-| `pages/*.html` | One page per project. `genauto.html` = steering robot (Gen Auto AI), `platform.html` = motion platform, `6dof.html` = desktop arm, `desmos.html` = cycloid generator, plus `braille`, `cycloid`, `controller`, `liq`, `sumo`. |
+| `pages/*.html` | One page per project. `genauto.html` = steering robot (Gen Auto AI), `platform.html` = motion platform, `6dof.html` = desktop arm, `desmos.html` = cycloid generator, `cycloid.html` = cycloidal actuator, `braille.html` = braille display, plus `controller`, `liq`, `sumo`, `propellers` (not linked from home). Old style (not yet rebuilt): `controller`, `liq`, `sumo`, `propellers`. `dynamicGif.html`, `platformGif.html` and `pages.js` are leftovers. See "Project page template" below. |
 | `pages/page-styles.css` | Old global stylesheet every project page loads. Has sharp edges (see Gotchas). |
 | `pages/genauto.css` | Components for the write-up style (`.ga-sec`, `.ga-h2/h3`, `.ga-fig`, `.ga-grid`, `.ga-label`, `.ga-calc`, `.ga-nav` …). Steering robot page puts them on a white sheet (`.ga-paper`). |
 | `pages/project.css` | Same components on the navy background (`.ga-night`) plus media blocks: `.pj-grid/.pj-tile`, `.pj-split`, `.pj-wide`, `.pj-video`, `.pj-embed`, `.cyc-sim`, plus `.pj-white` (white panel for black-ink sketches), `.pj-code`, `.cy-bom`. Used by platform, 6dof, desmos, cycloid, braille. |
@@ -27,8 +48,8 @@ Pushing straight to `master` is the normal workflow for this repo.
 | `assets/web/` | Web copies of videos (≈960 px wide H.264, faststart) + JPG posters; `assets/web/img/` 1400 px photos; hand-made SVG diagrams. |
 | `assets/GenAutoVids/`, `old-media/` | Originals. Large; don't link them from pages — make a web copy. |
 | `assets/preview/` | Pre-rendered home previews (generated, see below). |
-| `tools/make-previews.py` | Generates `assets/preview/` (image URLs carry `?v=<hash>`). |
-| `tools/ga-diagrams.py` | Sketch SVGs for the steering page (clamp four-bar, shape arms). |
+| `tools/make-previews.py` | Generates `assets/preview/` (image URLs carry `?v=<hash>`). Sets `window.__nvPreview` so the loading screen never ends up in the pictures. |
+| `tools/ga-diagrams.py` | Sketch SVGs for the steering page: clamp four-bar, and the shape diagrams (`shape-solution.svg`, `shape-examples.svg`). Needs `shapely` (`pip install --break-system-packages shapely`). Wheel kinds `round`, `waisted`, `flat`, `long`; the top half is always the same semicircle. Each arm stops where its fixed red arc first leaves the wheel (`arm_hit`), minus `RAISE[kind]` degrees. When changing a wheel shape, check the arc crosses its edge exactly once. |
 | `tools/platform-diagrams.py` | Inline sketches on the platform page, injected between `<!-- sketch:NAME -->` markers (Caveat labels). |
 
 ## Home page previews
@@ -49,12 +70,48 @@ opacity with a radial vignette (CSS mask) down to 50 % at the corners.
 PREVIEW_FONTS=/path/to/folder/with/Montserrat.ttf python3 tools/make-previews.py
 ```
 
-Typekit is unreachable offline, so pass a folder with Montserrat (Google Fonts'
-`Montserrat[wght].ttf` renamed `Montserrat.ttf`) or the pictures use a fallback font.
+Typekit is unreachable from the sandbox, so pass a folder with Montserrat or the
+pictures use a fallback font. GitHub is reachable, so:
+
+```
+mkdir -p fonts && curl -sL -o fonts/Montserrat.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/montserrat/Montserrat%5Bwght%5D.ttf"
+curl -sL -o fonts/Montserrat-Italic.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/montserrat/Montserrat-Italic%5Bwght%5D.ttf"
+```
+
+Keep that folder outside the repo (e.g. the session scratchpad).
 
 Cards with no page (TUBAA → tubaa.dev, coming-soon) show their card animation, or
 `data-preview-src` if set. The label unscrambles to VIEW PROJECT over 1.6 s, finishing
 before the 2.1 s dissolve does.
+
+## Project page template
+
+The rebuilt pages (`platform`, `6dof`, `desmos`, `cycloid`, `braille`) follow this
+shape; `cycloid.html` is the cleanest example (`desmos` and `platform` skip step 4):
+
+1. `<script src="../loader.js?v=N" data-mode="page">` right after `<body>`.
+2. Hero: `<div id="arm-anim-container" class="img-container">` with the `.page-title`
+   and the card's animation (`assets/anim/X-960/1280.mp4`). The preview renderer
+   hides this id, the meta strip and the title.
+3. `.project-meta` strip (Timeframe / Overview / Affiliation / Status).
+4. `.pj-top` media grid (photos and `data-autoplay` videos). This is the first thing
+   the home preview shows, so put real media here, not text or an iframe (iframes
+   come out blank in previews).
+5. `.ga-nav` section menu, then `<div class="ga-night">` with `section.ga-sec` blocks
+   (`data-open` keeps them open on phones).
+6. Scripts: `genauto-nav.js`, `genauto-layout.js`, `project.js`, `../blend.js`.
+
+Black-ink sketches (like the braille figures) go on `.pj-white` panels. Tables use
+`.pf-table`. Code uses `<pre class="pj-code">`.
+
+## Unconfirmed (ask Nikhil before repeating or changing)
+
+- Cycloid actuator ratio: the site says 28:1, but the maker portfolio PDFs say a
+  "custom ratio (26:1)".
+- Braille cost: the PDF says ($1.90/servo × 2) + $0.13 = $2.03 a cell, which doesn't
+  add up ($3.93). The page uses $2.03 a cell, so $15.12 for 4 cells and $68.42 for 14.
+- Whether the 2023 maker portfolio video (`NxsyXVb6r7Q`) actually covers the braille
+  display and the actuators. Both pages embed it saying so.
 
 ## Conventions
 
@@ -99,6 +156,20 @@ before the 2.1 s dissolve does.
 ```
 python3 -m http.server 8765        # from the repo root
 ```
-Then Playwright/Chromium at 390×844 (mobile, dpr 2) and 1440×900. Playwright's
-Chromium has no H.264: route `.mp4` requests to VP9 `.webm` copies to see videos
-play. Screenshot the sections you touched on both sizes before pushing.
+Then Playwright/Chromium (`/opt/pw-browsers`, don't run `playwright install`) at
+390×844 (mobile, dpr 2) and 1440×900. Screenshot the sections you touched on both
+sizes before pushing, and check `scrollWidth`.
+
+- Route `use.typekit.net` CSS to an `@font-face` pointing at the local Montserrat
+  above, abort other off-site requests (CDNs are blocked; stub GSAP).
+- `add_init_script("window.__nvPreview = true")` skips the loading screen for page
+  screenshots. To see the loader itself, poll `performance.now() -
+  window.__nvLoadStart` and screenshot in real time (Playwright's fake clock doesn't
+  drive its rAF timestamps).
+- On phones, `genauto-layout.js` collapses sections: remove `.is-collapsed` and
+  dispatch `resize` before full-page shots.
+- Playwright's Chromium has no H.264, so videos show their posters unless you route
+  `.mp4` to VP9 `.webm` copies.
+- The sandbox can't reach most sites (YouTube, Typekit, CDNs). WebFetch/WebSearch work
+  for looking things up, but YouTube pages are often rate-limited; the oEmbed URL
+  (`youtube.com/oembed?url=…`) still gives a video's title.
