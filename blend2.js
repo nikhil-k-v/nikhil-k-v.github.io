@@ -28,17 +28,21 @@
     var cv = document.createElement('canvas');
     cv.className = v.className;
     var style = v.getAttribute('style') || '';
-    // home cards sit on a flat colour (on index2, the .card face inside the box), so their canvas paints that colour and
-    // blends the clip onto it itself: no CSS blending needed at all
-    var card = v.closest('.card') || v.closest('.box');
-    cv.setAttribute('style', card ? style.replace(/filter\s*:[^;]*;?/g, '').replace(/mix-blend-mode\s*:[^;]*;?/g, '') + ';mix-blend-mode:normal' : style);
+    // home cards sit on a flat colour, so their canvas paints that colour and
+    // blends the clip onto it itself: no CSS blending needed at all.
+    // On index2 the card face (.card) is a gradient that fades to the page
+    // colour, so there the canvas paints only the (brightened) clip and is
+    // blended by CSS, which WebKit does do for canvas.
+    var face = v.closest('.card');
+    var card = face || v.closest('.box');
+    cv.setAttribute('style', card ? style.replace(/filter\s*:[^;]*;?/g, '').replace(/mix-blend-mode\s*:[^;]*;?/g, '') + (face ? ';mix-blend-mode:lighten' : ';mix-blend-mode:normal') : style);
     cv.setAttribute('aria-hidden', 'true');
     cv.width = 960;                       // replaced with the clip's own size once known
     cv.height = 540;
     v.parentNode.insertBefore(cv, v.nextSibling);
     v.style.opacity = '0';
     v.style.mixBlendMode = 'normal';
-    var p = { v: v, cv: cv, cx: cv.getContext('2d'), seen: true, t: -1, card: card, bright: brightnessOf(style), bg: '' };
+    var p = { v: v, cv: cv, cx: cv.getContext('2d'), seen: true, t: -1, card: card, face: !!face, bright: brightnessOf(style), bg: '' };
     if (v.poster) {
       var im = new Image();
       im.onload = function () { if (p.t < 0) paint(p, im, im.naturalWidth, im.naturalHeight); };
@@ -63,6 +67,7 @@
         tx.globalCompositeOperation = 'lighter'; tx.globalAlpha = Math.min(1, b - 1);
         tx.drawImage(el, 0, 0, w, h); b -= 1;
       }
+      if (p.face) { x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, w, h); x.drawImage(tmp, 0, 0); return; }
       // card colour, then the clip with black dropped out
       x.globalCompositeOperation = 'source-over';
       x.fillStyle = getComputedStyle(p.card).backgroundColor;
