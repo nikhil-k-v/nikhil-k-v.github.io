@@ -9,6 +9,7 @@ Pushing straight to `master` is the normal workflow for this repo.
 | Path | What it is |
 |---|---|
 | `index.html`, `home.js`, `home.css` | Home: project carousel. On portrait phones/tablets it's a split view (small carousel on top, dithered live preview of the selected project below). |
+| `index2.html`, `home2.js`, `home2.css`, `blend2.js` | Prototype home (not linked, `noindex`). Same as the home page on portrait phones. On desktop/landscape the open card becomes the top of its page: animation and thin title in the upper half, the card face fades out around the middle (`--cut`, an `@property` in home2.css), and a dithered page preview (`.bpv`) plays in the lower half and is the link. The preview is a child of the card, so it scrolls with the strip; two panes take turns so the old one can dither away while the new one comes in. `home2.js` is a fork of `home.js`; `blend2.js` is `blend.js` reading the colour from `.card`. Uses the same `assets/preview/` (the 1100 px render, middle 820 px). |
 | `about.html`, `about-page.css` | About page. |
 | `updates.html` | Gallery: Videos section (lazy-played) then Photos. |
 | `pages/*.html` | One page per project. `genauto.html` = steering robot (Gen Auto AI), `platform.html` = motion platform, `6dof.html` = desktop arm, `desmos.html` = cycloid generator, plus `braille`, `cycloid`, `controller`, `liq`, `sumo`. |
