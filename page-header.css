@@ -1,0 +1,98 @@
+/* =====================================================================
+   SHARED HEADER for pages that scroll normally (about, gallery).
+   Put class="sticky-head" on <body> and use the same markup as about.html:
+     <header class="site-header"><h1 id="title">…</h1><ul class="navigation">…</ul></header>
+   The header is sticky with a solid background, so content never shows
+   through gaps in the nav. Load this after styles.css / nav.css /
+   phonestyles.css: it overrides their old fixed-position title and nav
+   (phonestyles.css treats anything ≤1380 px wide as a phone, which broke
+   1366 px laptops).
+   ===================================================================== */
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+body.sticky-head {
+  height: auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  background-color: var(--dark-primary);
+  --gutter: max(20px, env(safe-area-inset-left));
+}
+
+/* ---------- header: title left, nav right ---------- */
+
+body.sticky-head .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-sizing: border-box;
+  width: 100%;
+  padding:
+    max(14px, env(safe-area-inset-top))
+    max(28px, env(safe-area-inset-right))
+    12px
+    max(28px, env(safe-area-inset-left));
+  background-color: var(--dark-primary);
+}
+
+body.sticky-head .site-header #title {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  width: auto !important;
+  margin: 0 !important;
+  text-align: left !important;
+  white-space: nowrap;
+  font-size: clamp(22px, 4.6vh, 42px) !important;
+}
+body.sticky-head #title a { text-decoration: none; color: inherit; font-weight: inherit; }
+
+body.sticky-head .site-header .navigation {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  flex: 0 1 auto;
+  margin: 0;
+  width: min(56vw, 780px) !important;
+  height: clamp(32px, 5.6vh, 52px) !important;
+  font-size: clamp(10px, 1.1vw, 16px) !important;
+}
+
+.site-header a:focus-visible {
+  outline: 2px solid var(--light-primary);
+  outline-offset: 3px;
+}
+
+/* ---------- phones & portrait tablets ---------- */
+
+@media (max-width: 760px), (orientation: portrait) and (max-width: 1100px) {
+
+  body.sticky-head .site-header {
+    flex-direction: column;
+    gap: 10px;
+    padding:
+      max(14px, env(safe-area-inset-top))
+      4vw
+      10px;
+  }
+
+  body.sticky-head .site-header #title {
+    text-align: center !important;
+    font-size: clamp(20px, 6.2vw, 32px) !important;
+  }
+
+  body.sticky-head .site-header .navigation {
+    width: 100% !important;
+    max-width: 560px;
+    height: clamp(26px, 3.8vh, 36px) !important;
+    font-size: clamp(9px, 2.7vw, 12.5px) !important;
+  }
+}

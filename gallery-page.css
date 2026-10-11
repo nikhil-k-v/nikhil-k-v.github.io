@@ -1,0 +1,68 @@
+/* =====================================================================
+   GALLERY (updates.html)
+   Header comes from page-header.css (same as the about page). Two
+   sections, Videos then Photos, each a masonry of CSS columns. Column
+   counts go by width only: 4/6 on laptops and desktops, 3/4 on tablets,
+   2/3 on phones.
+   ===================================================================== */
+
+.gal-main {
+  box-sizing: border-box;
+  width: min(1600px, 100% - 2 * var(--gutter));
+  margin: clamp(12px, 3vh, 32px) auto max(48px, env(safe-area-inset-bottom));
+  --gap: 14px;
+}
+
+.gal-sec + .gal-sec { margin-top: 2.5rem; }
+
+.gal-h {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 0 0 1rem;
+  font-size: 0.85rem; font-weight: 600; letter-spacing: 0.14em;
+  color: var(--light-primary);
+}
+.gal-h::after { content: ""; flex: 1; height: 1.5px; background: currentColor; opacity: 0.3; }
+
+.gal-grid { column-gap: var(--gap); }
+.gal-videos { column-count: 4; }
+.gal-photos { column-count: 6; }
+
+.gal-vid,
+.gal-grid .gallery-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 var(--gap);
+  border-radius: 10px;
+  break-inside: avoid;
+}
+.gal-vid { background: var(--dark-accent); }
+
+/* a tap on a touch screen would leave the photo stuck at 1.05× */
+@media (hover: none) {
+  .gallery-img:hover { transform: none; }
+}
+
+@media (max-width: 1100px) {
+  .gal-videos { column-count: 3; }
+  .gal-photos { column-count: 4; }
+}
+
+@media (max-width: 760px) {
+  .gal-main { --gap: 8px; margin-top: 16px; }
+  .gal-h { font-size: 0.72rem; margin-bottom: 0.7rem; }
+  .gal-videos { column-count: 2; }
+  .gal-photos { column-count: 3; }
+  .gal-vid, .gal-grid .gallery-img { border-radius: 6px; }
+}
+
+/* full-size photo: above the sticky header, fits any screen */
+.modal { z-index: 20; }
+.modal-content {
+  width: auto;
+  height: auto;
+  max-width: 92vw;
+  max-height: 80vh;
+  margin: 10vh auto 0;
+  border-radius: 6px;
+}

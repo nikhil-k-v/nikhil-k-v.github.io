@@ -45,8 +45,9 @@ domain that redirects to it through Cloudflare, outside this repo: don't change 
 |---|---|
 | `index.html`, `home.js`, `home.css` | Home: project carousel. On portrait phones/tablets it's a split view (small carousel on top, dithered live preview of the selected project below). |
 | `index2.html`, `home2.js`, `home2.css`, `blend2.js` | Prototype home (not linked, `noindex`). Same as the home page on portrait phones. On desktop/landscape the open card (32vw, 20 % narrower than on index) becomes the top of its page: the animation grows and stays centred as on index but is drawn in front of the preview (its `.anim-wrap` uses the `#anim-key` SVG filter in index2.html: black keyed to transparent plus a soft dark halo, instead of the lighten blend), the card face fades to the page colour around a quarter (`--fc`, an `@property` in home2.css), and a dithered page preview (`.bpv`, also a link) fills the lower part down to the bottom edge, under the title and VIEW PROJECT button, which stay at the bottom as on index. The preview shows the middle 700 px of the 1100 px render (the content column) edge to edge. The preview is a child of the card, so it scrolls with the strip; two panes take turns so the old one can dither away while the new one comes in. `home2.js` is a fork of `home.js`; `blend2.js` is `blend.js` reading the colour from `.card`. Uses the same `assets/preview/` (the 1100 px render, middle 820 px). |
-| `about.html`, `about-page.css` | About page. |
-| `updates.html` | Gallery: Videos section (lazy-played) then Photos. |
+| `page-header.css` | Shared sticky header (title left, nav right; stacked on phones/portrait tablets) for pages that scroll: about and gallery. Put `sticky-head` on `<body>` and copy the `<header class="site-header">` markup from `about.html`. Home has its own header in `home.css`. |
+| `about.html`, `about-page.css` | About page (header from `page-header.css`). |
+| `updates.html`, `gallery-page.css` | Gallery: Videos section (lazy-played) then Photos, CSS-column masonry (`.gal-grid`): 4/6 columns, 3/4 at ≤1100 px, 2/3 at ≤760 px. Header from `page-header.css`. Doesn't load `phonestyles.css` or `about.css`. |
 | `pages/*.html` | One page per project. `genauto.html` = steering robot (Gen Auto AI), `platform.html` = motion platform, `6dof.html` = desktop arm, `desmos.html` = cycloid generator, `cycloid.html` = cycloidal actuator, `braille.html` = braille display, plus `controller`, `liq`, `sumo`, `propellers` (not linked from home). Old style (not yet rebuilt): `controller`, `liq`, `sumo`, `propellers`. `dynamicGif.html`, `platformGif.html` and `pages.js` are leftovers. See "Project page template" below. |
 | `pages/page-styles.css` | Old global stylesheet every project page loads. Has sharp edges (see Gotchas). |
 | `pages/genauto.css` | Components for the write-up style (`.ga-sec`, `.ga-h2/h3`, `.ga-fig`, `.ga-grid`, `.ga-label`, `.ga-calc`, `.ga-nav` …). Steering robot page puts them on a white sheet (`.ga-paper`). |
@@ -150,6 +151,11 @@ Black-ink sketches (like the braille figures) go on `.pj-white` panels. Tables u
 
 ## Gotchas
 
+- `phonestyles.css` (and the old fixed `#title`/`.navigation` in `nav.css`) treat every
+  screen ≤1380 px wide as a phone: 1366×768 laptops got a 41 px nav font. New pages
+  should use `page-header.css`, not those rules.
+- Don't put `class="gallery"` on `<body>` or any wrapper: `styles.css` turns `.gallery`
+  into a 6-column grid. The gallery page uses `gal-page` / `.gal-grid`.
 - `page-styles.css` sets `overflow-x: hidden` on every element, makes every
   `figcaption` absolutely positioned and `nowrap`, and shrinks `p` with `!important`
   on phones. Components reset these locally; new components usually need to too.
