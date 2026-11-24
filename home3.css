@@ -1,0 +1,71 @@
+/* =====================================================================
+   HOME 3 (prototype, index3.html) — loaded after home.css.
+
+   The card animations are drawn as halftone dots by home3.js (through
+   halftone.js) into a canvas that covers each card. The video itself
+   stays in place, invisible, so its size and position still come from
+   home.css and the inline styles; the canvas reads them from it.
+   ===================================================================== */
+
+body.home3 .box video.anims { opacity: 0 !important; }
+
+body.home3 .box canvas.ht {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: lighten;       /* the picture is on black, as the clips are */
+}
+
+/* prototype controls: which behaviour to try, and a link to the tuning tool */
+.ht-bar {
+  position: fixed;
+  left: max(12px, env(safe-area-inset-left));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 1002;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-sizing: border-box;
+  max-width: calc(100vw - 24px);
+  padding: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background-color: rgba(9, 27, 43, 0.92);
+  border: 1px solid var(--dark-secondary);
+  border-radius: 8px;
+}
+.ht-bar::-webkit-scrollbar { display: none; }
+
+.ht-bar span,
+.ht-bar button,
+.ht-bar a {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.ht-bar span { padding: 0 8px 0 6px; color: #8b929b; }
+.ht-bar button,
+.ht-bar a {
+  padding: 8px 10px;
+  color: var(--light-primary);
+  text-decoration: none;
+  background: none;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.ht-bar button:hover,
+.ht-bar a:hover { background-color: var(--dark-secondary); }
+.ht-bar button[aria-pressed="true"] {
+  background-color: var(--light-primary);
+  color: var(--dark-primary);
+}
+.ht-bar button:focus-visible,
+.ht-bar a:focus-visible { outline: 2px solid var(--light-primary); outline-offset: 1px; }
+.ht-bar a { color: #9fc4e8; }

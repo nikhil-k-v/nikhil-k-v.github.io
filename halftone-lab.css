@@ -1,0 +1,204 @@
+/* Halftone lab (halftone-lab.html): a tool for tuning the dots drawn by
+   halftone.js. Stands alone: it doesn't load the site's other stylesheets. */
+
+:root {
+  --dark-primary: #051220;
+  --dark-secondary: #0b2135;
+  --dark-accent: #091b2b;
+  --light-primary: #f0f0f0;
+  --muted: #8b929b;
+  --line: #17324b;
+  --blue: #9fc4e8;
+  --h: min(70vh, 660px, calc((100vw - 460px) / 1.36));     /* card height on the stage */
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  min-height: 100vh;
+  background-color: var(--dark-primary);
+  color: var(--light-primary);
+  font-family: "montserrat", "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+a { color: var(--blue); }
+a:hover { color: var(--light-primary); }
+
+.lab-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px 12px;
+}
+.lab-head h1 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; }
+.lab-head nav { display: flex; gap: 18px; font-size: 13px; white-space: nowrap; }
+
+.lab-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 20px;
+  padding: 0 20px 20px;
+}
+
+/* ---- stage ---- */
+
+.lab-stage { min-width: 0; }
+
+.lab-cards {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.lab-fig { margin: 0; }
+.lab-fig figcaption {
+  margin-top: 8px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: var(--muted);
+}
+
+.lab-card {
+  position: relative;
+  overflow: hidden;
+  width: calc(var(--h) * 0.49);
+  height: var(--h);
+  background-color: var(--dark-accent);
+  border-radius: 12px;
+}
+.lab-card.is-open {
+  width: calc(var(--h) * 0.853);
+  background-color: var(--dark-secondary);
+}
+
+/* placed exactly as on the home cards (home.css .anims), but invisible:
+   the canvas draws it */
+.lab-card video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1920px;
+  height: auto;
+  max-width: 200%;
+  transform: translate(-51.5%, -55%);
+  opacity: 0 !important;
+  mix-blend-mode: lighten;
+  pointer-events: none;
+}
+.lab-card canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: lighten;
+}
+.is-compare .lab-card video { opacity: 1 !important; }
+.is-compare .lab-card canvas { visibility: hidden; }
+
+.lab-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 16px;
+  margin-top: 16px;
+}
+.lab-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.lab-field > span { font-size: 11px; letter-spacing: 0.06em; color: var(--muted); }
+.lab-field output { color: var(--light-primary); }
+.lab-grow { flex: 1 1 200px; }
+.lab-stat { flex: 1 1 100%; margin: 0; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---- controls ---- */
+
+select, button, textarea, input[type="color"] {
+  font: inherit;
+  color: var(--light-primary);
+  background-color: var(--dark-accent);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+select, button { min-height: 34px; padding: 6px 10px; }
+button { cursor: pointer; }
+button:hover, select:hover { background-color: var(--dark-secondary); }
+button[aria-pressed="true"] { background-color: var(--light-primary); color: var(--dark-primary); }
+select:focus-visible, button:focus-visible, textarea:focus-visible, input:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 1px;
+}
+input[type="range"] { width: 100%; margin: 0; accent-color: var(--blue); }
+input[type="color"] { width: 44px; height: 30px; padding: 2px; }
+
+.lab-panel { min-width: 0; }
+
+.lab-presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.lab-presets button { font-size: 12px; }
+
+.lab-group { margin: 18px 0 0; padding: 0; border: 0; }
+.lab-group legend {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 0 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+.lab-row {
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr) 54px;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+}
+.lab-row > span { font-size: 13px; }
+.lab-row output { font-size: 12px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lab-row select { grid-column: 2 / 4; width: 100%; }
+.lab-row.is-off { opacity: 0.4; }
+
+.lab-json { margin-top: 20px; }
+.lab-json label { display: block; margin-bottom: 6px; font-size: 11px; letter-spacing: 0.06em; color: var(--muted); }
+.lab-json textarea {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  resize: vertical;
+}
+.lab-json-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.lab-json-row span { flex: 1 1 160px; font-size: 11px; color: var(--muted); }
+
+/* ---- desktop: the page doesn't scroll, the settings column does ---- */
+@media (min-width: 901px) {
+  html, body { height: 100%; }
+  body { display: flex; flex-direction: column; }
+  .lab-main { flex: 1 1 auto; min-height: 0; }
+  .lab-panel { overflow-y: auto; padding-right: 6px; }
+  .lab-stage { overflow-y: auto; }
+}
+
+/* ---- phones and narrow windows: stage on top (stays in view), settings below ---- */
+@media (max-width: 900px) {
+  :root { --h: min(38vh, calc((100vw - 42px) / 1.36)); }
+  .lab-head { padding: 12px 16px 8px; }
+  .lab-main { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 0 16px 24px; }
+  .lab-stage { display: contents; }      /* so the cards can stick while the settings scroll */
+  .lab-tools { margin-top: 0; }
+  .lab-cards {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 6px 0 8px;
+    background-color: var(--dark-primary);
+  }
+  .lab-fig figcaption { margin-top: 4px; }
+  .lab-row { grid-template-columns: 104px minmax(0, 1fr) 48px; min-height: 40px; }
+}

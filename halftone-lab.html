@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Halftone lab</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/x-icon" href="/assets/favicon2.png">
+  <link rel="stylesheet" href="https://use.typekit.net/unj1kfg.css">
+  <link rel="stylesheet" href="halftone-lab.css?v=1">
+</head>
+
+<body>
+  <header class="lab-head">
+    <h1>HALFTONE LAB</h1>
+    <nav>
+      <a href="index3.html">Home prototype</a>
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+
+  <main class="lab-main">
+
+    <section class="lab-stage" id="stage" aria-label="Preview">
+      <div class="lab-cards">
+        <figure class="lab-fig">
+          <div class="lab-card" data-card="closed">
+            <video class="anims" muted loop playsinline preload="auto" aria-hidden="true"></video>
+            <canvas aria-hidden="true"></canvas>
+          </div>
+          <figcaption>Closed card</figcaption>
+        </figure>
+        <figure class="lab-fig">
+          <div class="lab-card is-open" data-card="open">
+            <video class="anims" muted loop playsinline preload="auto" aria-hidden="true"></video>
+            <canvas aria-hidden="true"></canvas>
+          </div>
+          <figcaption>Open card</figcaption>
+        </figure>
+      </div>
+
+      <div class="lab-tools">
+        <label class="lab-field">
+          <span>Animation</span>
+          <select id="anim"></select>
+        </label>
+        <label class="lab-field">
+          <span>Sharp patches</span>
+          <select id="patches">
+            <option value="none">None</option>
+            <option value="lens">Under the pointer</option>
+            <option value="blobs">Drifting</option>
+          </select>
+        </label>
+        <label class="lab-field lab-grow">
+          <span>Open card, sharp share <output id="crispOut">0%</output></span>
+          <input id="crisp" type="range" min="0" max="1" step="0.01" value="0">
+        </label>
+        <button id="play" type="button">Play open and close</button>
+        <button id="compare" type="button">Hold for the original</button>
+        <p class="lab-stat" id="stat" aria-live="off"></p>
+      </div>
+    </section>
+
+    <section class="lab-panel" aria-label="Settings">
+      <div class="lab-presets" id="presets" role="group" aria-label="Presets"></div>
+      <form id="controls" autocomplete="off"></form>
+      <div class="lab-json">
+        <label for="json">Settings, as text. Paste here to load.</label>
+        <textarea id="json" rows="6" spellcheck="false"></textarea>
+        <div class="lab-json-row">
+          <button id="copy" type="button">Copy</button>
+          <button id="reset" type="button">Reset</button>
+          <span id="saved">Saved in this browser. The home prototype uses the same settings.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="halftone.js?v=1"></script>
+  <script src="halftone-lab.js?v=1"></script>
+</body>
+</html>
