@@ -763,9 +763,9 @@
      ------------------------------------------------------------------ */
   /* opts.inBox: the pane sits in the lower half of an open card on
      desktop. Its loading state is faint drifting dots rather than the
-     card's animation (that's already showing just above), it uses the
-     widest pre-rendered page and shows its middle (the content column),
-     and it's quicker, since the card is opening at the same time. */
+     card's animation (that's already showing just above), it always uses
+     the phone render of the page (the narrowest one), full width, and it's
+     quicker, since the card is opening at the same time. */
   function makePreview(pane, opts) {
     opts = opts || {};
     var noop = { show: function () {}, nudge: function () {}, unload: function () {}, resume: function () {}, cover: function (f) { if (f) f(); }, pause: function () {} };
@@ -781,7 +781,7 @@
     var DISSOLVE = opts.inBox ? 1700 : 2100;
     var UNSCRAMBLE = opts.inBox ? 1300 : 1600; // VIEW PROJECT settles a little before the dissolve ends
     var TICK = 70;          // ms between scrambled-letter changes
-    var CROP_W = 700;       // in-box: page px across, centred: the content column of the 1100 px render, edge to edge
+    var CROP_W = 700;       // in-box: most page px shown across, centred (the 500 px phone render fits whole)
 
     var manifest = null;
     var manifestP = fetch('assets/preview/previews.json', { cache: 'no-cache' })
@@ -882,19 +882,20 @@
       }, 30);
     }
 
-    /* the pre-rendered width closest to how wide the page is in this pane */
+    /* the pre-rendered width closest to how wide the page is in this pane;
+       in a card, always the narrowest: the phone version of the page */
     function pickVariant(entry) {
       var want = (stage.clientWidth || 360) / PS, best = null;
       Object.keys(entry).forEach(function (k) {
         var v = entry[k];
-        if (opts.inBox) { if (!best || v.w > best.w) best = v; return; }
+        if (opts.inBox) { if (!best || v.w < best.w) best = v; return; }
         if (!best || Math.abs(v.w - want) < Math.abs(best.w - want)) best = v;
       });
       return best;
     }
 
-    /* the part of the page across the pane, in page px: in a card, the
-       middle CROP_W of the wide render; otherwise the full width */
+    /* the part of the page across the pane, in page px: the full width
+       (in a card, no more than the middle CROP_W) */
     function viewOf(v) {
       var w = opts.inBox ? Math.min(v.w, CROP_W) : v.w;
       return { x: (v.w - w) / 2, w: w };
